@@ -36,7 +36,26 @@ const Navbar = ({  }) => {
 
                     {user &&
                         <>
-                            <h1 className="text-white">{user._id}</h1>
+                            {
+                                user.profileId ? ( 
+                                    <>
+                                        
+                                        <h1>Placeholder</h1>
+
+                                    </>
+                                ) : (
+                                    <>
+                                    
+                                        <button
+                                            className="bg-white px-8 py-2 rounded-full"
+                                            onClick={() => {}}
+                                        >
+                                            <h1>Create Profile</h1>
+                                        </button>
+
+                                    </>
+                                )
+                            }
 
                             <button 
                                 className="px-8 py-2"
