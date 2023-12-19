@@ -31,9 +31,9 @@ const getPipelinesByCompany = async (req, res) => {
 
 // GET random profiles
 const getRandomPipelines = async(req, res) => {
-    const { size } = req.body
+    const { size } = req.params
 
-    const randomProfiles = await Profile.aggregate([{ $sample: { size: size } }]);
+    const randomProfiles = await Profile.aggregate([{ $sample: { size: Number(size) } }]);
     
     res.status(200).json(randomProfiles);
 }

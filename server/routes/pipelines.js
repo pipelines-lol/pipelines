@@ -16,7 +16,7 @@ router.get('/get/:id', getPipeline)
 router.get('/', getPipelinesByCompany)
 
 // GET random pipelines
-router.get('/random', getRandomPipelines)
+router.get('/random/:size', getRandomPipelines)
 
 // UPDATE (remove) experience from pipeline
 router.patch('/remove/:id', removeExperience)
