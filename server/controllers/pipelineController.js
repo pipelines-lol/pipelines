@@ -29,6 +29,7 @@ const getPipelinesByCompany = async (req, res) => {
     res.status(200).json(profiles)
 }
 
+// GET random profiles
 const getRandomPipelines = async(req, res) => {
     const { size } = req.body
 
