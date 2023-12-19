@@ -18,6 +18,17 @@ const getPipeline = async (req, res) => {
     res.status(200).json(profile.pipeline)
 }
 
+// GET profiles (by experience name)
+const getPipelinesByCompany = async (req, res) => {
+    const { company } = req.body
+
+    const profiles = await Profile.find({
+        'pipeline.company': company
+    })
+
+    res.status(200).json(profiles)
+}
+
 // REMOVE an experience from a pipeline
 const removeExperience = async (req, res) => {
     const { id } = req.params
@@ -34,13 +45,13 @@ const removeExperience = async (req, res) => {
     }
 
     // create new pipeline
-    const newPipeline = profile.pipeline
+    const newPipeline = [...profile.pipeline]
 
     // remove the experience at index
     newPipeline.splice(index, 0)
 
     // update pipeline in db
-    profile.updateOne({
+    await Profile.findOneAndUpdate({ _id: id }, {
         pipeline: newPipeline
     })
 
@@ -63,7 +74,7 @@ const addExperience = async (req, res) => {
     }
 
     // create new pipeline + experience
-    const newPipeline = profile.pipeline
+    const newPipeline = [...profile.pipeline]
     const experience = {
         company: company,
         title: title,
@@ -78,7 +89,7 @@ const addExperience = async (req, res) => {
     }
 
     // update pipeline in db
-    profile.updateOne({
+    await Profile.findOneAndUpdate({ _id: id }, {
         pipeline: newPipeline
     })
 
@@ -87,6 +98,7 @@ const addExperience = async (req, res) => {
 
 module.exports = {
     getPipeline,
+    getPipelinesByCompany,
     removeExperience,
     addExperience,
 }
