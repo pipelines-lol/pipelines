@@ -1,4 +1,5 @@
 const mongoose = require('mongoose')
+const random = require('mongoose-simple-random');
 
 const Schema = mongoose.Schema
 
@@ -15,5 +16,6 @@ const profileSchema = new Schema({
     anonymous: Boolean,
     pipeline: [Experience]
 }, { timestamps: true })
+profileSchema.plugin(random);
 
 module.exports = mongoose.model('Profile', profileSchema)

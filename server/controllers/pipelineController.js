@@ -29,6 +29,14 @@ const getPipelinesByCompany = async (req, res) => {
     res.status(200).json(profiles)
 }
 
+const getRandomPipelines = async(req, res) => {
+    const { size } = req.body
+
+    const randomProfiles = await Profile.aggregate([{ $sample: { size: size } }]);
+    
+    res.status(200).json(randomProfiles);
+}
+
 // REMOVE an experience from a pipeline
 const removeExperience = async (req, res) => {
     const { id } = req.params
@@ -99,6 +107,7 @@ const addExperience = async (req, res) => {
 module.exports = {
     getPipeline,
     getPipelinesByCompany,
+    getRandomPipelines,
     removeExperience,
     addExperience,
 }

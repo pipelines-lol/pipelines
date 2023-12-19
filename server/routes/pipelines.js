@@ -2,6 +2,7 @@ const express = require('express')
 const {
     getPipeline,
     getPipelinesByCompany,
+    getRandomPipelines,
     removeExperience,
     addExperience,
 } = require('../controllers/pipelineController')
@@ -9,10 +10,13 @@ const {
 const router = express.Router()
 
 // GET a single pipeline (by id)
-router.get('/:id', getPipeline)
+router.get('/get/:id', getPipeline)
 
 // GET pipelines (by company name)
 router.get('/', getPipelinesByCompany)
+
+// GET random pipelines
+router.get('/random', getRandomPipelines)
 
 // UPDATE (remove) experience from pipeline
 router.patch('/remove/:id', removeExperience)
