@@ -13,7 +13,7 @@ const router = express.Router()
 router.get('/get/:id', getPipeline)
 
 // GET pipelines (by company name)
-router.get('/', getPipelinesByCompany)
+router.get('/search/:company', getPipelinesByCompany)
 
 // GET random pipelines
 router.get('/random/:size', getRandomPipelines)

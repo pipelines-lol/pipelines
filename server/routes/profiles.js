@@ -2,7 +2,6 @@ const express = require('express')
 const {
     getProfiles, 
     getProfile,
-    createProfile,
     deleteProfile,
     updateProfile,
 } = require('../controllers/profileController')
@@ -14,9 +13,6 @@ router.get('/', getProfiles)
 
 // GET a single profile
 router.get('/:id', getProfile)
-
-// POST a profile
-router.post('/', createProfile)
 
 // DELETE a profile
 router.delete('/:id', deleteProfile)

@@ -6,19 +6,19 @@ function Signup() {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
 
-    const { dispatch } = useAuthContext();
+    const { user, dispatch } = useAuthContext();
 
     const navigate = useNavigate();
     
     const signUp = (email, password) => {
-        const user = { email, password };
+        const _user = { email, password };
 
-        const response = fetch('http://localhost:4000/api/user/signup', {
+        fetch('http://localhost:4000/api/user/signup', {
             method: "POST",
             headers: {
                 'Content-Type': 'application/json' // Specify the content type as JSON
             },
-            body: JSON.stringify(user)
+            body: JSON.stringify(_user)
         })
         .then((res) => {
             if (!res.ok) {
@@ -37,6 +37,8 @@ function Signup() {
         })
         .then((data) => {
             localStorage.setItem('user', JSON.stringify(data));
+
+            console.log(data);
 
             // update AuthContext
             dispatch({ type: "LOGIN", payload: data });

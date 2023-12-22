@@ -1,7 +1,7 @@
 
 export const PipelineCard = ({ name, pipeline }) => {
     return (
-        <div className='flex flex-row justify-center items-center bg-gray-200 p-12 rounded-2xl gap-10' key={pipeline._id}>
+        <div className='flex flex-row justify-center items-center bg-gray-200 w-full p-12 rounded-2xl gap-10' key={pipeline._id}>
             <div className="flex flex-col justify-center items-center gap-3">
                 <img className='w-36 h-36 rounded-full' src="avatar.png" />
                 <h1 className="text-black font-medium text-xl">{name}</h1>

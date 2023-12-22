@@ -11,11 +11,24 @@ const Experience = new mongoose.Schema({
 
 const profileSchema = new Schema({
     userId: String, 
-    name: String,
+    firstName: String,
+    lastName: String,
     linkedin: String,
     anonymous: Boolean,
-    pipeline: [Experience]
+    pipeline: [Experience],
+    created: Boolean
 }, { timestamps: true })
 profileSchema.plugin(random);
+
+// static methods
+profileSchema.statics.getByUserId = async function (userId) {
+    const profile = await this.findOne({ userId })
+
+    if (!profile) {
+        throw Error(`Invalid user ID.`)
+    }
+
+    return profile
+}
 
 module.exports = mongoose.model('Profile', profileSchema)

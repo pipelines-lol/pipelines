@@ -1,8 +1,8 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuthContext } from "../hooks/useAuthContext";
 
-function CreateProfile() {
+function EditProfile() {
     const [firstName, setFirstName] = useState('');
     const [lastName, setLastName] = useState('');
     const [linkedin, setLinkedin] = useState('');
@@ -10,9 +10,41 @@ function CreateProfile() {
 
     const navigate = useNavigate();
 
-    const { user, dispatch } = useAuthContext();
+    const { user } = useAuthContext();
 
-    const handleCreateProfile = async () => {
+    const fetchProfile = async () => {
+        fetch(`http://localhost:4000/api/profile/${user.profileId}`, {
+            method: "GET",
+            headers: {
+                'Content-Type': 'application/json' // Specify the content type as JSON
+            }
+        })
+        .then((res) => {
+            if (!res.ok) {
+                // Check if the response has JSON content
+                if (res.headers.get('content-type')?.includes('application/json')) {
+                    return res.json().then((errorData) => {
+                        throw new Error(`${errorData.error}`);
+                    });
+                } else {
+                    throw new Error(`HTTP error! Status: ${res.status}`);
+                }
+            }
+
+            return res.json();
+        })
+        .then((data) => {
+            setFirstName(data.firstName);
+            setLastName(data.lastName);
+            setLinkedin(data.linkedin);
+            setAnonymous(data.anonymous);
+        })
+        .catch((error) => {
+            console.error(error.message);
+        });
+    }
+
+    const handleEditProfile = async () => {
 
         // TEMP CODE:
         // handle empty values
@@ -20,14 +52,13 @@ function CreateProfile() {
         if (!firstName || !lastName || !linkedin) {
             return;
         }
-        
+
         const profile = {
             'firstName': firstName,
             'lastName': lastName,
             'linkedin': linkedin,
             'anonymous': anonymous,
-            'created': true
-        };
+        }
 
         fetch(`http://localhost:4000/api/profile/${user.profileId}`, {
             method: "PATCH",
@@ -47,14 +78,15 @@ function CreateProfile() {
                     throw new Error(`HTTP error! Status: ${res.status}`);
                 }
             }
-
-            // set user data
-            dispatch({ type: 'CREATED' });
         })
         .catch((error) => {
             console.error(error.message);
         });
     }
+
+    useEffect(() => {
+        fetchProfile();
+    }, [])
 
     return (
         <>
@@ -93,7 +125,12 @@ function CreateProfile() {
                         />
 
                         <label className="relative inline-flex items-center cursor-pointer">
-                            <input type="checkbox" onChange={() => setAnonymous((prev) => !prev)} className="sr-only peer"/>
+                            <input 
+                                type="checkbox" 
+                                checked={anonymous} 
+                                onChange={() => setAnonymous((prev) => !prev)} 
+                                class="sr-only peer"
+                            />
                             <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600"></div>
                             <span className="ms-3 text-sm font-medium text-gray-900 dark:text-gray-300">Anonymous</span>
                         </label>
@@ -101,9 +138,9 @@ function CreateProfile() {
                     
                     <button 
                         className="bg-black px-12 py-2 rounded-full"
-                        onClick={handleCreateProfile}
+                        onClick={handleEditProfile}
                     >
-                        <h1 className="text-white">Create</h1>
+                        <h1 className="text-white">Submit</h1>
                     </button>
                 </div>
             </div>
@@ -112,4 +149,4 @@ function CreateProfile() {
     )
 }
 
-export default CreateProfile;
+export default EditProfile;

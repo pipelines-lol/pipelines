@@ -20,10 +20,10 @@ const getPipeline = async (req, res) => {
 
 // GET profiles (by experience name)
 const getPipelinesByCompany = async (req, res) => {
-    const { company } = req.body
+    const { company } = req.params
 
     const profiles = await Profile.find({
-        'pipeline.company': company
+        'pipeline.company': company,
     })
 
     res.status(200).json(profiles)
@@ -33,7 +33,10 @@ const getPipelinesByCompany = async (req, res) => {
 const getRandomPipelines = async(req, res) => {
     const { size } = req.params
 
-    const randomProfiles = await Profile.aggregate([{ $sample: { size: Number(size) } }]);
+    const randomProfiles = await Profile.aggregate([
+        { $match: { created: true } },
+        { $sample: { size: Number(size) } }
+    ]);
     
     res.status(200).json(randomProfiles);
 }

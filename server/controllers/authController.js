@@ -1,4 +1,5 @@
 const User = require('../models/userModel')
+const Profile = require('../models/profileModel')
 const jwt = require('jsonwebtoken')
 
 const createToken = (_id) => {
@@ -6,32 +7,44 @@ const createToken = (_id) => {
 }
 
 const loginUser = async (req, res) => {
-    const { email, password } = req.body;
+    const { email, password } = req.body
 
     try {
-        const user = await User.login(email, password);
+        const user = await User.login(email, password)
+
+        const profile = await Profile.getByUserId(user._id)
 
         // create token
         const token = createToken(user._id)
 
-        res.status(200).json({ email, _id: user._id, token });
+        res.status(200).json({ email, _id: user._id, profileId: profile._id, profileCreated: profile.created, token });
     } catch (error) {
         res.status(400).json({ error: error.message });
     }
 }
 
 const signupUser = async (req, res) => {
-    const { email, password } = req.body;
+    const { email, password } = req.body
 
     try {
-        const user = await User.signup(email, password);
+        const user = await User.signup(email, password)
+
+        // create new profile
+        const profile = await Profile.create({ 
+            userId: user._id, 
+            name: '',
+            linkedin: '',
+            anonymous: false,
+            pipeline: [],
+            created: false
+        })
 
         // create token
         const token = createToken(user._id)
 
-        res.status(200).json({ email, _id: user._id, token });
+        res.status(200).json({ email, _id: user._id, profileId: profile._id, profileCreated: false, token })
     } catch (error) {
-        res.status(400).json({ error: error.message });
+        res.status(400).json({ error: error.message })
     }
 };
 

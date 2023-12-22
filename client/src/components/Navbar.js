@@ -37,10 +37,15 @@ const Navbar = ({  }) => {
                     {user &&
                         <>
                             {
-                                user.profileId ? ( 
+                                user.profileCreated ? ( 
                                     <>
                                         
-                                        <h1>Placeholder</h1>
+                                        <button
+                                            className="bg-white px-8 py-2 rounded-full"
+                                            onClick={() => navigate('/edit')}
+                                        >
+                                            <h1>Edit Profile</h1>
+                                        </button>
 
                                     </>
                                 ) : (
@@ -48,7 +53,7 @@ const Navbar = ({  }) => {
                                     
                                         <button
                                             className="bg-white px-8 py-2 rounded-full"
-                                            onClick={() => {}}
+                                            onClick={() => navigate('/create')}
                                         >
                                             <h1>Create Profile</h1>
                                         </button>

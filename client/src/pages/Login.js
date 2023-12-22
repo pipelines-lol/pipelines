@@ -13,7 +13,7 @@ function Login() {
     const login = (email, password) => {
         const user = { email, password };
 
-        const response = fetch('http://localhost:4000/api/user/login', {
+        fetch('http://localhost:4000/api/user/login', {
             method: "POST",
             headers: {
                 'Content-Type': 'application/json' // Specify the content type as JSON
