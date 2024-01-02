@@ -14,7 +14,13 @@ const app = express()
 const PORT = process.env.PORT || 4000
 
 // cors
-app.use(cors())
+app.use(cors(
+    {
+        origin: ["https://pipelines-api.vercel.app/"],
+        methods: ["POST", "PATCH", "DELETE", "GET"],
+        credentials: true
+    }
+))
 
 // database
 mongoose.connect(process.env.DB_CONNECT)
