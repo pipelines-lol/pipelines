@@ -46,7 +46,7 @@ const deleteProfile = async (req, res) => {
 // UPDATE a poll
 const updateProfile = async (req, res) => {
     const { id } = req.params
-    const { firstName, lastName, linkedin, anonymous } = req.body
+    const { firstName, lastName, linkedin, anonymous, pipeline, created } = req.body
 
     if (!mongoose.Types.ObjectId.isValid(id)) {
         return res.status(404).json({error: 'No such Profile.'})
@@ -57,7 +57,8 @@ const updateProfile = async (req, res) => {
         lastName,
         linkedin, 
         anonymous,
-        created: true
+        pipeline,
+        created
     })
 
     if (!profile) {

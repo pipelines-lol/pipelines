@@ -1,32 +1,60 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuthContext } from "../hooks/useAuthContext";
+import { ExperienceForm } from "../components/ExperienceForm";
 
 function CreateProfile() {
     const [firstName, setFirstName] = useState('');
     const [lastName, setLastName] = useState('');
     const [linkedin, setLinkedin] = useState('');
     const [anonymous, setAnonymous] = useState(false);
+    const [pipeline, setPipeline] = useState([]);
 
     const navigate = useNavigate();
 
     const { user, dispatch } = useAuthContext();
 
-    const handleCreateProfile = async () => {
+    const fetchProfile = async () => {
+        fetch(`http://localhost:4000/api/profile/${user.profileId}`, {
+            method: "GET",
+            headers: {
+                'Content-Type': 'application/json' // Specify the content type as JSON
+            }
+        })
+        .then((res) => {
+            if (!res.ok) {
+                // Check if the response has JSON content
+                if (res.headers.get('content-type')?.includes('application/json')) {
+                    return res.json().then((errorData) => {
+                        throw new Error(`${errorData.error}`);
+                    });
+                } else {
+                    throw new Error(`HTTP error! Status: ${res.status}`);
+                }
+            }
 
-        // TEMP CODE:
-        // handle empty values
-        // handle this in backend
-        if (!firstName || !lastName || !linkedin) {
-            return;
-        }
+            return res.json();
+        })
+        .then((data) => {
+            setFirstName(data.firstName);
+            setLastName(data.lastName);
+            setLinkedin(data.linkedin);
+            setAnonymous(data.anonymous);
+        })
+        .catch((error) => {
+            console.error(error.message);
+        });
+    }
+
+    const updateProfile = async () => {
         
         const profile = {
-            'firstName': firstName,
-            'lastName': lastName,
-            'linkedin': linkedin,
-            'anonymous': anonymous,
-            'created': true
+            firstName: firstName,
+            lastName: lastName,
+            linkedin: linkedin,
+            anonymous: anonymous,
+            pipeline: pipeline,
+            created: true
         };
 
         fetch(`http://localhost:4000/api/profile/${user.profileId}`, {
@@ -48,19 +76,55 @@ function CreateProfile() {
                 }
             }
 
+            return res.json();
+        })
+        .then((data) => {
+            console.log(data);
+
             // set user data
             dispatch({ type: 'CREATED' });
+
+            // set new user in local storage (with profile created)
+            const storedUser = JSON.parse(localStorage.getItem('user'));
+            storedUser.profileCreated = true;
+            localStorage.setItem('user', JSON.stringify(storedUser));
+
+            // display change in DOM
+            fetchProfile();
+
+            navigate('/');
         })
         .catch((error) => {
             console.error(error.message);
         });
     }
 
+    const addExperience = async (index) => {
+        const placeholder = {
+            company: "",
+            title: "",
+            date: ""
+        }
+        const newPipeline = [...pipeline];
+
+        newPipeline.splice(index, 0, placeholder);
+
+        setPipeline(newPipeline);
+    }
+
+    const updateExperience = async (experience, index) => {
+        const newPipeline = [...pipeline];
+
+        newPipeline.splice(index, 1, experience);
+
+        setPipeline(newPipeline);
+    }
+
     return (
         <>
         
             <div className="flex justify-center items-center w-full h-full bg-gray-100">
-                <div className="flex flex-col justify-center items-center w-1/3 h-2/3 bg-white shadow-md gap-10">
+                <div className="flex flex-col justify-center items-center h-2/3 bg-white shadow-md p-5 gap-10">
                     <h1 className="text-black font-semibold text-2xl tracking-wide uppercase">Profile</h1>
 
                     <div className="flex flex-col gap-3">
@@ -98,10 +162,38 @@ function CreateProfile() {
                             <span className="ms-3 text-sm font-medium text-gray-900 dark:text-gray-300">Anonymous</span>
                         </label>
                     </div>
+
+                    <div className="flex flex-row justify-center items-center w-full gap-3">
+                        <button
+                            key={0}
+                            className="w-10 h-10 bg-gray-200 rounded-full"
+                            onClick={() => {addExperience(0)}}
+                        >
+                            <h1>+</h1>
+                        </button>
+                        {
+                            pipeline.map((experience, index) => (
+                                <>
+                                    <ExperienceForm
+                                        experience={experience} 
+                                        index={index} 
+                                        updateExperience={updateExperience}
+                                    />
+                                    <button
+                                        key={index + 1}
+                                        className="w-10 h-10 bg-gray-200 rounded-full"
+                                        onClick={() => {addExperience(index)}}
+                                    >
+                                        <h1>+</h1>
+                                    </button>
+                                </>
+                            ))
+                        }
+                    </div>
                     
                     <button 
                         className="bg-black px-12 py-2 rounded-full"
-                        onClick={handleCreateProfile}
+                        onClick={updateProfile}
                     >
                         <h1 className="text-white">Create</h1>
                     </button>

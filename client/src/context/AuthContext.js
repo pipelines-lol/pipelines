@@ -26,6 +26,11 @@ export const AuthContextProvider = ({ children }) => {
         if (user) {
             dispatch({ type: 'LOGIN', payload: user });
         }
+
+        if (user.profileCreated) {
+            dispatch({ type: 'CREATED', payload: user });
+        }
+
     }, []);
 
     console.log('AuthContext state: ', state);

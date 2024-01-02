@@ -20,7 +20,7 @@ function App() {
 
   return (
     <Router>
-      <div className='flex flex-col w-screen min-h-screen'>
+      <div className='flex flex-col w-screen min-h-screen bg-gray-100'>
         <Navbar />
         <Routes>
           <Route path="/" exact element={<Home />} />
