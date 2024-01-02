@@ -29,6 +29,11 @@ mongoose.connect(process.env.DB_CONNECT)
 
 app.use(express.json())
 
+// testing
+app.get("/", (req, res) => {
+    res.json("Hello!")
+})
+
 // routes
 app.use('/api/user', authRoutes)
 app.use('/api/profile', profileRoutes)
