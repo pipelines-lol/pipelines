@@ -1,12 +1,14 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuthContext } from "../hooks/useAuthContext";
+import { ExperienceForm } from "../components/ExperienceForm";
 
 function EditProfile() {
     const [firstName, setFirstName] = useState('');
     const [lastName, setLastName] = useState('');
     const [linkedin, setLinkedin] = useState('');
     const [anonymous, setAnonymous] = useState(false);
+    const [pipeline, setPipeline] = useState([]);
 
     const navigate = useNavigate();
 
@@ -38,10 +40,32 @@ function EditProfile() {
             setLastName(data.lastName);
             setLinkedin(data.linkedin);
             setAnonymous(data.anonymous);
+            setPipeline(data.pipeline);
         })
         .catch((error) => {
             console.error(error.message);
         });
+    }
+
+    const addExperience = async (index) => {
+        const placeholder = {
+            company: "",
+            title: "",
+            date: ""
+        }
+        const newPipeline = [...pipeline];
+
+        newPipeline.splice(index, 0, placeholder);
+
+        setPipeline(newPipeline);
+    }
+
+    const updateExperience = async (experience, index) => {
+        const newPipeline = [...pipeline];
+
+        newPipeline.splice(index, 1, experience);
+
+        setPipeline(newPipeline);
     }
 
     const handleEditProfile = async () => {
@@ -54,10 +78,11 @@ function EditProfile() {
         }
 
         const profile = {
-            'firstName': firstName,
-            'lastName': lastName,
-            'linkedin': linkedin,
-            'anonymous': anonymous,
+            firstName: firstName,
+            lastName: lastName,
+            linkedin: linkedin,
+            anonymous: anonymous,
+            pipeline: pipeline
         }
 
         fetch(`http://localhost:4000/api/profile/${user.profileId}`, {
@@ -82,6 +107,8 @@ function EditProfile() {
         .catch((error) => {
             console.error(error.message);
         });
+
+        navigate('/');
     }
 
     useEffect(() => {
@@ -134,6 +161,34 @@ function EditProfile() {
                             <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600"></div>
                             <span className="ms-3 text-sm font-medium text-gray-900 dark:text-gray-300">Anonymous</span>
                         </label>
+                    </div>
+
+                    <div className="flex flex-row justify-center items-center w-full gap-3">
+                        <button
+                            key={0}
+                            className="w-10 h-10 bg-gray-200 rounded-full"
+                            onClick={() => {addExperience(0)}}
+                        >
+                            <h1>+</h1>
+                        </button>
+                        {
+                            pipeline.map((experience, index) => (
+                                <>
+                                    <ExperienceForm
+                                        experience={experience} 
+                                        index={index} 
+                                        updateExperience={updateExperience}
+                                    />
+                                    <button
+                                        key={index + 1}
+                                        className="w-10 h-10 bg-gray-200 rounded-full"
+                                        onClick={() => {addExperience(index)}}
+                                    >
+                                        <h1>+</h1>
+                                    </button>
+                                </>
+                            ))
+                        }
                     </div>
                     
                     <button 
