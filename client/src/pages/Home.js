@@ -91,7 +91,7 @@ function Home() {
                     </button>
                 </form>
 
-                <div className="flex flex-col justify-center items-center w-1/2 gap-5 py-12">
+                <div className="flex flex-col justify-center items-center min-w-1/2 gap-5 py-12">
                 {
                     profiles.map((profile) => (
                         <PipelineCard name={profile.firstName + ' ' + profile.lastName}  pipeline={profile.pipeline} />
