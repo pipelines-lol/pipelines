@@ -119,7 +119,7 @@ function EditProfile() {
         <>
         
             <div className="flex justify-center items-center w-full h-full bg-gray-100">
-                <div className="flex flex-col justify-center items-center w-1/3 h-2/3 bg-white shadow-md gap-10">
+                <div className="flex flex-col justify-center items-center h-2/3 bg-white shadow-md p-5 gap-10">
                     <h1 className="text-black font-semibold text-2xl tracking-wide uppercase">Profile</h1>
 
                     <div className="flex flex-col gap-3">
