@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuthContext } from "../hooks/useAuthContext";
 import { ExperienceForm } from "../components/ExperienceForm";
+import { host } from "../util/apiRoutes";
 
 function EditProfile() {
     const [firstName, setFirstName] = useState('');
@@ -15,7 +16,7 @@ function EditProfile() {
     const { user } = useAuthContext();
 
     const fetchProfile = async () => {
-        fetch(`http://localhost:4000/api/profile/${user.profileId}`, {
+        fetch(`${host}//api/profile/${user.profileId}`, {
             method: "GET",
             headers: {
                 'Content-Type': 'application/json' // Specify the content type as JSON
@@ -85,7 +86,7 @@ function EditProfile() {
             pipeline: pipeline
         }
 
-        fetch(`http://localhost:4000/api/profile/${user.profileId}`, {
+        fetch(`${host}/api/profile/${user.profileId}`, {
             method: "PATCH",
             headers: {
                 'Content-Type': 'application/json' // Specify the content type as JSON

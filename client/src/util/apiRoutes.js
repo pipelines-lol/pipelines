@@ -1,0 +1,1 @@
+export const host = "https://pipelines-backend.onrender.com/"

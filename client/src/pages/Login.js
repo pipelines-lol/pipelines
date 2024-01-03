@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuthContext } from "../hooks/useAuthContext";
+import { host } from "../util/apiRoutes";
 
 function Login() {
     const [email, setEmail] = useState('');
@@ -13,7 +14,7 @@ function Login() {
     const login = (email, password) => {
         const user = { email, password };
 
-        fetch('http://localhost:4000/api/user/login', {
+        fetch(`${host}/api/user/login`, {
             method: "POST",
             headers: {
                 'Content-Type': 'application/json' // Specify the content type as JSON

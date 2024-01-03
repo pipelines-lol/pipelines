@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 
 import { PipelineCard } from "../components/PipelineCard";
+import { host } from "../util/apiRoutes";
 
 function Home() {
 
@@ -10,7 +11,7 @@ function Home() {
     const generateProfiles = async () => {
         const size = 5;
 
-        fetch(`http://localhost:4000/api/pipeline/random/${size}`, {
+        fetch(`${host}/api/pipeline/random/${size}`, {
             method: "GET",
             headers: {
                 'Content-Type': 'application/json' // Specify the content type as JSON
@@ -43,7 +44,7 @@ function Home() {
     }
 
     const searchProfiles = async () => {
-        fetch(`http://localhost:4000/api/pipeline/search/${search}`, {
+        fetch(`${host}/api/pipeline/search/${search}`, {
             method: "GET",
             headers: {
                 'Content-Type': 'application/json' // Specify the content type as JSON
