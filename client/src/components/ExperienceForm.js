@@ -12,6 +12,7 @@ export const ExperienceForm = ({ experience, index, updateExperience }) => {
             setTitle(experience.title);
             setDate(experience.date);
         }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
 
     // handle experience change

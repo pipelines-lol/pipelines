@@ -7,7 +7,7 @@ function Signup() {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
 
-    const { user, dispatch } = useAuthContext();
+    const { dispatch } = useAuthContext();
 
     const navigate = useNavigate();
     

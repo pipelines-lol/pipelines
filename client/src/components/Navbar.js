@@ -1,7 +1,7 @@
 import { useNavigate } from "react-router-dom";
 import { useAuthContext } from "../hooks/useAuthContext";
 
-const Navbar = ({  }) => {
+const Navbar = () => {
     const navigate = useNavigate();
     const { user, dispatch } = useAuthContext();
 
