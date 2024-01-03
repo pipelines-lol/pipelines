@@ -5,9 +5,9 @@ const mongoose = require("mongoose")
 const cors = require('cors')
 
 // route imports
-const authRoutes = require("../routes/auth")
-const profileRoutes = require('../routes/profiles')
-const pipelineRoutes = require('../routes/pipelines')
+const authRoutes = require("./routes/auth")
+const profileRoutes = require('./routes/profiles')
+const pipelineRoutes = require('./routes/pipelines')
 
 dotenv.config()
 const app = express()
