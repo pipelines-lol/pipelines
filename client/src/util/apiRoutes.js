@@ -1,1 +1,8 @@
-export const host = "https://pipelines-backend.onrender.com" // https://pipelines-backend.onrender.com
+const host =
+  process.env.MODE === "DEV"
+    ? "http://localhost:4000"
+    : process.env.MODE === "PROD"
+    ? "https://pipelines-backend.onrender.com"
+    : (console.error("Unknown mode:", process.env.MODE), null);
+
+export { host };
