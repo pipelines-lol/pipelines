@@ -95,7 +95,11 @@ function Home() {
                 <div className="flex flex-col justify-center items-center min-w-1/2 gap-5 py-12">
                 {
                     profiles.map((profile) => (
-                        <PipelineCard name={profile.firstName + ' ' + profile.lastName}  pipeline={profile.pipeline} />
+                        <PipelineCard
+                            key={`pipeline_${profile._id}`}
+                            name={profile.firstName + ' ' + profile.lastName}  
+                            pipeline={profile.pipeline} 
+                        />
                     ))
                 }
                 </div>
