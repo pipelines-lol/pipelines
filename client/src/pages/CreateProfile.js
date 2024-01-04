@@ -109,7 +109,7 @@ function CreateProfile() {
         }
         const newPipeline = [...pipeline];
 
-        newPipeline.splice(index, 0, placeholder);
+        newPipeline.splice(index, 0, placeholder); 
 
         setPipeline(newPipeline);
     }
@@ -175,7 +175,7 @@ function CreateProfile() {
 
                     <div className="flex flex-row justify-center items-center w-full gap-3">
                         <button
-                            key={0}
+                            key={`add_experience_button_0`}
                             className="w-10 h-10 bg-gray-200 rounded-full"
                             onClick={() => {addExperience(0)}}
                         >
@@ -183,21 +183,25 @@ function CreateProfile() {
                         </button>
                         {
                             pipeline.map((experience, index) => (
-                                <>
+                                <div 
+                                    key={`experience_${index}`}
+                                    className="flex flex-row justify-center items-center gap-3"
+                                >
                                     <ExperienceForm
+                                        key={`experience_form_${index}`}
                                         experience={experience} 
                                         index={index} 
                                         updateExperience={updateExperience}
                                         removeExperience={removeExperience}
                                     />
                                     <button
-                                        key={index + 1}
+                                        key={`add_experience_button_${index + 1}`}
                                         className="w-10 h-10 bg-gray-200 rounded-full"
-                                        onClick={() => {addExperience(index)}}
+                                        onClick={() => {addExperience(index + 1)}}
                                     >
                                         <h1>+</h1>
                                     </button>
-                                </>
+                                </div>
                             ))
                         }
                     </div>
