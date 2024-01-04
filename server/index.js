@@ -15,7 +15,7 @@ const PORT = process.env.PORT || 4000
 
 // cors
 const corsOptions = {
-    origin: ["http://localhost:3000", "https://pipelines-api.vercel.app/"],
+    origin: ["http://localhost:3000", "https://pipelines-backend.onrender.com/", "https://pipelinesfyi.netlify.app/"],
     methods: ["POST", "PATCH", "DELETE", "GET"],
     credentials: true
 }
