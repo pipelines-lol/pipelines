@@ -1,1 +1,1 @@
-export const host = "https://pipelines-backend.onrender.com/"
+export const host = "https://pipelines-backend.onrender.com"
