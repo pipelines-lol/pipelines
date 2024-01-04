@@ -16,7 +16,7 @@ function EditProfile() {
     const { user } = useAuthContext();
 
     const fetchProfile = async () => {
-        fetch(`${host}//api/profile/${user.profileId}`, {
+        fetch(`${host}/api/profile/${user.profileId}`, {
             method: "GET",
             headers: {
                 'Content-Type': 'application/json' // Specify the content type as JSON
