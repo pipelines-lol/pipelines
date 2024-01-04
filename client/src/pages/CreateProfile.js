@@ -41,6 +41,7 @@ function CreateProfile() {
             setLastName(data.lastName);
             setLinkedin(data.linkedin);
             setAnonymous(data.anonymous);
+            setPipeline(data.pipeline);
         })
         .catch((error) => {
             console.error(error.message);
@@ -121,6 +122,14 @@ function CreateProfile() {
         setPipeline(newPipeline);
     }
 
+    const removeExperience = async(index) => {
+        const newPipeline = [...pipeline];
+
+        newPipeline.splice(index, 1);
+
+        setPipeline(newPipeline);
+    }
+
     return (
         <>
         
@@ -179,6 +188,7 @@ function CreateProfile() {
                                         experience={experience} 
                                         index={index} 
                                         updateExperience={updateExperience}
+                                        removeExperience={removeExperience}
                                     />
                                     <button
                                         key={index + 1}
