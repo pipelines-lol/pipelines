@@ -37,13 +37,13 @@ export const QuerySearchInput = ({ handleSearch }) => {
                 onSubmit={(e) => e.preventDefault()} // Prevent form submission
             >
                 <input
-                    className={`w-1/2 h-20 z-10 bg-gray-200 rounded-2xl text-xl p-10`}
+                    className={`w-1/2 h-20 z-20 bg-gray-200 rounded-2xl text-xl p-10`}
                     type="text"
                     value={query}
                     onChange={handleInputChange}
                     placeholder="Search companies..."
                 />
-                <div className={`bg-white w-1/2 max-h-96 -translate-y-2 overflow-y-scroll shadow-md ${hasResults ? "absolute top-full" : ""}`}>
+                <div className={`bg-white w-1/2 max-h-96 z-10 -translate-y-2 overflow-y-scroll shadow-md ${hasResults ? "absolute top-full" : ""}`}>
                     {hasResults && results.map((company) => (
                         <div className="flex flex-row justify-center items-center px-5 py-2 hover:bg-gray-100">
                             <img 
