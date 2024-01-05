@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react"
+import { ExperienceQuerySearchInput } from "./ExperienceQuerySearchInput";
 
 export const ExperienceForm = ({ experience, index, updateExperience, removeExperience }) => {
     const [company, setCompany] = useState('');
@@ -15,23 +16,10 @@ export const ExperienceForm = ({ experience, index, updateExperience, removeExpe
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
 
-    // handle experience change
     const handleExperienceChange = (e, field) => {
         const value = e.target.value;
 
-        if (field === "company") {
-
-            setCompany(value);
-
-            const newExperience = {
-                company: value,
-                title: title,
-                date: date
-            }
-
-            updateExperience(newExperience, index);
-
-        } else if (field === "title") {
+        if (field === "title") {
 
             setTitle(value);
 
@@ -58,23 +46,32 @@ export const ExperienceForm = ({ experience, index, updateExperience, removeExpe
         } 
     }
 
+    const handleCompanyChange = async (company) => {
+        setCompany(company);
+
+        const newExperience = {
+            company: company,
+            title: title,
+            date: date
+        }
+
+        updateExperience(newExperience, index);
+    }
+
     return (
         <>
                                 
             <div className="flex flex-col justify-center items-center h-96 bg-gray-200 gap-5 p-10">
                 <button 
-                    className=" self-start" 
+                    className="self-start" 
                     onClick={() => removeExperience(index)}
                 >
                     <h1>X</h1>
                 </button>
                 <div className="flex flex-col justify-center items-center">
                     <label className="text-medium">Company</label>
-                    <input 
-                        className="px-4 py-2 text-gray-800 bg-gray-100 rounded-full outline-none" 
-                        placeholder="Google"
-                        value={company}
-                        onChange={(e) => handleExperienceChange(e, "company")}
+                    <ExperienceQuerySearchInput 
+                        handleSearch={handleCompanyChange}
                     />
                 </div>
 
