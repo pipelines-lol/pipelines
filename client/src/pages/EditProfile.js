@@ -185,15 +185,16 @@ function EditProfile() {
                             pipeline.map((experience, index) => (
                                 <>
                                     <ExperienceForm
+                                        key={`experience_form_${index}`}
                                         experience={experience} 
                                         index={index} 
                                         updateExperience={updateExperience}
                                         removeExperience={removeExperience}
                                     />
                                     <button
-                                        key={index + 1}
+                                        key={`add_experience_button_${index + 1}`}
                                         className="w-10 h-10 bg-gray-200 rounded-full"
-                                        onClick={() => {addExperience(index)}}
+                                        onClick={() => {addExperience(index + 1)}}
                                     >
                                         <h1>+</h1>
                                     </button>
