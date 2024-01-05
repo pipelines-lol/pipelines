@@ -14,7 +14,7 @@ export const ExperienceQuerySearchInput = ({ value, handleSearch }) => {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
 
-    const handleInputChange = (event) => {
+    const handleInputChange = async (event) => {
         const inputValue = event.target.value;
         setQuery(inputValue);
 
@@ -26,6 +26,8 @@ export const ExperienceQuerySearchInput = ({ value, handleSearch }) => {
             setResults(filteredCompanies);
         } else {
             setResults([]);
+
+            await handleSearch("");
         }
     };
 

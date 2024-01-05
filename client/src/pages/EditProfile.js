@@ -11,6 +11,8 @@ function EditProfile() {
     const [anonymous, setAnonymous] = useState(false);
     const [pipeline, setPipeline] = useState([]);
 
+    const [errorMessage, setErrorMessage] = useState("");
+
     const navigate = useNavigate();
 
     const { user } = useAuthContext();
@@ -79,14 +81,29 @@ function EditProfile() {
         setPipeline(newPipeline);
     }
 
-    const handleEditProfile = async () => {
-
-        // TEMP CODE:
-        // handle empty values
-        // handle this in backend
-        if (!firstName || !lastName || !linkedin) {
-            return;
+    const validateSubmission = () => {
+        function checkPipelineForEmptyFields(pipeline) {
+            for (const experience of pipeline) {
+                for (const key in experience) {
+                    if (experience.hasOwnProperty(key) && typeof experience[key] === 'string' && experience[key].trim() === '') {
+                        return false;
+                    }
+                }
+            }
+            return true;
         }
+
+        // check none of the singular fields are blank
+        if (firstName === "" || lastName === "") return false;
+        if (linkedin === "") return false;
+
+        // check none of the fields in the pipeline are blank
+        if (!checkPipelineForEmptyFields(pipeline)) return false;
+
+        return true;
+    }
+
+    const handleEditProfile = async () => {
 
         const profile = {
             firstName: firstName,
@@ -94,6 +111,12 @@ function EditProfile() {
             linkedin: linkedin,
             anonymous: anonymous,
             pipeline: pipeline
+        }
+
+        // make sure no input fields are blank
+        if (!validateSubmission()) {
+            setErrorMessage("Must fill out all input fields.")
+            return;
         }
 
         fetch(`${host}/api/profile/${user.profileId}`, {
@@ -204,6 +227,12 @@ function EditProfile() {
                             ))
                         }
                     </div>
+
+                    {errorMessage && 
+                        <h1 className="text-red-400 font-light text-lg italic">
+                            {errorMessage}
+                        </h1>
+                    }
                     
                     <button 
                         className="bg-black px-12 py-2 rounded-full"
