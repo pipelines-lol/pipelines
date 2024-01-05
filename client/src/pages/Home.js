@@ -2,11 +2,11 @@ import { useState, useEffect } from "react";
 
 import { PipelineCard } from "../components/PipelineCard";
 import { host } from "../util/apiRoutes";
+import { QuerySearchInput } from "../components/QuerySearchInput";
 
 function Home() {
 
     const [profiles, setProfiles] = useState([]);
-    const [search, setSearch] = useState("");
 
     const generateProfiles = async () => {
         const size = 5;
@@ -38,13 +38,8 @@ function Home() {
         });
     }
 
-    const handleSearch = async (e) => {
-        e.preventDefault();
-        await searchProfiles();
-    }
-
-    const searchProfiles = async () => {
-        fetch(`${host}/api/pipeline/search/${search}`, {
+    const handleSearch = async (query) => {
+        fetch(`${host}/api/pipeline/search/${query}`, {
             method: "GET",
             headers: {
                 'Content-Type': 'application/json' // Specify the content type as JSON
@@ -81,16 +76,9 @@ function Home() {
             <div className="flex flex-col justify-center items-center w-full h-full bg-gray-100 gap-12">
                 <h1 className="text-black font-bold text-3xl p-8">Pipelines</h1>
 
-                <form className="flex flex-col justify-center items-center w-full gap-5" onSubmit={(e) => handleSearch(e)}>
-                    <input 
-                        className="w-1/2 h-20 bg-gray-200 rounded-2xl text-xl p-10" 
-                        type="text"
-                        onChange={(e) => setSearch(e.target.value)}
-                    />
-                    <button className="bg-white px-12 py-4 text-black font-semibold text-xl uppercase rounded-2xl" type="submit">
-                        <h1>Search</h1>
-                    </button>
-                </form>
+                <QuerySearchInput 
+                    handleSearch={handleSearch}
+                />
 
                 <div className="flex flex-col justify-center items-center min-w-1/2 gap-5 py-12">
                 {

@@ -5,13 +5,18 @@ const Navbar = () => {
     const navigate = useNavigate();
     const { user, dispatch } = useAuthContext();
 
+    const handlePipelinesClick = () => {
+        window.location.reload();
+        navigate('/');
+    };
+
     return (
         <>
         
             <div className="flex flex-row justify-between items-center w-full h-16 px-12 bg-gray-900">
                 <button 
                     className="px-8 py-2"
-                    onClick={() => navigate('/')}
+                    onClick={handlePipelinesClick}
                 >
                     <h1 className="text-white">pipelines.fyi</h1>
                 </button>

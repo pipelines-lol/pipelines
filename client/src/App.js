@@ -5,14 +5,18 @@ import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import Home from './pages/Home';
 import Login from './pages/Login';
 import Signup from './pages/Signup';
+
 import CreateProfile from './pages/CreateProfile';
+import EditProfile from './pages/EditProfile';
+
+// import Test from './testing/Test';
 
 // context
 import { useAuthContext } from "./hooks/useAuthContext";
 
 // components
 import Navbar from './components/Navbar';
-import EditProfile from './pages/EditProfile';
+
 
 function App() {
 
@@ -28,6 +32,9 @@ function App() {
           <Route path="/signup" element={<Signup />} />
           { user && <Route path="/create" element={<CreateProfile />} /> }
           { user && user.profileCreated && <Route path="/edit" element={<EditProfile />} /> }
+
+          { /* TESTING */ }
+          { /* process.env.REACT_APP_NODE_ENV === "DEV" && <Route path="/test" element={<Test />} /> */ }
         </Routes>
       </div>
     </Router>
