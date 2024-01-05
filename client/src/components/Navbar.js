@@ -6,8 +6,8 @@ const Navbar = () => {
     const { user, dispatch } = useAuthContext();
 
     const handlePipelinesClick = () => {
-        window.location.reload();
         navigate('/');
+        window.location.reload();
     };
 
     return (
