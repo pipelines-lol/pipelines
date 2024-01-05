@@ -9,7 +9,7 @@ import Signup from './pages/Signup';
 import CreateProfile from './pages/CreateProfile';
 import EditProfile from './pages/EditProfile';
 
-import Test from './testing/Test';
+// import Test from './testing/Test';
 
 // context
 import { useAuthContext } from "./hooks/useAuthContext";
