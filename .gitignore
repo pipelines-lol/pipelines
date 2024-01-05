@@ -11,6 +11,9 @@ coverage
 # Environmental Vars
 .env
 
+# Development testing
+testing/
+
 # Benchmarking
 benchmarks/graphs
 
