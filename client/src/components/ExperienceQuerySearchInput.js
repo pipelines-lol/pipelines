@@ -1,10 +1,18 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { companies } from "../data/companyData"
 
-export const ExperienceQuerySearchInput = ({ handleSearch }) => {
+export const ExperienceQuerySearchInput = ({ value, handleSearch }) => {
     const [query, setQuery] = useState("");
     const [results, setResults] = useState([]);
     let hasResults = results.length > 0;
+
+    // initialize company if one exists
+    useEffect(() => {
+        if (value) {
+            setQuery(value);
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [])
 
     const handleInputChange = (event) => {
         const inputValue = event.target.value;

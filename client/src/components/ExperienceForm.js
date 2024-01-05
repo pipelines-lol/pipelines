@@ -46,11 +46,11 @@ export const ExperienceForm = ({ experience, index, updateExperience, removeExpe
         } 
     }
 
-    const handleCompanyChange = async (company) => {
-        setCompany(company);
+    const handleCompanyChange = async (value) => {
+        setCompany(value);
 
         const newExperience = {
-            company: company,
+            company: value,
             title: title,
             date: date
         }
@@ -70,7 +70,8 @@ export const ExperienceForm = ({ experience, index, updateExperience, removeExpe
                 </button>
                 <div className="flex flex-col justify-center items-center">
                     <label className="text-medium">Company</label>
-                    <ExperienceQuerySearchInput 
+                    <ExperienceQuerySearchInput
+                        value={experience.company}
                         handleSearch={handleCompanyChange}
                     />
                 </div>
