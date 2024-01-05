@@ -11,6 +11,8 @@ function CreateProfile() {
     const [anonymous, setAnonymous] = useState(false);
     const [pipeline, setPipeline] = useState([]);
 
+    const [errorMessage, setErrorMessage] = useState("");
+
     const navigate = useNavigate();
 
     const { user, dispatch } = useAuthContext();
@@ -246,6 +248,12 @@ function CreateProfile() {
                             ))
                         }
                     </div>
+
+                    {errorMessage && 
+                        <h1 className="text-red-400 font-light text-lg italic">
+                            {errorMessage}
+                        </h1>
+                    }
                     
                     <button 
                         className="bg-black px-12 py-2 rounded-full"
