@@ -5,6 +5,7 @@ import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import Home from './pages/Home';
 import Login from './pages/Login';
 import Signup from './pages/Signup';
+import Test from './testing/Test';
 import CreateProfile from './pages/CreateProfile';
 
 // context
@@ -28,6 +29,9 @@ function App() {
           <Route path="/signup" element={<Signup />} />
           { user && <Route path="/create" element={<CreateProfile />} /> }
           { user && user.profileCreated && <Route path="/edit" element={<EditProfile />} /> }
+
+          { /* TESTING */ }
+          { process.env.REACT_APP_NODE_ENV === "DEV" && <Route path="/test" element={<Test />} /> }
         </Routes>
       </div>
     </Router>
