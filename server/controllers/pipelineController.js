@@ -34,7 +34,7 @@ const getRandomPipelines = async(req, res) => {
     const { size } = req.params
 
     const randomProfiles = await Profile.aggregate([
-        { $match: { created: true } },
+        { $match: { created: true, 'pipeline.0': { $exists: true } } },
         { $sample: { size: Number(size) } }
     ]);
     

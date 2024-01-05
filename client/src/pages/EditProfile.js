@@ -103,6 +103,13 @@ function EditProfile() {
         return true;
     }
 
+    const validateLinkedinField = () => {
+        // Regular expression to match LinkedIn profile URLs
+        const linkedinRegex = /^(https?:\/\/)?(www\.)?linkedin\.com\/in\/[a-zA-Z0-9-]+\/?$/;
+        
+        return linkedinRegex.test(linkedin);
+    }
+
     const handleEditProfile = async () => {
 
         const profile = {
@@ -116,6 +123,12 @@ function EditProfile() {
         // make sure no input fields are blank
         if (!validateSubmission()) {
             setErrorMessage("Must fill out all input fields.")
+            return;
+        }
+
+        // make sure linkedin link is valid
+        if (!validateLinkedinField()) {
+            setErrorMessage("Invalid Linkedin URL.")
             return;
         }
 
