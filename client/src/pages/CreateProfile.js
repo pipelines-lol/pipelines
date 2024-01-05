@@ -48,6 +48,28 @@ function CreateProfile() {
         });
     }
 
+    const validateSubmission = () => {
+        function checkPipelineForEmptyFields(pipeline) {
+            for (const experience of pipeline) {
+                for (const key in experience) {
+                    if (experience.hasOwnProperty(key) && typeof experience[key] === 'string' && experience[key].trim() === '') {
+                        return false;
+                    }
+                }
+            }
+            return true;
+        }
+
+        // check none of the singular fields are blank
+        if (firstName === "" || lastName === "") return false;
+        if (linkedin === "") return false;
+
+        // check none of the fields in the pipeline are blank
+        if (!checkPipelineForEmptyFields(pipeline)) return false;
+
+        return true;
+    }
+
     const updateProfile = async () => {
         
         const profile = {
@@ -58,6 +80,12 @@ function CreateProfile() {
             pipeline: pipeline,
             created: true
         };
+
+        // make sure no input fields are blank
+        if (!validateSubmission()) {
+            // TODO: add error message
+            return;
+        }
 
         fetch(`${host}/api/profile/${user.profileId}`, {
             method: "PATCH",
