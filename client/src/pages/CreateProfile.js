@@ -11,6 +11,8 @@ function CreateProfile() {
     const [anonymous, setAnonymous] = useState(false);
     const [pipeline, setPipeline] = useState([]);
 
+    const [errorMessage, setErrorMessage] = useState("");
+
     const navigate = useNavigate();
 
     const { user, dispatch } = useAuthContext();
@@ -70,6 +72,13 @@ function CreateProfile() {
         return true;
     }
 
+    const validateLinkedinField = () => {
+        // Regular expression to match LinkedIn profile URLs
+        const linkedinRegex = /^(https?:\/\/)?(www\.)?linkedin\.com\/in\/[a-zA-Z0-9-]+\/?$/;
+        
+        return linkedinRegex.test(linkedin);
+    }
+
     const updateProfile = async () => {
         
         const profile = {
@@ -83,7 +92,13 @@ function CreateProfile() {
 
         // make sure no input fields are blank
         if (!validateSubmission()) {
-            // TODO: add error message
+            setErrorMessage("Must fill out all input fields.")
+            return;
+        }
+
+        // make sure linkedin link is valid
+        if (!validateLinkedinField()) {
+            setErrorMessage("Invalid Linkedin URL.")
             return;
         }
 
@@ -233,6 +248,12 @@ function CreateProfile() {
                             ))
                         }
                     </div>
+
+                    {errorMessage && 
+                        <h1 className="text-red-400 font-light text-lg italic">
+                            {errorMessage}
+                        </h1>
+                    }
                     
                     <button 
                         className="bg-black px-12 py-2 rounded-full"
