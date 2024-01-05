@@ -69,6 +69,14 @@ function EditProfile() {
         setPipeline(newPipeline);
     }
 
+    const removeExperience = async(index) => {
+        const newPipeline = [...pipeline];
+
+        newPipeline.splice(index, 1);
+
+        setPipeline(newPipeline);
+    }
+
     const handleEditProfile = async () => {
 
         // TEMP CODE:
@@ -180,6 +188,7 @@ function EditProfile() {
                                         experience={experience} 
                                         index={index} 
                                         updateExperience={updateExperience}
+                                        removeExperience={removeExperience}
                                     />
                                     <button
                                         key={index + 1}
