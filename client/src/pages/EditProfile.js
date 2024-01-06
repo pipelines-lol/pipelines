@@ -44,8 +44,6 @@ function EditProfile() {
             setLinkedin(data.linkedin);
             setAnonymous(data.anonymous);
             setPipeline(data.pipeline);
-
-            console.log(data);
         })
         .catch((error) => {
             console.error(error.message);
