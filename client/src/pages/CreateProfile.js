@@ -124,8 +124,7 @@ function CreateProfile() {
             return res.json();
         })
         .then((data) => {
-            console.log(data);
-
+            
             // set user data
             dispatch({ type: 'CREATED' });
 
