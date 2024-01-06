@@ -8,6 +8,7 @@ const cors = require('cors')
 const authRoutes = require("./routes/auth")
 const profileRoutes = require('./routes/profiles')
 const pipelineRoutes = require('./routes/pipelines')
+const mongodbIdRoutes = require('./routes/mongodbId')
 
 dotenv.config()
 const app = express()
@@ -37,5 +38,6 @@ app.get("/", (req, res) => {
 app.use('/api/user', authRoutes)
 app.use('/api/profile', profileRoutes)
 app.use('/api/pipeline', pipelineRoutes)
+app.use('/api/mongodbId', mongodbIdRoutes)
 
 app.listen(PORT, () => console.log("Server is running."))
