@@ -220,7 +220,7 @@ function CreateProfile() {
                         <button
                             key={`add_experience_button_0`}
                             className="w-10 h-10 bg-gray-200 rounded-full"
-                            onClick={() => {addExperience(0)}}
+                            onClick={() => addExperience(0)}
                         >
                             <h1>+</h1>
                         </button>

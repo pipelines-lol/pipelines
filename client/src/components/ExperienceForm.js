@@ -14,7 +14,7 @@ export const ExperienceForm = ({ experience, index, updateExperience, removeExpe
             setDate(experience.date);
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [])
+    }, [experience])
 
     const handleExperienceChange = (e, field) => {
         const value = e.target.value;
@@ -71,7 +71,7 @@ export const ExperienceForm = ({ experience, index, updateExperience, removeExpe
                 <div className="flex flex-col justify-center items-center">
                     <label className="text-medium">Company</label>
                     <ExperienceQuerySearchInput
-                        value={experience.company}
+                        value={company}
                         handleSearch={handleCompanyChange}
                     />
                 </div>
