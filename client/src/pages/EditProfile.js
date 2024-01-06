@@ -221,7 +221,10 @@ function EditProfile() {
                         </button>
                         {
                             pipeline.map((experience, index) => (
-                                <>
+                                <div 
+                                    key={`experience_${index}`}
+                                    className="flex flex-row justify-center items-center gap-3"
+                                >
                                     <ExperienceForm
                                         key={`experience_form_${index}`}
                                         experience={experience} 
@@ -236,7 +239,7 @@ function EditProfile() {
                                     >
                                         <h1>+</h1>
                                     </button>
-                                </>
+                                </div>
                             ))
                         }
                     </div>
