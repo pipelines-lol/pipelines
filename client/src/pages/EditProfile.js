@@ -44,8 +44,6 @@ function EditProfile() {
             setLinkedin(data.linkedin);
             setAnonymous(data.anonymous);
             setPipeline(data.pipeline);
-
-            console.log(data);
         })
         .catch((error) => {
             console.error(error.message);
@@ -215,13 +213,16 @@ function EditProfile() {
                         <button
                             key={0}
                             className="w-10 h-10 bg-gray-200 rounded-full"
-                            onClick={() => {addExperience(0)}}
+                            onClick={() => addExperience(0)}
                         >
                             <h1>+</h1>
                         </button>
                         {
                             pipeline.map((experience, index) => (
-                                <>
+                                <div 
+                                    key={`experience_${index}`}
+                                    className="flex flex-row justify-center items-center gap-3"
+                                >
                                     <ExperienceForm
                                         key={`experience_form_${index}`}
                                         experience={experience} 
@@ -236,7 +237,7 @@ function EditProfile() {
                                     >
                                         <h1>+</h1>
                                     </button>
-                                </>
+                                </div>
                             ))
                         }
                     </div>

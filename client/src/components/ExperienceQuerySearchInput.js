@@ -8,11 +8,17 @@ export const ExperienceQuerySearchInput = ({ value, handleSearch }) => {
 
     // initialize company if one exists
     useEffect(() => {
+
+        // reset query before checking if theres a previous value
+        setQuery("");
+
+        // check if there was a previous value
+        // if there was, set query to it
         if (value) {
             setQuery(value);
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [])
+    }, [value])
 
     const handleInputChange = async (event) => {
         const inputValue = event.target.value;
