@@ -14,7 +14,7 @@ function Profile () {
     
     // for searching through profiles that have
     // id as a username instead of id
-    const [profiles, setProfiles] = useState([]);
+    // const [profiles, setProfiles] = useState([]);
 
     const { user } = useAuthContext();
     const [loading, setLoading] = useState(true);
@@ -253,7 +253,7 @@ function Profile () {
         }
 
         fetchInfo();
-    }, [id]);
+    }, [id, fetchProfile]);
 
     const admin = user && (user.profileId === id || user.username === id);
 
@@ -272,6 +272,7 @@ function Profile () {
                             <img 
                                 src={"/avatar.png"}
                                 className="w-96 h-96 rounded-full"
+                                alt={`${profile._id}_avatar`}
                             />
 
                             { admin ? (
