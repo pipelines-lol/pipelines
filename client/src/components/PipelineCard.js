@@ -1,14 +1,14 @@
 import { companies } from "../data/companyData";
+import { homepage } from "../util/apiRoutes";
 import { ConditionalLink } from "./ConditionalLink"
 
-export const PipelineCard = ({ name, linkedin, anonymous, pipeline }) => {
+export const PipelineCard = ({ profileId, name, linkedin, anonymous, pipeline }) => {
     return (
         <div className='flex flex-row justify-center items-center bg-gray-200 w-full p-12 rounded-2xl gap-10' key={pipeline._id}>
             <div className="flex flex-col justify-center items-center gap-3">
                 <ConditionalLink
                     condition={!anonymous}
-                    to={linkedin}
-                    target="_blank"
+                    to={`/user/${profileId}`}
                 >
                     <img 
                         className='w-36 h-36 rounded-full' 
@@ -34,13 +34,13 @@ export const PipelineCard = ({ name, linkedin, anonymous, pipeline }) => {
     )
 }
 
-const ExperienceCard = ({ experience }) => {
+export const ExperienceCard = ({ experience }) => {
     function getLogoByName(companyName) {
         const foundCompany = companies.find(company => company.name === companyName);
         return foundCompany ? foundCompany.logo : null;
     }
 
-    const logo = `logos/${getLogoByName(experience.company)}`;
+    const logo = `${homepage}/logos/${getLogoByName(experience.company)}`;
 
     return (
         <div className="flex flex-col justify-center items-center gap-3" key={experience._id}>
