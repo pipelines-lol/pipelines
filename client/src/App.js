@@ -6,6 +6,7 @@ import Home from './pages/Home';
 import Login from './pages/Login';
 import Signup from './pages/Signup';
 
+import Profile from './pages/Profile';
 import CreateProfile from './pages/CreateProfile';
 import EditProfile from './pages/EditProfile';
 
@@ -32,6 +33,9 @@ function App() {
           <Route path="/signup" element={<Signup />} />
           { user && <Route path="/create" element={<CreateProfile />} /> }
           { user && user.profileCreated && <Route path="/edit" element={<EditProfile />} /> }
+
+          { /* User Profiles */ }
+          <Route path="/user/:id" element={<Profile />} />
 
           { /* TESTING */ }
           { /* process.env.REACT_APP_NODE_ENV === "DEV" && <Route path="/test" element={<Test />} /> */ }

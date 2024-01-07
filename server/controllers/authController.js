@@ -17,7 +17,7 @@ const loginUser = async (req, res) => {
         // create token
         const token = createToken(user._id)
 
-        res.status(200).json({ email, _id: user._id, profileId: profile._id, profileCreated: profile.created, token })
+        res.status(200).json({ email, _id: user._id, profileId: profile._id, profileCreated: profile.created, username: profile.username, token })
     } catch (error) {
         res.status(400).json({ error: error.message })
     }
@@ -33,7 +33,10 @@ const signupUser = async (req, res) => {
         const profile = await Profile.create({ 
             userId: user._id, 
             name: '',
+            username: '',
             linkedin: '',
+            position: '',
+            location: '',
             anonymous: false,
             pipeline: [],
             created: false
@@ -45,7 +48,7 @@ const signupUser = async (req, res) => {
         // create token
         const token = createToken(user._id)
 
-        res.status(200).json({ email, _id: user._id, profileId: profile._id, profileCreated: profile.created, token })
+        res.status(200).json({ email, _id: user._id, profileId: profile._id, profileCreated: profile.created, username: profile.username, token })
     } catch (error) {
         res.status(400).json({ error: error.message })
     }

@@ -85,6 +85,7 @@ function Home() {
                     profiles.map((profile) => (
                         <PipelineCard
                             key={`pipeline_${profile._id}`}
+                            profileId={profile._id}
                             name={profile.firstName + ' ' + profile.lastName}
                             linkedin={profile.linkedin}
                             anonymous={profile.anonymous}

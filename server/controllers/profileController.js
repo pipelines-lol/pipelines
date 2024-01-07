@@ -45,28 +45,25 @@ const deleteProfile = async (req, res) => {
 
 // UPDATE a poll
 const updateProfile = async (req, res) => {
-    const { id } = req.params
-    const { firstName, lastName, linkedin, anonymous, pipeline, created } = req.body
+    const { id } = req.params;
 
     if (!mongoose.Types.ObjectId.isValid(id)) {
-        return res.status(404).json({error: 'No such Profile.'})
+        return res.status(404).json({ error: 'No such Profile.' });
     }
 
-    const profile = await Profile.findOneAndUpdate({ _id: id }, {
-        firstName, 
-        lastName,
-        linkedin, 
-        anonymous,
-        pipeline,
-        created
-    })
+    try {
+        const profile = await Profile.findOneAndUpdate({ _id: id }, req.body, { new: true });
 
-    if (!profile) {
-        return res.status(404).json({error: 'No such Profile.'})
+        if (!profile) {
+            return res.status(404).json({ error: 'No such Profile.' });
+        }
+
+        res.status(200).json(profile);
+    } catch (error) {
+        console.error(error.message);
+        res.status(500).json({ error: 'Internal Server Error.' });
     }
-
-    res.status(200).json(profile)
-}
+};
 
 module.exports = {
     getProfiles, 

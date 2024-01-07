@@ -7,7 +7,6 @@ import { host } from "../util/apiRoutes";
 function EditProfile() {
     const [firstName, setFirstName] = useState('');
     const [lastName, setLastName] = useState('');
-    const [linkedin, setLinkedin] = useState('');
     const [anonymous, setAnonymous] = useState(false);
     const [pipeline, setPipeline] = useState([]);
 
@@ -41,7 +40,6 @@ function EditProfile() {
         .then((data) => {
             setFirstName(data.firstName);
             setLastName(data.lastName);
-            setLinkedin(data.linkedin);
             setAnonymous(data.anonymous);
             setPipeline(data.pipeline);
         })
@@ -93,7 +91,6 @@ function EditProfile() {
 
         // check none of the singular fields are blank
         if (firstName === "" || lastName === "") return false;
-        if (linkedin === "") return false;
 
         // check none of the fields in the pipeline are blank
         if (!checkPipelineForEmptyFields(pipeline)) return false;
@@ -101,19 +98,11 @@ function EditProfile() {
         return true;
     }
 
-    const validateLinkedinField = () => {
-        // Regular expression to match LinkedIn profile URLs
-        const linkedinRegex = /^(https?:\/\/)?(www\.)?linkedin\.com\/in\/[a-zA-Z0-9-]+\/?$/;
-        
-        return linkedinRegex.test(linkedin);
-    }
-
     const handleEditProfile = async () => {
 
         const profile = {
             firstName: firstName,
             lastName: lastName,
-            linkedin: linkedin,
             anonymous: anonymous,
             pipeline: pipeline
         }
@@ -121,12 +110,6 @@ function EditProfile() {
         // make sure no input fields are blank
         if (!validateSubmission()) {
             setErrorMessage("Must fill out all input fields.")
-            return;
-        }
-
-        // make sure linkedin link is valid
-        if (!validateLinkedinField()) {
-            setErrorMessage("Invalid Linkedin URL.")
             return;
         }
 
@@ -189,13 +172,6 @@ function EditProfile() {
                                 />
                             </div>
                         </div>
-                        <label className="text-medium">Linkedin</label>
-                        <input 
-                            className="px-4 py-2 text-gray-800 bg-gray-100 rounded-full outline-none" 
-                            placeholder="https://www.linkedin.com/john-doe"
-                            value={linkedin}
-                            onChange={(e) => setLinkedin(e.target.value)}
-                        />
 
                         <label className="relative inline-flex items-center cursor-pointer">
                             <input 
