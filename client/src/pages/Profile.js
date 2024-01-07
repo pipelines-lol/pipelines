@@ -285,7 +285,9 @@ function Profile () {
         }
 
         fetchInfo();
-    }, [id, fetchProfile, fetchProfiles]);
+
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [id]);
 
     const admin = user && (user.profileId === id || user.username === id);
 
