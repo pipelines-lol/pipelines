@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react"
 import { ExperienceQuerySearchInput } from "./ExperienceQuerySearchInput";
+import { TitleQuerySearchInput } from "./TitleQuerySearchInput";
 
 export const ExperienceForm = ({ experience, index, updateExperience, removeExperience }) => {
     const [company, setCompany] = useState('');
@@ -18,20 +19,8 @@ export const ExperienceForm = ({ experience, index, updateExperience, removeExpe
 
     const handleExperienceChange = (e, field) => {
         const value = e.target.value;
-
-        if (field === "title") {
-
-            setTitle(value);
-
-            const newExperience = {
-                company: company,
-                title: value,
-                date: date
-            }
-
-            updateExperience(newExperience, index);
             
-        } else if (field === "date") {
+        if (field === "date") {
 
             setDate(value);
 
@@ -58,6 +47,18 @@ export const ExperienceForm = ({ experience, index, updateExperience, removeExpe
         updateExperience(newExperience, index);
     }
 
+    const handleTitleChange = async (value) => {
+        setTitle(value);
+
+        const newExperience = {
+            company: company,
+            title: value,
+            date: date
+        }
+
+        updateExperience(newExperience, index);
+    }
+
     return (
         <>
                                 
@@ -78,11 +79,9 @@ export const ExperienceForm = ({ experience, index, updateExperience, removeExpe
 
                 <div className="flex flex-col justify-center items-center">
                     <label className="text-medium">Title</label>
-                    <input 
-                        className="px-4 py-2 text-gray-800 bg-gray-100 rounded-full outline-none" 
-                        placeholder="Software Engineer"
+                    <TitleQuerySearchInput 
                         value={title}
-                        onChange={(e) => handleExperienceChange(e, "title")}
+                        handleSearch={handleTitleChange}
                     />
                 </div>
 

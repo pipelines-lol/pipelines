@@ -10,10 +10,13 @@ const Experience = new mongoose.Schema({
 });
 
 const profileSchema = new Schema({
-    userId: String, 
+    userId: String,
     firstName: String,
     lastName: String,
+    username: String,
     linkedin: String,
+    position: String,
+    location: String,
     anonymous: Boolean,
     pipeline: [Experience],
     created: Boolean

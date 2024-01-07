@@ -1,4 +1,4 @@
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useAuthContext } from "../hooks/useAuthContext";
 
 const Navbar = () => {
@@ -45,6 +45,16 @@ const Navbar = () => {
                                 user.profileCreated ? ( 
                                     <>
                                         
+                                        <Link
+                                            to={`/user/${user.profileId}`}
+                                        >
+                                            <img 
+                                                src={"/avatar.png"}
+                                                className="w-12 h-12 rounded-full"
+                                                alt={"user_pfp"}
+                                            />
+                                        </Link>
+
                                         <button
                                             className="bg-white px-8 py-2 rounded-full"
                                             onClick={() => navigate('/edit')}
