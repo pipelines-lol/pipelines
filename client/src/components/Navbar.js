@@ -18,7 +18,7 @@ const Navbar = () => {
                     className="px-8 py-2"
                     onClick={handlePipelinesClick}
                 >
-                    <h1 className="text-white">pipelines.fyi</h1>
+                    <h1 className="text-white">pipelines.lol</h1>
                 </button>
                 <div className="flex flex-row gap-5">
 
