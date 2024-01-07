@@ -7,12 +7,20 @@ function Signup() {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
 
+    const [errorMessage, setErrorMessage] = useState('');
+
     const { dispatch } = useAuthContext();
 
     const navigate = useNavigate();
     
     const signUp = (email, password) => {
         const _user = { email, password };
+
+        // validation
+        if (email.includes(" ") || password.includes(" ")) {
+            setErrorMessage("Invalid username or password.");
+            return;
+        } 
 
         fetch(`${host}/api/user/signup`, {
             method: "POST",
@@ -32,14 +40,11 @@ function Signup() {
                     throw new Error(`HTTP error! Status: ${res.status}`);
                 }
             }
-            console.log('User signed up successfully!');
 
             return res.json();
         })
         .then((data) => {
             localStorage.setItem('user', JSON.stringify(data));
-
-            console.log(data);
 
             // update AuthContext
             dispatch({ type: "LOGIN", payload: data });
@@ -48,7 +53,7 @@ function Signup() {
             navigate('/');
         })
         .catch((error) => {
-            console.error(error.message);
+            setErrorMessage(error.message);
         });
     }
 
@@ -56,7 +61,7 @@ function Signup() {
         <>
         
             <div className="flex justify-center items-center w-full h-full bg-gray-100">
-                <div className="flex flex-col justify-center items-center w-96 h-2/3 bg-white shadow-md gap-10">
+                <div className="flex flex-col justify-center items-center w-96 h-2/3 bg-white shadow-md py-10 gap-10">
                     <h1 className="text-black font-semibold text-2xl tracking-wide uppercase">Signup</h1>
 
                     <div className="flex flex-col gap-3">
@@ -77,6 +82,10 @@ function Signup() {
                             onChange={(e) => setPassword(e.target.value)}
                         />
                     </div>
+
+                    { errorMessage &&
+                        <h1 className="text-red-400">{errorMessage}</h1>
+                    }
                     
                     <button 
                         className="bg-black px-12 py-2 rounded-full"

@@ -122,6 +122,13 @@ function Profile () {
                 profile.username.toLowerCase() === username.toLowerCase()
             );
 
+            // check if the one profile there is the current user's
+            if (filteredProfiles.length === 1) {
+                const filteredProfile = filteredProfiles[0];
+
+                return profile.username === filteredProfile.username;
+            }
+
             return filteredProfiles.length === 0;
         }
 
@@ -268,9 +275,7 @@ function Profile () {
                     throw new Error(`HTTP error! Status: ${response.status}`);
                 }
             }
-    
-            const data = await response.json();
-            console.log(data);
+            
         } catch (error) {
             console.error(error.message);
         }
