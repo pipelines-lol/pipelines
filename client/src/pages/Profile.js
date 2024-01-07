@@ -14,7 +14,7 @@ function Profile () {
     
     // for searching through profiles that have
     // id as a username instead of id
-    // const [profiles, setProfiles] = useState([]);
+    const [profiles, setProfiles] = useState([]);
 
     const { user } = useAuthContext();
     const [loading, setLoading] = useState(true);
@@ -76,6 +76,37 @@ function Profile () {
         } else {
             setProfile(null);
         }
+
+    }
+
+    const fetchProfiles = async () => {
+
+        fetch(`${host}/api/profile/`, {
+            method: "GET",
+            headers: {
+                'Content-Type': 'application/json' // Specify the content type as JSON
+            }
+        })
+        .then((res) => {
+            if (!res.ok) {
+                // Check if the response has JSON content
+                if (res.headers.get('content-type')?.includes('application/json')) {
+                    return res.json().then((errorData) => {
+                        throw new Error(`${errorData.error}`);
+                    });
+                } else {
+                    throw new Error(`HTTP error! Status: ${res.status}`);
+                }
+            }
+
+            return res.json();
+        })
+        .then((data) => {
+            setProfiles(data);
+        })
+        .catch((error) => {
+            console.error(error.message);
+        });
 
     }
 
@@ -250,10 +281,11 @@ function Profile () {
     useEffect(() => {
         const fetchInfo = async () => {
             await fetchProfile();
+            await fetchProfiles();
         }
 
         fetchInfo();
-    }, [id, fetchProfile]);
+    }, [id, fetchProfile, fetchProfiles]);
 
     const admin = user && (user.profileId === id || user.username === id);
 
