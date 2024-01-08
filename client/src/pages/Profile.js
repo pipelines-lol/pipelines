@@ -26,7 +26,7 @@ function Profile () {
     const [linkedin, setLinkedin] = useState('');
     const [linkedinErrorMessage, setLinkedinErrorMessage] = useState('');
 
-    const [location, setLocation] = useState('New York, NY');
+    const [location, setLocation] = useState('');
 
     const hasError = 
         usernameErrorMessage.length !== 0 &&
@@ -64,6 +64,7 @@ function Profile () {
 
                 setUsername(data.username);
                 setLinkedin(extractLinkedinUsername(data.linkedin));
+                setLocation(data.location);
             })
             .catch((error) => {
                 console.error(error.message);
@@ -275,6 +276,9 @@ function Profile () {
                     throw new Error(`HTTP error! Status: ${response.status}`);
                 }
             }
+            
+            const data = await response.json();
+            console.log(data);
             
         } catch (error) {
             console.error(error.message);

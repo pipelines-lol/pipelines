@@ -49,12 +49,27 @@ function CreateProfile() {
     }
 
     const validateSubmission = () => {
+        function isValidDateFormat(date) {
+            return !date.contains("undefined");
+        }
+
         function checkPipelineForEmptyFields(pipeline) {
             for (const experience of pipeline) {
                 for (const key in experience) {
-                    if (experience.hasOwnProperty(key) && typeof experience[key] === 'string' && experience[key].trim() === '') {
-                        return false;
+                    if (experience.hasOwnProperty(key)) {
+
+                        // validate date
+                        if (key === 'date' && !isValidDateFormat(experience[key])) {
+                            console.log(experience[key])
+                            return false;
+                        }
+
+                        // empty field
+                        if (typeof experience[key] === 'string' && experience[key].trim() === '') {
+                            return false;
+                        }
                     }
+
                 }
             }
             return true;
@@ -195,7 +210,7 @@ function CreateProfile() {
                         <button
                             key={`add_experience_button_0`}
                             className="w-10 h-10 bg-gray-200 rounded-full"
-                            onClick={() => addExperience(0)}
+                            onClick={(e) => addExperience(0)}
                         >
                             <h1>+</h1>
                         </button>
