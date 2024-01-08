@@ -78,12 +78,26 @@ function EditProfile() {
     }
 
     const validateSubmission = () => {
+        function isValidDateFormat(date) {
+            return !date.includes("undefined");
+        }
+
         function checkPipelineForEmptyFields(pipeline) {
             for (const experience of pipeline) {
                 for (const key in experience) {
-                    if (experience.hasOwnProperty(key) && typeof experience[key] === 'string' && experience[key].trim() === '') {
-                        return false;
+                    if (experience.hasOwnProperty(key)) {
+
+                        // validate date
+                        if (key === 'date' && !isValidDateFormat(experience[key])) {
+                            return false;
+                        }
+
+                        // empty field
+                        if (typeof experience[key] === 'string' && experience[key].trim() === '') {
+                            return false;
+                        }
                     }
+
                 }
             }
             return true;

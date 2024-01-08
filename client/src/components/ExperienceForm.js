@@ -11,8 +11,6 @@ export const ExperienceForm = ({ experience, index, updateExperience, removeExpe
     // initialize experience if one exists
     useEffect(() => {
         if (experience) {
-            console.log(experience);
-
             setCompany(experience.company);
             setTitle(experience.title);
             
@@ -76,8 +74,6 @@ export const ExperienceForm = ({ experience, index, updateExperience, removeExpe
       
         return outputDate;
       }
-
-    console.log(`${startDate} - ${endDate}`)
  
     const handleExperienceChange = (e, field) => {
         const value = e.target.value;
