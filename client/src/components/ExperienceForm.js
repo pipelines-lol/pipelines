@@ -11,14 +11,23 @@ export const ExperienceForm = ({ experience, index, updateExperience, removeExpe
     // initialize experience if one exists
     useEffect(() => {
         if (experience) {
+            console.log(experience);
+
             setCompany(experience.company);
             setTitle(experience.title);
             
-            let [start, end] = experience.date.split('-');
-            start = start.trim();
-            end = end.trim();
+            let start, end;
 
-            console.log(convertDateFormat(start), convertDateFormat(end));
+            // Check if date property exists and is not empty
+            if (experience.date && experience.date !== "") {
+                [start, end] = experience.date.split('-');
+
+                start = start.trim();
+                end = end.trim();
+            } else {
+                // Set default values if date is empty or undefined
+                [start, end] = ["", ""];
+            }
 
             setStartDate(convertDateFormat(start));
             setEndDate(convertDateFormat(end));
@@ -44,6 +53,11 @@ export const ExperienceForm = ({ experience, index, updateExperience, removeExpe
     }
 
     function convertDateFormat(inputDate) {
+        // edge case: blank date
+        if (inputDate === "") {
+            return "";
+        }
+
         // Split the input date string into month and year
         const [month, year] = inputDate.split(' ');
       
