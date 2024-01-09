@@ -535,6 +535,14 @@ export const companies = [
         name: "Kayak", 
         logo: "Kayak.png" 
     },
+    {
+        name: "Berkshire Hathaway",
+        logo: "Berkshire_Hathaway.png"
+    },
+    {
+        name: "UserTesting",
+        logo: "UserTesting.png"
+    }
 ]
 
 export const titles = [
