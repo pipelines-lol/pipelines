@@ -24,7 +24,7 @@ function Profile () {
 
     const [saveable, setSaveable] = useState(false);
 
-    const [pfp, setPfp] = useState(null);
+    // const [pfp, setPfp] = useState(null);
     const [username, setUsername] = useState('');
     const [usernameErrorMessage, setUsernameErrorMessage] = useState('');
     const [linkedin, setLinkedin] = useState('');
@@ -278,30 +278,30 @@ function Profile () {
         }
 
         // upload profile picture seperately
-        const formData = new FormData();
-        formData.append("pfp", pfp);
+        // const formData = new FormData();
+        // formData.append("pfp", pfp);
 
-        try {
-            const response = await fetch(`${host}/api/pfp/${user.profileId}`, {
-                method: "PATCH",
-                headers: {
-                    'Content-Type': 'application/json' // Specify the content type as JSON
-                },
-                body: JSON.stringify(formData)
-            });
+        // try {
+        //     const response = await fetch(`${host}/api/pfp/${user.profileId}`, {
+        //         method: "PATCH",
+        //         headers: {
+        //             'Content-Type': 'application/json' // Specify the content type as JSON
+        //         },
+        //         body: JSON.stringify(formData)
+        //     });
     
-            if (!response.ok) {
-                // Check if the response has JSON content
-                if (response.headers.get('content-type')?.includes('application/json')) {
-                    const errorData = await response.json();
-                    throw new Error(`${errorData.error}`);
-                } else {
-                    throw new Error(`HTTP error! Status: ${response.status}`);
-                }
-            }
-        } catch (error) {
-            console.error(error.message);
-        }
+        //     if (!response.ok) {
+        //         // Check if the response has JSON content
+        //         if (response.headers.get('content-type')?.includes('application/json')) {
+        //             const errorData = await response.json();
+        //             throw new Error(`${errorData.error}`);
+        //         } else {
+        //             throw new Error(`HTTP error! Status: ${response.status}`);
+        //         }
+        //     }
+        // } catch (error) {
+        //     console.error(error.message);
+        // }
     
         setSaveable(false);
     };
