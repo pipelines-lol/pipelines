@@ -6,7 +6,8 @@ import { useAuthContext } from "../hooks/useAuthContext";
 
 import { ExperienceCard } from "../components/PipelineCard";
 
-import { MapPin } from 'lucide-react';
+import { MapPin, PencilLine } from 'lucide-react';
+import Loading from "./Loading";
 
 function Profile () {
     const { id } = useParams();
@@ -301,7 +302,7 @@ function Profile () {
     const admin = user && (user.profileId === id || user.username === id);
 
     if (loading) {
-        return <div>Loading</div>
+        return <Loading />
     }
 
     return (
@@ -312,11 +313,28 @@ function Profile () {
                         
                         {/* Profile picture + few fields */}
                         <div className="flex flex-col justify-center items-center bg-white w-1/3 h-full p-10 gap-5 shadow-md">
-                            <img 
-                                src={"/avatar.png"}
-                                className="w-96 h-96 rounded-full"
-                                alt={`${profile._id}_avatar`}
-                            />
+                            
+                            { admin ? (
+                                    <div className="relative w-96 h-96 rounded-full overflow-hidden">
+                                        <img 
+                                            src={"/avatar.png"}
+                                            className="w-full h-full object-cover rounded-full transition-transform transform hover:scale-105"
+                                            alt={`${profile._id}_avatar`}
+                                        />
+                                        <div className="absolute top-0 left-0 w-full h-full flex items-center justify-center opacity-0 hover:opacity-100">
+                                            <PencilLine 
+                                                className="w-12 h-12 text-gray-200 hover:text-gray-300 transition-transform transform hover:scale-110 cursor-pointer"
+                                            />
+                                        </div>
+                                    </div>
+                                ) : (
+                                    <img 
+                                        src={"/avatar.png"}
+                                        className="w-96 h-96 rounded-full"
+                                        alt={`${profile._id}_avatar`}
+                                    />
+                                )
+                            }
 
                             { admin ? (
                                 <div className="flex flex-col justify-center items-center gap-3">

@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { useAuthContext } from "../hooks/useAuthContext";
 import { ExperienceForm } from "../components/ExperienceForm";
 import { host } from "../util/apiRoutes";
+import Loading from "./Loading";
 
 function CreateProfile() {
     const [firstName, setFirstName] = useState('');
@@ -10,6 +11,7 @@ function CreateProfile() {
     const [anonymous, setAnonymous] = useState(false);
     const [pipeline, setPipeline] = useState([]);
 
+    const [loading, setLoading] = useState(true);
     const [errorMessage, setErrorMessage] = useState("");
 
     const navigate = useNavigate();
@@ -42,6 +44,8 @@ function CreateProfile() {
             setLastName(data.lastName);
             setAnonymous(data.anonymous);
             setPipeline(data.pipeline);
+
+            setLoading(false);
         })
         .catch((error) => {
             console.error(error.message);
@@ -168,6 +172,10 @@ function CreateProfile() {
         newPipeline.splice(index, 1);
 
         setPipeline(newPipeline);
+    }
+
+    if (loading) {
+        return <Loading />
     }
 
     return (
