@@ -56,7 +56,7 @@ function CreateProfile() {
 
     const validateSubmission = () => {
         function isValidDateFormat(date) {
-            return !date.contains("undefined");
+            return !date.includes("undefined");
         }
 
         function checkPipelineForEmptyFields(pipeline) {
