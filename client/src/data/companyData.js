@@ -550,7 +550,323 @@ export const companies = [
     {
         name: "Epic Systems",
         logo: "Epic_Systems.png"
-    }
+    },
+    {
+        name: "3M",
+        logo: "3M.png"
+    },
+    {
+        name: "Abbot Laboratories",
+        logo: "Abbot_Laboratories.png"
+    },
+    {
+        name: "AbbVie",
+        logo: "AbbVie.png"
+    },
+    {
+        name: "AIG",
+        logo: "AIG.png"
+    },
+    {
+        name: "Albertsons",
+        logo: "Albertsons.png"
+    },
+    {
+        name: "Allstate",
+        logo: "Allstate.png"
+    },
+    {
+        name: "American Airlines",
+        logo: "American_Airlines.png"
+    },
+    {
+        name: "American Express",
+        logo: "American_Express.png"
+    },
+    {
+        name: "Arrow",
+        logo: "Arrow.png"
+    },
+    {
+        name: "Best Buy",
+        logo: "Best_Buy.png"
+    },
+    {
+        name: "Boeing",
+        logo: "Boeing.png"
+    },
+    {
+        name: "Bristol Myers Squibb",
+        logo: "Bristol_Myers_Squibb.png"
+    },
+    {
+        name: "CarMax",
+        logo: "CarMax.png"
+    },
+    {
+        name: "Caterpillar",
+        logo: "Caterpillar.png"
+    },
+    {
+        name: "Charles Schwab",
+        logo: "Charles_Schwab.png"
+    },
+    {
+        name: "Coca Cola",
+        logo: "Coca_Cola.png"
+    },
+    {
+        name: "ConocoPhillips",
+        logo: "ConocoPhillips.png"
+    },
+    {
+        name: "Delta",
+        logo: "Delta.png"
+    },
+    {
+        name: "Disney",
+        logo: "Disney.png"
+    },
+    {
+        name: "Dollar General",
+        logo: "Dollar_General.png"
+    },
+    {
+        name: "Dollar Tree",
+        logo: "Dollar_Tree.png"
+    },
+    {
+        name: "Dow",
+        logo: "Dow.png"
+    },
+    {
+        name: "Energy Transfer",
+        logo: "Energy_Transfer.png"
+    },
+    {
+        name: "FedEx",
+        logo: "FedEx.png"
+    },
+    {
+        name: "Fox News",
+        logo: "Fox_News.png"
+    },
+    {
+        name: "Freddie Mac",
+        logo: "Freddie_Mac.png"
+    },
+    {
+        name: "General Dynamic",
+        logo: "General_Dynamic.png"
+    },
+    {
+        name: "General Electric",
+        logo: "General_Electric.png"
+    },
+    {
+        name: "General Mills",
+        logo: "General_Mills.png"
+    },
+    {
+        name: "General Motors",
+        logo: "General_Motors.png"
+    },
+    {
+        name: "HCA",
+        logo: "HCA.png"
+    },
+    {
+        name: "HF Sinclair",
+        logo: "HF_Sinclair.png"
+    },
+    {
+        name: "Honeywell",
+        logo: "Honeywell.png"
+    },
+    {
+        name: "HP",
+        logo: "HP.png"
+    },
+    {
+        name: "Humana",
+        logo: "Humana.png"
+    },
+    {
+        name: "John Deere",
+        logo: "John_Deere.png"
+    },
+    {
+        name: "Kelloggs",
+        logo: "Kelloggs.png"
+    },
+    {
+        name: "Lennar",
+        logo: "Lennar.png"
+    },
+    {
+        name: "Liberty Mutual",
+        logo: "Liberty_Mutual.png"
+    },
+    {
+        name: "Macy's",
+        logo: "Macy's.png"
+    },
+    {
+        name: "MasterCard",
+        logo: "MasterCard.png"
+    },
+    {
+        name: "McDonalds",
+        logo: "McDonalds.png"
+    },
+    {
+        name: "Merck",
+        logo: "Merck.png"
+    },
+    {
+        name: "MetLife",
+        logo: "MetLife.png"
+    },
+    {
+        name: "Micron",
+        logo: "Micron.png"
+    },
+    {
+        name: "Nationwide",
+        logo: "Nationwide.png"
+    },
+    {
+        name: "New York Life",
+        logo: "New_York_Life.png"
+    },
+    {
+        name: "Nike",
+        logo: "Nike.png"
+    },
+    {
+        name: "Northrop Grumman",
+        logo: "Northrop_Grumman.png"
+    },
+    {
+        name: "Northwestern Mutual",
+        logo: "Northwestern_Mutual.png"
+    },
+    {
+        name: "Nucor",
+        logo: "Nucor.png"
+    },
+    {
+        name: "Occidental",
+        logo: "Occidental.png"
+    },
+    {
+        name: "PBF Energy",
+        logo: "PBF_Energy.png"
+    },
+    {
+        name: "Pepsi",
+        logo: "Pepsi.png"
+    },
+    {
+        name: "Performance Food",
+        logo: "Performance_Food.png"
+    },
+    {
+        name: "Proctor & Gamble",
+        logo: "Proctor_&_Gamble.png"
+    },
+    {
+        name: "Progressive",
+        logo: "Progressive.png"
+    },
+    {
+        name: "Prudential",
+        logo: "Prudential.png"
+    },
+    {
+        name: "Publix",
+        logo: "Publix.png"
+    },
+    {
+        name: "Qualcomm",
+        logo: "Qualcomm.png"
+    },
+    {
+        name: "Raytheon",
+        logo: "Raytheon.png"
+    },
+    {
+        name: "Spectrum",
+        logo: "Spectrum.png"
+    },
+    {
+        name: "Starbucks",
+        logo: "Starbucks.png"
+    },
+    {
+        name: "State Farm",
+        logo: "State_Farm.png"
+    },
+    {
+        name: "StoneX",
+        logo: "StoneX.png"
+    },
+    {
+        name: "Sysco",
+        logo: "Sysco.png"
+    },
+    {
+        name: "TD Synnex",
+        logo: "TD Synnex.png"
+    },
+    {
+        name: "TD",
+        logo: "TD.png"
+    },
+    {
+        name: "Thermo Fisher Scientific",
+        logo: "Thermo_Fisher_Scientific.png"
+    },
+    {
+        name: "TIAA",
+        logo: "TIAA.png"
+    },
+    {
+        name: "TJX",
+        logo: "TJX.png"
+    },
+    {
+        name: "Travelers",
+        logo: "Travelers.png"
+    },
+    {
+        name: "Union Pacific",
+        logo: "Union_Pacific.png"
+    },
+    {
+        name: "United Airlines",
+        logo: "United_Airlines.png"
+    },
+    {
+        name: "US Foods",
+        logo: "US_Foods.png"
+    },
+    {
+        name: "Visa",
+        logo: "Visa.png"
+    },
+    {
+        name: "Warner Bros",
+        logo: "Warner_Bros.png"
+    },
+    {
+        name: "Wayfair",
+        logo: "Wayfair.png"
+    },
+    {
+        name: "Wells Fargo",
+        logo: "Wells_Fargo"
+    },
 ]
 
 export const titles = [
