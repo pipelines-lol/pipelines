@@ -163,7 +163,7 @@ function Profile () {
         const regex = /^[a-z0-9-]+$/i;
     
         // Check if the username matches the pattern
-        if (!regex.test(username)) {
+        if (!regex.test(linkedin)) {
             setLinkedinErrorMessage('Invalid Linkedin username.');
             return false;
         } else {
@@ -342,11 +342,14 @@ function Profile () {
                                     }
 
                                     <label>Linkedin</label>
-                                    <input
-                                        className="p-3 bg-gray-100 rounded-full"
-                                        value={linkedin}
-                                        onChange={handleLinkedinChange}
-                                    />
+                                    <div className="flex flex-row justify-center items-center gap-2">
+                                        <h1>linkedin.com/in/</h1>
+                                        <input
+                                            className="p-3 bg-gray-100 rounded-full"
+                                            value={linkedin}
+                                            onChange={handleLinkedinChange}
+                                        />
+                                    </div>
                                     { linkedinErrorMessage &&
                                         <h1 className="text-red-400">{linkedinErrorMessage}</h1>
                                     }
