@@ -364,7 +364,7 @@ export const companies = [
         logo: "Tableau.png" 
     },
     { 
-        name: "J.P. Morgan", 
+        name: "J.P. Morgan Chase", 
         logo: "J.P._Morgan.png" 
     },
     { 
