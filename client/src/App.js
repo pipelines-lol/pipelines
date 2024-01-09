@@ -3,12 +3,15 @@ import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 
 // pages
 import Home from './pages/Home';
+import Loading from './pages/Loading';
+
 import Login from './pages/Login';
 import Signup from './pages/Signup';
 
 import Profile from './pages/Profile';
 import CreateProfile from './pages/CreateProfile';
 import EditProfile from './pages/EditProfile';
+
 
 // import Test from './testing/Test';
 

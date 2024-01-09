@@ -3,10 +3,13 @@ import { useState, useEffect } from "react";
 import { PipelineCard } from "../components/PipelineCard";
 import { host } from "../util/apiRoutes";
 import { QuerySearchInput } from "../components/QuerySearchInput";
+import Loading from "./Loading";
 
 function Home() {
 
     const [profiles, setProfiles] = useState([]);
+
+    const [loading, setLoading] = useState(true);
 
     const generateProfiles = async () => {
         const size = 5;
@@ -32,6 +35,8 @@ function Home() {
         })
         .then((data) => {
             setProfiles([...data]);
+
+            setLoading(false);
         })
         .catch((error) => {
             console.error(error.message);
@@ -39,6 +44,9 @@ function Home() {
     }
 
     const handleSearch = async (query) => {
+        // loading state to load query
+        setLoading(true);
+
         fetch(`${host}/api/pipeline/search/${query}`, {
             method: "GET",
             headers: {
@@ -60,6 +68,8 @@ function Home() {
         })
         .then((data) => {
             setProfiles([...data]);
+
+            setLoading(false);
         })
         .catch((error) => {
             console.error(error.message);
@@ -69,6 +79,10 @@ function Home() {
     useEffect(() => {
         generateProfiles();
     }, [])
+
+    if (loading) {
+        return <Loading />
+    }
 
     return (
         <>
