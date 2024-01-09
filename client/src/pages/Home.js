@@ -9,10 +9,11 @@ function Home() {
 
     const [profiles, setProfiles] = useState([]);
 
-    const [loading, setLoading] = useState(true);
+    const [loading, setLoading] = useState(false);
 
     const generateProfiles = async () => {
         const size = 5;
+        setLoading(true);
 
         fetch(`${host}/api/pipeline/random/${size}`, {
             method: "GET",

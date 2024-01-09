@@ -18,7 +18,7 @@ function Profile () {
     const [profiles, setProfiles] = useState([]);
 
     const { user } = useAuthContext();
-    const [loading, setLoading] = useState(true);
+    const [loading, setLoading] = useState(false);
 
     const [saveable, setSaveable] = useState(false);
 
@@ -35,6 +35,7 @@ function Profile () {
 
     const fetchProfile = async () => {
 
+        setLoading(true);
         const isValidId = await isMongoDBId(id);
 
         // id is a mongodb id
