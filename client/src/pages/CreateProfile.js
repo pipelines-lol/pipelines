@@ -11,7 +11,7 @@ function CreateProfile() {
     const [anonymous, setAnonymous] = useState(false);
     const [pipeline, setPipeline] = useState([]);
 
-    const [loading, setLoading] = useState(true);
+    const [loading, setLoading] = useState(false);
     const [errorMessage, setErrorMessage] = useState("");
 
     const navigate = useNavigate();
@@ -19,6 +19,8 @@ function CreateProfile() {
     const { user, dispatch } = useAuthContext();
 
     const fetchProfile = async () => {
+        setLoading(true);
+
         fetch(`${host}/api/profile/${user.profileId}`, {
             method: "GET",
             headers: {
