@@ -34,53 +34,45 @@ function Profile () {
         linkedinErrorMessage.length !== 0;
 
     const fetchProfile = async () => {
-
-        setLoading(true);
-        const isValidId = await isMongoDBId(id);
-
-        // id is a mongodb id
-        if (isValidId) {
-            fetch(`${host}/api/profile/${id}`, {
-                method: "GET",
-                headers: {
-                    'Content-Type': 'application/json' // Specify the content type as JSON
-                }
-            })
-            .then((res) => {
-                if (!res.ok) {
+        try {
+            setLoading(true);
+            const isValidId = await isMongoDBId(id);
+    
+            if (isValidId) {
+                const response = await fetch(`${host}/api/profile/${id}`, {
+                    method: "GET",
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                });
+    
+                if (!response.ok) {
                     // Check if the response has JSON content
-                    if (res.headers.get('content-type')?.includes('application/json')) {
-                        return res.json().then((errorData) => {
-                            throw new Error(`${errorData.error}`);
-                        });
+                    if (response.headers.get('content-type')?.includes('application/json')) {
+                        const errorData = await response.json();
+                        throw new Error(`${errorData.error}`);
                     } else {
-                        throw new Error(`HTTP error! Status: ${res.status}`);
+                        throw new Error(`HTTP error! Status: ${response.status}`);
                     }
                 }
     
-                return res.json();
-            })
-            .then((data) => {
+                const data = await response.json();
                 setProfile(data);
-                setLoading(false);
-
+    
                 setUsername(data.username);
                 setLinkedin(extractLinkedinUsername(data.linkedin));
                 setLocation(data.location);
-            })
-            .catch((error) => {
-                console.error(error.message);
     
-                setProfile(null);
                 setLoading(false);
-            });
-        
-        // id is a username or an invalid profile
-        } else {
+            } else {
+                setProfile(null);
+            }
+        } catch (error) {
+            console.error(error.message);
             setProfile(null);
+            setLoading(false);
         }
-
-    }
+    };
 
     const fetchProfiles = async () => {
 
@@ -395,8 +387,10 @@ function Profile () {
                             <div className="flex justify-center items-center w-24 h-8 bg-gray-200 border-gray-500 border-2 rounded-full">
                                 <h1 className="text-gray-800 font-semibold">Intern</h1>
                             </div>
-
-                            <h1>{profile.pipeline[0].title} at <span className="font-medium">{profile.pipeline[0].company}</span></h1>
+                            
+                            { profile.pipeline && profile.pipeline.length > 0 && 
+                                <h1>{profile.pipeline[0].title} at <span className="font-medium">{profile.pipeline[0].company}</span></h1>
+                            }
                             
                             <div className="flex flex-row justify-center items-center gap-2">
                                 <MapPin />
@@ -415,7 +409,7 @@ function Profile () {
                         
                         {/* Pipeline */}
                         <div className="flex flex-col justify-center items-center w-1/3 h-full bg-white p-10 gap-3">
-                        {
+                        { profile.pipeline &&
                             profile.pipeline.map((experience, i) => (
                                 <div className='flex flex-col justify-center items-center gap-3' key={experience._id}>
                                     <ExperienceCard experience={experience} />
