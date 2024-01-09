@@ -542,6 +542,14 @@ export const companies = [
     {
         name: "UserTesting",
         logo: "UserTesting.png"
+    },
+    {
+        name: "Fidelity",
+        logo: "Fidelity.png"
+    },
+    {
+        name: "Epic Systems",
+        logo: "Epic_Systems.png"
     }
 ]
 
