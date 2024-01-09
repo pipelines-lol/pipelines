@@ -867,6 +867,30 @@ export const companies = [
         name: "Wells Fargo",
         logo: "Wells_Fargo"
     },
+    {
+        name: "Barclays",
+        logo: "Barclays.png"
+    },
+    {
+        name: "Cigna",
+        logo: "Cigna.png"
+    },
+    {
+        name: "Mako",
+        logo: "Mako.png"
+    },
+    {
+        name: "Tower Research",
+        logo: "Tower_Research.png"
+    },
+    {
+        name: "Virtu Financial",
+        logo: "Virtu_Financial.png"
+    },
+    {
+        name: "Wolverine Trading",
+        logo: "Wolverine_Trading.png"
+    }
 ]
 
 export const titles = [
