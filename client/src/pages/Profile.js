@@ -4,10 +4,12 @@ import { host } from "../util/apiRoutes";
 import { isMongoDBId } from "../util/isMongodbId";
 import { useAuthContext } from "../hooks/useAuthContext";
 
+import Loading from "./Loading";
+
 import { ExperienceCard } from "../components/PipelineCard";
 
-import { MapPin, PencilLine } from 'lucide-react';
-import Loading from "./Loading";
+import { MapPin } from 'lucide-react';
+import { ProfilePicture } from "../components/ProfilePicture";
 
 function Profile () {
     const { id } = useParams();
@@ -22,6 +24,7 @@ function Profile () {
 
     const [saveable, setSaveable] = useState(false);
 
+    const [pfp, setPfp] = useState(null);
     const [username, setUsername] = useState('');
     const [usernameErrorMessage, setUsernameErrorMessage] = useState('');
     const [linkedin, setLinkedin] = useState('');
@@ -270,10 +273,32 @@ function Profile () {
                     throw new Error(`HTTP error! Status: ${response.status}`);
                 }
             }
-            
-            const data = await response.json();
-            console.log(data);
-            
+        } catch (error) {
+            console.error(error.message);
+        }
+
+        // upload profile picture seperately
+        const formData = new FormData();
+        formData.append("pfp", pfp);
+
+        try {
+            const response = await fetch(`${host}/api/pfp/${user.profileId}`, {
+                method: "PATCH",
+                headers: {
+                    'Content-Type': 'application/json' // Specify the content type as JSON
+                },
+                body: JSON.stringify(formData)
+            });
+    
+            if (!response.ok) {
+                // Check if the response has JSON content
+                if (response.headers.get('content-type')?.includes('application/json')) {
+                    const errorData = await response.json();
+                    throw new Error(`${errorData.error}`);
+                } else {
+                    throw new Error(`HTTP error! Status: ${response.status}`);
+                }
+            }
         } catch (error) {
             console.error(error.message);
         }
@@ -307,19 +332,11 @@ function Profile () {
                         {/* Profile picture + few fields */}
                         <div className="flex flex-col justify-center items-center bg-white w-1/3 h-full p-10 gap-5 shadow-md">
                             
-                            { admin ? (
-                                    <div className="relative w-96 h-96 rounded-full overflow-hidden">
-                                        <img 
-                                            src={"/avatar.png"}
-                                            className="w-full h-full object-cover rounded-full transition-transform transform hover:scale-105"
-                                            alt={`${profile._id}_avatar`}
-                                        />
-                                        <div className="absolute top-0 left-0 w-full h-full flex items-center justify-center opacity-0 hover:opacity-100">
-                                            <PencilLine 
-                                                className="w-12 h-12 text-gray-200 hover:text-gray-300 transition-transform transform hover:scale-110 cursor-pointer"
-                                            />
-                                        </div>
-                                    </div>
+                            { admin ? 
+                                (
+                                    <ProfilePicture 
+                                        profile={profile}
+                                    />
                                 ) : (
                                     <img 
                                         src={"/avatar.png"}

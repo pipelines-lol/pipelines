@@ -36,6 +36,7 @@ const signupUser = async (req, res) => {
             username: '',
             linkedin: '',
             position: '',
+            pfp: '',
             location: '',
             anonymous: false,
             pipeline: [],

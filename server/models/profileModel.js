@@ -15,6 +15,7 @@ const profileSchema = new Schema({
     lastName: String,
     username: String,
     linkedin: String,
+    pfp: String,
     position: String,
     location: String,
     anonymous: Boolean,
