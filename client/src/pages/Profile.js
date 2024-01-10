@@ -24,7 +24,7 @@ function Profile () {
 
     const [saveable, setSaveable] = useState(false);
 
-    // const [pfp, setPfp] = useState(null);
+    const [pfp, setPfp] = useState('');
     const [username, setUsername] = useState('');
     const [usernameErrorMessage, setUsernameErrorMessage] = useState('');
     const [linkedin, setLinkedin] = useState('');
@@ -65,8 +65,6 @@ function Profile () {
                 setUsername(data.username);
                 setLinkedin(extractLinkedinUsername(data.linkedin));
                 setLocation(data.location);
-    
-                setLoading(false);
             } else {
                 setProfile(null);
             }
@@ -101,6 +99,8 @@ function Profile () {
         })
         .then((data) => {
             setProfiles(data);
+
+            setLoading(false);
         })
         .catch((error) => {
             console.error(error.message);
@@ -276,32 +276,6 @@ function Profile () {
         } catch (error) {
             console.error(error.message);
         }
-
-        // upload profile picture seperately
-        // const formData = new FormData();
-        // formData.append("pfp", pfp);
-
-        // try {
-        //     const response = await fetch(`${host}/api/pfp/${user.profileId}`, {
-        //         method: "PATCH",
-        //         headers: {
-        //             'Content-Type': 'application/json' // Specify the content type as JSON
-        //         },
-        //         body: JSON.stringify(formData)
-        //     });
-    
-        //     if (!response.ok) {
-        //         // Check if the response has JSON content
-        //         if (response.headers.get('content-type')?.includes('application/json')) {
-        //             const errorData = await response.json();
-        //             throw new Error(`${errorData.error}`);
-        //         } else {
-        //             throw new Error(`HTTP error! Status: ${response.status}`);
-        //         }
-        //     }
-        // } catch (error) {
-        //     console.error(error.message);
-        // }
     
         setSaveable(false);
     };
@@ -336,10 +310,11 @@ function Profile () {
                                 (
                                     <ProfilePicture 
                                         profile={profile}
+                                        setPfp={setPfp}
                                     />
                                 ) : (
                                     <img 
-                                        src={"/avatar.png"}
+                                        src={pfp ? pfp : "/avatar.png"}
                                         className="w-96 h-96 rounded-full"
                                         alt={`${profile._id}_avatar`}
                                     />
