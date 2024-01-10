@@ -12,7 +12,7 @@ function Home() {
     const [loading, setLoading] = useState(false);
 
     const generateProfiles = async () => {
-        const size = 5;
+        const size = 10;
         setLoading(true);
 
         fetch(`${host}/api/pipeline/random/${size}`, {
