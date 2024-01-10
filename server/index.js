@@ -9,8 +9,10 @@ const authRoutes = require("./routes/auth")
 const profileRoutes = require('./routes/profiles')
 const pipelineRoutes = require('./routes/pipelines')
 const mongodbIdRoutes = require('./routes/mongodbId')
+const pfpRoutes = require('./routes/pfps')
 
 dotenv.config()
+
 const app = express()
 const PORT = process.env.PORT || 4000
 
@@ -39,5 +41,6 @@ app.use('/api/user', authRoutes)
 app.use('/api/profile', profileRoutes)
 app.use('/api/pipeline', pipelineRoutes)
 app.use('/api/mongodbId', mongodbIdRoutes)
+app.use('/api/pfp', pfpRoutes)
 
 app.listen(PORT, () => console.log("Server is running."))

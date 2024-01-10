@@ -1,8 +1,50 @@
+import { useEffect, useState } from "react";
 import { companies } from "../data/companyData";
-import { homepage } from "../util/apiRoutes";
+import { homepage, host } from "../util/apiRoutes";
 import { ConditionalLink } from "./ConditionalLink"
 
-export const PipelineCard = ({ profileId, name, linkedin, anonymous, pipeline }) => {
+export const PipelineCard = ({ profileId, name, anonymous, pipeline }) => {
+    const fetchPfp = async () => {
+        if (!profileId || profileId === "") return;
+
+        try {
+            const response = await fetch(`${host}/api/pfp/${profileId}`, {
+                method: "GET",
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            });
+    
+            if (!response.ok) {
+                // Check if the response has JSON content
+                if (response.headers.get('content-type')?.includes('application/json')) {
+                    const errorData = await response.json();
+                    throw new Error(`${errorData.error}`);
+                } else {
+                    throw new Error(`HTTP error! Status: ${response.status}`);
+                }
+            }
+    
+            const data = await response.json();
+            setPfp(data.pfp);
+        } catch (error) {
+            console.error(error.message);
+            setPfp(null);
+        }
+    }
+    
+    useEffect(() => {
+        const fetchInfo = async () => {
+            await fetchPfp();
+        }
+    
+        fetchInfo();
+    
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
+
+    const [pfp, setPfp] = useState(null);
+
     return (
         <div className='flex flex-row justify-center items-center bg-gray-200 w-full p-12 rounded-2xl gap-10' key={pipeline._id}>
             <div className="flex flex-col justify-center items-center gap-3">
@@ -11,8 +53,8 @@ export const PipelineCard = ({ profileId, name, linkedin, anonymous, pipeline })
                     to={`/user/${profileId}`}
                 >
                     <img 
-                        className='w-36 h-36 rounded-full' 
-                        src="avatar.png" 
+                        className='w-36 h-36 rounded-full object-cover' 
+                        src={pfp ? pfp : "avatar.png"} 
                         alt="avatar" 
                     />
                 </ConditionalLink>

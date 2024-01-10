@@ -1,22 +1,54 @@
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { PencilLine } from "lucide-react";
+import { host } from "../util/apiRoutes";
+import { useParams } from "react-router-dom";
 
-export const ProfilePicture = ({ profile }) => {
+export const ProfilePicture = ({ profile, setPfp }) => {
+    const { id } = useParams();
+
     const fileInputRef = useRef(null);
+    const [fetchedPfp, setFetchedPfp] = useState(null);
     const [filePreview, setFilePreview] = useState(null);
+
+    const fetchPfp = async () => {
+        try {
+            const response = await fetch(`${host}/api/pfp/${id}`, {
+                method: "GET",
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            });
+
+            if (!response.ok) {
+                // Check if the response has JSON content
+                if (response.headers.get('content-type')?.includes('application/json')) {
+                    const errorData = await response.json();
+                    throw new Error(`${errorData.error}`);
+                } else {
+                    throw new Error(`HTTP error! Status: ${response.status}`);
+                }
+            }
+
+            const data = await response.json();
+            setPfp(data.pfp);
+            setFetchedPfp(data.pfp);
+        } catch (error) {
+            console.error(error.message);
+            setPfp(null);
+        }
+    }
 
     const handleEditProfilePictureClick = () => {
         // Trigger the file input when the button is clicked
         fileInputRef.current.click();
     };
 
-    const handleFileInputChange = (e) => {
+    const handleFileInputChange = async (e) => {
         // Handle the selected file
         const selectedFile = e.target.files[0];
-        console.log('Selected file:', selectedFile);
 
         // Read the file contents and set the preview
-        if (selectedFile) {
+        if (selectedFile) {   
             const reader = new FileReader();
 
             reader.onloadend = () => {
@@ -25,9 +57,45 @@ export const ProfilePicture = ({ profile }) => {
 
             reader.readAsDataURL(selectedFile);
         }
+
+        const formData = new FormData();
+        formData.append("pfp", selectedFile);
+
+        try {
+            const response = await fetch(`${host}/api/pfp/${profile._id}`, {
+                method: "PATCH",
+                body: formData
+            });
+    
+            if (!response.ok) {
+                // Check if the response has JSON content
+                if (response.headers.get('content-type')?.includes('application/json')) {
+                    const errorData = await response.json();
+                    throw new Error(`${errorData.error}`);
+                } else {
+                    throw new Error(`HTTP error! Status: ${response.status}`);
+                }
+            }
+
+            const data = await response.json();
+            console.log(data);
+
+        } catch (error) {
+            console.error(error.message);
+        }
     };
 
-    const src = filePreview || (profile.pfp ? profile.pfp : '/avatar.png');
+    useEffect(() => {
+        const fetchInfo = async () => {
+            await fetchPfp();
+        }
+
+        fetchInfo();
+
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
+
+    const src = filePreview || (fetchedPfp ? fetchedPfp : '/avatar.png');
 
     return (
         <div className="relative w-96 h-96 rounded-full overflow-hidden">
