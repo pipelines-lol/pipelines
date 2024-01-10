@@ -10,6 +10,7 @@ const profileRoutes = require('./routes/profiles')
 const pipelineRoutes = require('./routes/pipelines')
 const mongodbIdRoutes = require('./routes/mongodbId')
 const pfpRoutes = require('./routes/pfps')
+const imageModerationRoutes = require('./routes/imageModeration')
 
 dotenv.config()
 
@@ -42,5 +43,6 @@ app.use('/api/profile', profileRoutes)
 app.use('/api/pipeline', pipelineRoutes)
 app.use('/api/mongodbId', mongodbIdRoutes)
 app.use('/api/pfp', pfpRoutes)
+app.use('/api/imageModeration', imageModerationRoutes)
 
 app.listen(PORT, () => console.log("Server is running."))
