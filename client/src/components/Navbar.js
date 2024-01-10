@@ -1,14 +1,57 @@
 import { Link, useNavigate } from "react-router-dom";
 import { useAuthContext } from "../hooks/useAuthContext";
+import { host } from "../util/apiRoutes";
+import { useEffect, useState } from "react";
 
 const Navbar = () => {
     const navigate = useNavigate();
     const { user, dispatch } = useAuthContext();
 
+    const [pfp, setPfp] = useState(null);
+
+    const fetchPfp = async () => {
+        if (!user || !user.profileCreated) return;
+
+        try {
+            const response = await fetch(`${host}/api/pfp/${user.profileId}`, {
+                method: "GET",
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            });
+
+            if (!response.ok) {
+                // Check if the response has JSON content
+                if (response.headers.get('content-type')?.includes('application/json')) {
+                    const errorData = await response.json();
+                    throw new Error(`${errorData.error}`);
+                } else {
+                    throw new Error(`HTTP error! Status: ${response.status}`);
+                }
+            }
+
+            const data = await response.json();
+            setPfp(data.pfp);
+        } catch (error) {
+            console.error(error.message);
+            setPfp(null);
+        }
+    }
+
     const handlePipelinesClick = () => {
         navigate('/');
         window.location.reload();
     };
+
+    useEffect(() => {
+        const fetchInfo = async () => {
+            await fetchPfp();
+        }
+    
+        fetchInfo();
+    
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
 
     return (
         <>
@@ -49,8 +92,8 @@ const Navbar = () => {
                                             to={`/user/${user.profileId}`}
                                         >
                                             <img 
-                                                src={"/avatar.png"}
-                                                className="w-12 h-12 rounded-full"
+                                                src={pfp ? pfp : "/avatar.png"}
+                                                className="w-12 h-12 rounded-full object-cover"
                                                 alt={"user_pfp"}
                                             />
                                         </Link>

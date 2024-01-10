@@ -4,6 +4,8 @@ import { homepage, host } from "../util/apiRoutes";
 import { ConditionalLink } from "./ConditionalLink"
 
 export const PipelineCard = ({ profileId, name, anonymous, pipeline }) => {
+    const [pfp, setPfp] = useState(null);
+    
     const fetchPfp = async () => {
         if (!profileId || profileId === "") return;
 
@@ -42,8 +44,6 @@ export const PipelineCard = ({ profileId, name, anonymous, pipeline }) => {
     
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
-
-    const [pfp, setPfp] = useState(null);
 
     return (
         <div className='flex flex-row justify-center items-center bg-gray-200 w-full p-12 rounded-2xl gap-10' key={pipeline._id}>
