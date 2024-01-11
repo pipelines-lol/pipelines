@@ -3,11 +3,12 @@ import { companies } from "../data/companyData";
 import { homepage, host } from "../util/apiRoutes";
 import { ConditionalLink } from "./ConditionalLink"
 
-export const PipelineCard = ({ profileId, name, anonymous, pipeline }) => {
-    const [pfp, setPfp] = useState(null);
+export const PipelineCard = ({ profileId, name, pfp, anonymous, pipeline }) => {
+    const [pfpUrl, setPfpUrl] = useState(null);
     
     const fetchPfp = async () => {
         if (!profileId || profileId === "") return;
+        if (!pfp || pfp === "") return;
 
         try {
             const response = await fetch(`${host}/api/pfp/${profileId}`, {
@@ -28,10 +29,10 @@ export const PipelineCard = ({ profileId, name, anonymous, pipeline }) => {
             }
     
             const data = await response.json();
-            setPfp(data.pfp);
+            setPfpUrl(data.pfp);
         } catch (error) {
             console.error(error.message);
-            setPfp(null);
+            setPfpUrl(null);
         }
     }
     
@@ -54,7 +55,7 @@ export const PipelineCard = ({ profileId, name, anonymous, pipeline }) => {
                 >
                     <img 
                         className='w-36 h-36 rounded-full object-cover' 
-                        src={pfp ? pfp : "avatar.png"} 
+                        src={pfpUrl ? pfpUrl : "avatar.png"} 
                         alt="avatar" 
                     />
                 </ConditionalLink>

@@ -102,6 +102,7 @@ function Home() {
                             key={`pipeline_${profile._id}`}
                             profileId={profile._id}
                             name={profile.firstName + ' ' + profile.lastName}
+                            pfp={profile.pfp}
                             anonymous={profile.anonymous}
                             pipeline={profile.pipeline} 
                         />
