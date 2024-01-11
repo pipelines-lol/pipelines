@@ -2,6 +2,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { useAuthContext } from "../hooks/useAuthContext";
 import { host } from "../util/apiRoutes";
 import { useEffect, useState } from "react";
+import { GalleryHorizontalEnd } from "lucide-react";
 
 const Navbar = () => {
     const navigate = useNavigate();
@@ -56,28 +57,44 @@ const Navbar = () => {
     return (
         <>
         
-            <div className="flex flex-row justify-between items-center w-full h-16 px-12 bg-gray-900">
-                <button 
-                    className="px-8 py-2"
-                    onClick={handlePipelinesClick}
-                >
-                    <h1 className="text-white">pipelines.lol</h1>
-                </button>
+            <div className="flex flex-row justify-between items-center w-full h-20 px-12 bg-white">
+                <div className="flex flex-row justify-start items-center gap-3">
+                    <GalleryHorizontalEnd 
+                        size={36}
+                        color="#444444"
+                    />
+
+                    <button 
+                        className="px-12"
+                        onClick={handlePipelinesClick}
+                    >
+                        <h1 className="text-pipelines-gray-500 font-light uppercase">About</h1>
+                    </button>
+
+                    <button 
+                        className="px-12"
+                        onClick={() => navigate('/search')}
+                    >
+                        <h1 className="text-pipelines-gray-500 font-light uppercase">Search</h1>
+                    </button>
+                </div>
+
                 <div className="flex flex-row gap-5">
 
                     {!user &&
                         <>
                             <button 
-                                className="px-8 py-2"
-                                onClick={() => navigate('/login')}
-                            >
-                                <h1 className="text-white">Login</h1>
-                            </button>
-                            <button 
-                                className="bg-white px-8 py-2 rounded-full"
+                                className="bg-pipelines-gray-500 px-8 py-2 rounded-lg shadow-md transition-colors duration-300 hover:bg-gray-700"
                                 onClick={() => navigate('/signup')}
                             >
-                                <h1 className="text-black">Signup</h1>
+                                <h1 className="text-white font-normal uppercase">Signup</h1>
+                            </button>
+
+                            <button 
+                                className="bg-white px-8 py-2 rounded-lg shadow-md transition-colors duration-300 hover:bg-gray-100"
+                                onClick={() => navigate('/login')}
+                            >
+                                <h1 className="text-pipelines-gray-500 font-light uppercase">Login</h1>
                             </button>
                         </>
                     }  
@@ -99,10 +116,10 @@ const Navbar = () => {
                                         </Link>
 
                                         <button
-                                            className="bg-white px-8 py-2 rounded-full"
+                                            className="bg-pipelines-gray-500 px-8 py-2 rounded-lg shadow-md transition-colors duration-300 hover:bg-gray-700"
                                             onClick={() => navigate('/edit')}
                                         >
-                                            <h1>Edit Profile</h1>
+                                            <h1 className="text-white font-normal uppercase">Edit Profile</h1>
                                         </button>
 
                                     </>
@@ -113,7 +130,7 @@ const Navbar = () => {
                                             className="bg-white px-8 py-2 rounded-full"
                                             onClick={() => navigate('/create')}
                                         >
-                                            <h1>Create Profile</h1>
+                                            <h1 className="text-pipelines-gray-500 font-light uppercase">Create Profile</h1>
                                         </button>
 
                                     </>
@@ -121,13 +138,15 @@ const Navbar = () => {
                             }
 
                             <button 
-                                className="px-8 py-2"
+                                className="bg-white px-8 py-2 rounded-lg shadow-md transition-colors duration-300 hover:bg-gray-100"
                                 onClick={() => {
                                     dispatch({ type: 'LOGOUT' });
                                     localStorage.setItem('user', null);
+
+                                    navigate('/');
                                 }}
                             >
-                                <h1 className="text-white">Logout</h1>
+                                <h1 className="text-pipelines-gray-500 font-light uppercase">Logout</h1>
                             </button>
                         </>
                     }

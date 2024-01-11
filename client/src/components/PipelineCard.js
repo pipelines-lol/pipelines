@@ -47,27 +47,29 @@ export const PipelineCard = ({ profileId, name, pfp, anonymous, pipeline }) => {
     }, []);
 
     return (
-        <div className='flex flex-row justify-center items-center bg-gray-200 w-full p-12 rounded-2xl gap-10' key={pipeline._id}>
-            <div className="flex flex-col justify-center items-center gap-3">
-                <ConditionalLink
-                    condition={!anonymous}
-                    to={`/user/${profileId}`}
-                >
+        <div className='flex flex-col justify-center items-center bg-white w-full p-12 rounded-2xl gap-10' key={pipeline._id}>
+            <ConditionalLink
+                className="w-2/3"
+                condition={!anonymous}
+                to={`/user/${profileId}`}
+            >
+                <div className="flex flex-row justify-end items-center w-full gap-5">
                     <img 
-                        className='w-36 h-36 rounded-full object-cover' 
+                        className='w-12 h-12 rounded-full object-cover' 
                         src={pfpUrl ? pfpUrl : "avatar.png"} 
                         alt="avatar" 
                     />
-                </ConditionalLink>
-                <h1 className="text-black font-medium text-xl">{anonymous ? "Anonymous" : name}</h1>
-            </div>
+                    <h1 className="text-black font-light text-xl uppercase">{anonymous ? "Anonymous" : name}</h1>
+                </div>
+            </ConditionalLink>
+
             <div className="flex flex-row gap-3">
             {
                 pipeline.map((experience, i) => (
                     <div className='flex flex-row justify-center items-center gap-3' key={experience._id}>
                         <ExperienceCard experience={experience} />
                         {
-                            (i !== pipeline.length - 1) ? (<h1>--</h1>) : (<></>)
+                            (i !== pipeline.length - 1) ? (<div className="w-12 h-2 bg-pipelines-gray-500 rounded-md"></div>) : (<></>)
                         }
                     </div>
                 ))
