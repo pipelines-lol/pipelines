@@ -37,7 +37,7 @@ export const QuerySearchInput = ({ handleSearch }) => {
                 onSubmit={(e) => e.preventDefault()} // Prevent form submission
             >
                 <input
-                    className={`w-1/2 h-20 z-20 bg-gray-200 rounded-2xl text-xl p-10`}
+                    className={`w-1/2 h-20 z-20 bg-white rounded-2xl text-xl p-10`}
                     type="text"
                     value={query}
                     onChange={handleInputChange}

@@ -59,7 +59,7 @@ function Login() {
     return (
         <>
         
-            <div className="flex justify-center items-center w-full h-full bg-gray-100">
+            <div className="flex justify-center items-center w-full h-[90vh] bg-gray-100">
                 <div className="flex flex-col justify-center items-center w-96 h-2/3 bg-white shadow-md py-10 gap-10">
                     <h1 className="text-black font-semibold text-2xl tracking-wide uppercase">Login</h1>
 
