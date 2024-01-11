@@ -47,6 +47,9 @@ export const ProfilePicture = ({ profile, setPfp }) => {
 
     const handleFileInputChange = async (e) => {
         const selectedFile = e.target.files[0];
+
+        // clear error message
+        setErrorMessage('');
       
         if (selectedFile) {
             const reader = new FileReader();
