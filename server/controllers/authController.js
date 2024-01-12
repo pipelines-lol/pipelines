@@ -2,6 +2,8 @@ const User = require('../models/userModel')
 const Profile = require('../models/profileModel')
 const jwt = require('jsonwebtoken')
 
+const { Authorization, Redirect } = require('../helpers/authHelper')
+
 const createToken = (_id) => {
     return jwt.sign({ _id }, process.env.JWT_SECRET, { expiresIn: '3d' })
 }
@@ -55,7 +57,19 @@ const signupUser = async (req, res) => {
     }
 };
 
+const authorizeLinkedinUser = async (req, res) => {
+    return res.redirect(Authorization())
+}
+
+const redirectLinkedinUser = async (req, res) => {
+    const code = req.query.code
+
+    return res.json(Redirect(code))
+}
+
 module.exports = {
     loginUser,
-    signupUser
+    signupUser,
+    authorizeLinkedinUser,
+    redirectLinkedinUser
 }
