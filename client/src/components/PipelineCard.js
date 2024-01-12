@@ -71,19 +71,14 @@ export const PipelineCard = ({ profileId, name, pfp, anonymous, pipeline }) => {
       </ConditionalLink>
 
       <div className="flex flex-row gap-3">
-        {pipeline.map((experience, i) => (
+        {pipeline.length > 0 && (
           <div
             className="flex flex-row justify-center items-center gap-3"
-            key={experience._id}
+            key={pipeline[pipeline.length - 1]._id}
           >
-            <ExperienceCard experience={experience} />
-            {i !== pipeline.length - 1 ? (
-              <div className="w-12 h-2 bg-pipelines-gray-500 rounded-md"></div>
-            ) : (
-              <></>
-            )}
+            <ExperienceCard experience={pipeline[pipeline.length - 1]} />
           </div>
-        ))}
+        )}
       </div>
     </div>
   );
