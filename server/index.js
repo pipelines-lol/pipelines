@@ -3,6 +3,7 @@ const express = require("express")
 const dotenv = require("dotenv")
 const mongoose = require("mongoose")
 const cors = require('cors')
+const bodyParser = require('body-parser')
 
 // route imports
 const authRoutes = require("./routes/auth")
@@ -24,6 +25,13 @@ const corsOptions = {
     credentials: true
 }
 app.use(cors(corsOptions))
+
+// body parser
+app.use(bodyParser.urlencoded({
+    extended: true
+}))
+
+app.use(bodyParser.json())
 
 // database
 mongoose.connect(process.env.DB_CONNECT)
