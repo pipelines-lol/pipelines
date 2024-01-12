@@ -115,7 +115,7 @@ function Home() {
           </div>
         </div>
 
-        <div className="grid md:grid-cols-5 grid-cols-2 col-span-5 gap-5 py-12">
+        <div className="grid md:grid-cols-4 grid-cols-2 row-span-5 gap-5 py-12 overflow-y-scroll">
           {profiles.map((profile) => (
             <PipelineCard
               key={`pipeline_${profile._id}`}

@@ -302,7 +302,7 @@ function Profile() {
   return (
     <>
       {profile && !profile.anonymous ? (
-        <div className="flex md:flex-row flex-col justify-center items-center  w-full h-full p-16 gap-10">
+        <div className="flex md:flex-row flex-col justify-center items-center w-full h-full p-16 gap-10">
           {/* Profile picture + few fields */}
           <div className="flex flex-col justify-center items-center bg-white md:w-1/3 w-full h-full p-10 gap-5 shadow-md">
             {admin ? (
