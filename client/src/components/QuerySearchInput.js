@@ -65,7 +65,6 @@ export const QuerySearchInput = ({ handleSearch }) => {
                     ))}
                 </div>
             </form>
-        
         </>
     )
 }
