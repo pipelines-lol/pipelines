@@ -37,7 +37,6 @@ function Home() {
         })
         .then((data) => {
             setProfiles([...data]);
-
             setLoading(false);
         })
         .catch((error) => {
