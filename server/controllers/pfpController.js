@@ -1,15 +1,11 @@
 const Profile = require('../models/profileModel')
 const mongoose = require('mongoose')
-
-const dotenv = require('dotenv')
 const crypto = require('crypto')
 
 // const sharp = require('sharp')
 
 const { S3Client, PutObjectCommand, GetObjectCommand } = require('@aws-sdk/client-s3')
 const { getSignedUrl } = require('@aws-sdk/s3-request-presigner')
-
-dotenv.config()
 
 const randomImageName = (bytes = 32) => crypto.randomBytes(bytes).toString('hex')
 
