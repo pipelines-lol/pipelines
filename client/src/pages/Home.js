@@ -16,7 +16,7 @@ function Home() {
     const size = 1;
     setLoading(true);
 
-    fetch(`${host}/api/pipeline/random/${size}`, {
+    fetch(`${HOST}/api/pipeline/random/${size}`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json", // Specify the content type as JSON

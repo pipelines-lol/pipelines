@@ -21,7 +21,7 @@ function EditProfile() {
   const fetchProfile = async () => {
     setLoading(true);
 
-    fetch(`${host}/api/profile/${user.profileId}`, {
+    fetch(`${HOST}/api/profile/${user.profileId}`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json", // Specify the content type as JSON
@@ -133,7 +133,7 @@ function EditProfile() {
       return;
     }
 
-    fetch(`${host}/api/profile/${user.profileId}`, {
+    fetch(`${HOST}/api/profile/${user.profileId}`, {
       method: "PATCH",
       headers: {
         "Content-Type": "application/json", // Specify the content type as JSON

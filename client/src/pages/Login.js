@@ -22,7 +22,7 @@ function Login() {
       return;
     }
 
-    fetch(`${host}/api/user/login`, {
+    fetch(`${HOST}/api/user/login`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json", // Specify the content type as JSON

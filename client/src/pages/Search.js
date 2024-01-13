@@ -14,7 +14,7 @@ function Search() {
     const size = 1;
     setLoading(true);
 
-    fetch(`${host}/api/pipeline/random/${size}`, {
+    fetch(`${HOST}/api/pipeline/random/${size}`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json", // Specify the content type as JSON
@@ -47,7 +47,7 @@ function Search() {
     // loading state to load query
     setLoading(true);
 
-    fetch(`${host}/api/pipeline/search/${query}`, {
+    fetch(`${HOST}/api/pipeline/search/${query}`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json", // Specify the content type as JSON

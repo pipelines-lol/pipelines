@@ -10,6 +10,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faBars, faTimes } from "@fortawesome/free-solid-svg-icons";
 
 const Navbar = () => {
+  const [nav, setNav] = useState(false);
   const navigate = useNavigate();
   const { user, dispatch } = useAuthContext();
 
@@ -56,8 +57,8 @@ const Navbar = () => {
     async function checkForLinkedinToken () {
       let windowUrl = window.location.href
       if (windowUrl.includes('code=')) {
-        let codeMatch = windowUrl.match(/code=([a-zA-Z0-9_\-]+)/)
-        
+        let codeMatch = windowUrl.match(/code=([a-zA-Z0-9_-]+)/);
+
         try {
           const response = await fetch(`${HOST}/api/user/linkedin/userinfo`, {
             method: 'GET',
@@ -124,7 +125,7 @@ const Navbar = () => {
 
     checkForUserInfo();
 
-  }, [userInfo]);
+  }, [userInfo, dispatch, navigate]);
 
   useEffect(() => {
     const fetchInfo = async () => {

@@ -106,7 +106,7 @@ function CreateProfile() {
       return;
     }
 
-    fetch(`${host}/api/profile/${user.profileId}`, {
+    fetch(`${HOST}/api/profile/${user.profileId}`, {
       method: "PATCH",
       headers: {
         "Content-Type": "application/json", // Specify the content type as JSON

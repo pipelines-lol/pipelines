@@ -41,7 +41,7 @@ function Profile() {
       const isValidId = await isMongoDBId(id);
 
       if (isValidId) {
-        const response = await fetch(`${host}/api/profile/${id}`, {
+        const response = await fetch(`${HOST}/api/profile/${id}`, {
           method: "GET",
           headers: {
             "Content-Type": "application/json",
@@ -77,7 +77,7 @@ function Profile() {
   };
 
   const fetchProfiles = async () => {
-    fetch(`${host}/api/profile/`, {
+    fetch(`${HOST}/api/profile/`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json", // Specify the content type as JSON
@@ -256,7 +256,7 @@ function Profile() {
     }
 
     try {
-      const response = await fetch(`${host}/api/profile/${user.profileId}`, {
+      const response = await fetch(`${HOST}/api/profile/${user.profileId}`, {
         method: "PATCH",
         headers: {
           "Content-Type": "application/json", // Specify the content type as JSON
