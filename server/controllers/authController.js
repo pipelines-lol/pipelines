@@ -9,12 +9,37 @@ const createToken = (_id) => {
 }
 
 const loginUser = async (req, res) => {
-    const { email, password } = req.body
+    const { email } = req.body
 
     try {
-        const user = await User.login(email, password)
+        const user = await User.login(email)
 
-        const profile = await Profile.getByUserId(user._id)
+        let profile 
+        
+        // check to see if a profile has been made
+        try {
+            profile = await Profile.getByUserId(user._id)
+        } 
+        
+        // no profile created yet
+        catch (error) {
+            // create new profile
+            profile = await Profile.create({ 
+                userId: user._id, 
+                name: '',
+                username: '',
+                linkedin: '',
+                position: '',
+                pfp: '',
+                location: '',
+                anonymous: false,
+                pipeline: [],
+                created: false
+            })
+
+            // update profileId on user
+            await User.updateOne({ _id: user._id }, { profileId: profile._id })
+        }
 
         // create token
         const token = createToken(user._id)
@@ -24,38 +49,6 @@ const loginUser = async (req, res) => {
         res.status(400).json({ error: error.message })
     }
 }
-
-const signupUser = async (req, res) => {
-    const { email, password } = req.body
-
-    try {
-        const user = await User.signup(email, password)
-
-        // create new profile
-        const profile = await Profile.create({ 
-            userId: user._id, 
-            name: '',
-            username: '',
-            linkedin: '',
-            position: '',
-            pfp: '',
-            location: '',
-            anonymous: false,
-            pipeline: [],
-            created: false
-        })
-
-        // update profileId on user
-        await User.updateOne({ _id: user._id }, { profileId: profile._id })
-
-        // create token
-        const token = createToken(user._id)
-
-        res.status(200).json({ email, _id: user._id, profileId: profile._id, profileCreated: profile.created, username: profile.username, token })
-    } catch (error) {
-        res.status(400).json({ error: error.message })
-    }
-};
 
 const getLinkedinInfoWithCode = async (req, res) => {
     const CLIENT_ID = process.env.LINKEDIN_CLIENT_ID
@@ -87,6 +80,5 @@ const getLinkedinInfoWithCode = async (req, res) => {
 
 module.exports = {
     loginUser,
-    signupUser,
     getLinkedinInfoWithCode
 }
