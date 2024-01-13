@@ -13,10 +13,9 @@ const Navbar = () => {
   const navigate = useNavigate();
   const { user, dispatch } = useAuthContext();
 
+  // taken from linkedin api
+  const [userInfo, setUserInfo] = useState({});
   const [pfp, setPfp] = useState(null);
-  const [nav, setNav] = useState(false);
-
-  const [accessToken, setAccessToken] = useState(null);
 
   const linkedinRedirectUrl = `https://linkedin.com/oauth/v2/authorization?client_id=${CLIENT_ID}&response_type=code&scope=${SCOPE}&redirect_uri=${REDIRECT_URI}`
 
@@ -58,8 +57,6 @@ const Navbar = () => {
       let windowUrl = window.location.href
       if (windowUrl.includes('code=')) {
         let codeMatch = windowUrl.match(/code=([a-zA-Z0-9_\-]+)/)
-
-        console.log(codeMatch[1]);
         
         try {
           const response = await fetch(`${HOST}/api/user/linkedin/userinfo`, {
@@ -74,7 +71,7 @@ const Navbar = () => {
           }
       
           const data = await response.json();
-          console.log(data);
+          setUserInfo(data);
         } catch (error) {
           console.error(error.message);
         }
@@ -84,6 +81,50 @@ const Navbar = () => {
     checkForLinkedinToken();
 
   }, []);
+
+  useEffect(() => {
+    async function checkForUserInfo () {
+      if (!userInfo) return;
+
+      const email = userInfo.email;
+      if (email) {
+        try {
+          const response = await fetch(`${HOST}/api/user/login`, {
+            method: "POST",
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ email })
+          });
+  
+          if (!response.ok) {
+            // Check if the response has JSON content
+            if (response.headers.get('content-type')?.includes('application/json')) {
+              const errorData = await response.json();
+              throw new Error(`${errorData.error}`);
+            } else {
+              throw new Error(`HTTP error! Status: ${response.status}`);
+            }
+          }
+    
+          const data = await response.json();
+          
+          localStorage.setItem('user', JSON.stringify(data));
+
+          // update AuthContext
+          dispatch({ type: "LOGIN", payload: data });
+
+          // redirect to home
+          navigate('/');
+        } catch (error) {
+            console.error(error.message);
+        }
+      }
+    }
+
+    checkForUserInfo();
+
+  }, [userInfo]);
 
   useEffect(() => {
     const fetchInfo = async () => {
