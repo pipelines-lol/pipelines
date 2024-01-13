@@ -48,7 +48,7 @@ function App() {
           <Route path="/user/:id" element={<Profile />} />
 
           { /* Suggestions */ }
-          <Route path = "/suggestions" element = {<Suggestions />} />
+          <Route path = "/Suggestions" element = {<Suggestions />} />
 
           { /* TESTING */ }
           { /* process.env.REACT_APP_NODE_ENV === "DEV" && <Route path="/test" element={<Test />} /> */ }
