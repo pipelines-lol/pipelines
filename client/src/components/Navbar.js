@@ -2,7 +2,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { useAuthContext } from "../hooks/useAuthContext";
 
 import { HOST, HOMEPAGE } from "../util/apiRoutes";
-import { CLIENT_ID, SCOPE, REDIRECT_URI } from "../util/linkedinKeys";
+import { CLIENT_ID, SCOPE } from "../util/linkedinKeys";
 
 import { useEffect, useState } from "react";
 import { GalleryHorizontalEnd } from "lucide-react";
