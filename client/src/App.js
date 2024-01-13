@@ -13,6 +13,7 @@ import Signup from './pages/Signup';
 import Profile from './pages/Profile';
 import CreateProfile from './pages/CreateProfile';
 import EditProfile from './pages/EditProfile';
+import Suggestions from './pages/Suggestions';
 
 
 // import Test from './testing/Test';
@@ -45,6 +46,9 @@ function App() {
 
           { /* User Profiles */ }
           <Route path="/user/:id" element={<Profile />} />
+
+          { /* Suggestions */ }
+          <Route path = "/suggestions" element = {<Suggestions />} />
 
           { /* TESTING */ }
           { /* process.env.REACT_APP_NODE_ENV === "DEV" && <Route path="/test" element={<Test />} /> */ }
