@@ -4,6 +4,8 @@ const Profile = require('../models/profileModel')
 const jwt = require('jsonwebtoken')
 const axios = require('axios')
 
+const { HOMEPAGE } = require('../utils/apiRoutes');
+
 const createToken = (_id) => {
     return jwt.sign({ _id }, process.env.JWT_SECRET, { expiresIn: '3d' })
 }
@@ -53,7 +55,7 @@ const loginUser = async (req, res) => {
 const getLinkedinInfoWithCode = async (req, res) => {
     const CLIENT_ID = process.env.LINKEDIN_CLIENT_ID
     const CLIENT_SECRET = process.env.LINKEDIN_CLIENT_SECRET
-    const REDIRECT_URI = process.env.LINKEDIN_REDIRECT_URI
+    const REDIRECT_URI = HOMEPAGE
 
     try {
         const code = req.headers.auth_code

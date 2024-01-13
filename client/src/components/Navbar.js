@@ -18,7 +18,7 @@ const Navbar = () => {
   const [userInfo, setUserInfo] = useState({});
   const [pfp, setPfp] = useState(null);
 
-  const linkedinRedirectUrl = `https://linkedin.com/oauth/v2/authorization?client_id=${CLIENT_ID}&response_type=code&scope=${SCOPE}&redirect_uri=${REDIRECT_URI}`
+  const linkedinRedirectUrl = `https://linkedin.com/oauth/v2/authorization?client_id=${CLIENT_ID}&response_type=code&scope=${SCOPE}&redirect_uri=${HOMEPAGE}`
 
   const fetchPfp = async () => {
     if (!user || !user.profileCreated) return;
