@@ -1,7 +1,7 @@
 import { Link, useNavigate } from "react-router-dom";
 import { useAuthContext } from "../hooks/useAuthContext";
 
-import { HOST } from "../util/apiRoutes";
+import { HOST, HOMEPAGE } from "../util/apiRoutes";
 import { CLIENT_ID, SCOPE, REDIRECT_URI } from "../util/linkedinKeys";
 
 import { useEffect, useState } from "react";
