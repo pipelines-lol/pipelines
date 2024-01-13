@@ -122,7 +122,7 @@ const Navbar = () => {
 
     checkForUserInfo();
 
-  }, [userInfo, dispatch, navigate]);
+  }, [userInfo, user, dispatch, navigate]);
 
   useEffect(() => {
     const fetchInfo = async () => {
