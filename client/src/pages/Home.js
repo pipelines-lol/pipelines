@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 
 import { PipelineCard } from "../components/PipelineCard";
-import { host } from "../util/apiRoutes";
+import { HOST } from "../util/apiRoutes";
 import Loading from "./Loading";
 import { useNavigate } from "react-router-dom";
 
@@ -16,7 +16,7 @@ function Home() {
         const size = 1;
         setLoading(true);
 
-        fetch(`${host}/api/pipeline/random/${size}`, {
+        fetch(`${HOST}/api/pipeline/random/${size}`, {
             method: "GET",
             headers: {
                 'Content-Type': 'application/json' // Specify the content type as JSON
@@ -110,14 +110,15 @@ function Home() {
                     <div className="flex flex-col justify-center items-center w-full gap-5 py-12">
                     {
                         profiles.map((profile) => (
-                            <PipelineCard
-                                key={`pipeline_${profile._id}`}
-                                profileId={profile._id}
-                                name={profile.firstName + ' ' + profile.lastName}
-                                pfp={profile.pfp}
-                                anonymous={profile.anonymous}
-                                pipeline={profile.pipeline} 
-                            />
+                            <></>
+                            // <PipelineCard
+                            //     key={`pipeline_${profile._id}`}
+                            //     profileId={profile._id}
+                            //     name={profile.firstName + ' ' + profile.lastName}
+                            //     pfp={profile.pfp}
+                            //     anonymous={profile.anonymous}
+                            //     pipeline={profile.pipeline} 
+                            // />
                         ))
                     }
                     </div>

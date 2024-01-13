@@ -1,8 +1,8 @@
 const User = require('../models/userModel')
 const Profile = require('../models/profileModel')
-const jwt = require('jsonwebtoken')
 
-const { Authorization, Redirect } = require('../helpers/authHelper')
+const jwt = require('jsonwebtoken')
+const axios = require('axios')
 
 const createToken = (_id) => {
     return jwt.sign({ _id }, process.env.JWT_SECRET, { expiresIn: '3d' })
@@ -57,19 +57,36 @@ const signupUser = async (req, res) => {
     }
 };
 
-const authorizeLinkedinUser = async (req, res) => {
-    return res.redirect(Authorization())
-}
+const getLinkedinInfoWithCode = async (req, res) => {
+    const CLIENT_ID = process.env.LINKEDIN_CLIENT_ID
+    const CLIENT_SECRET = process.env.LINKEDIN_CLIENT_SECRET
+    const REDIRECT_URI = process.env.LINKEDIN_REDIRECT_URI
 
-const redirectLinkedinUser = async (req, res) => {
-    const code = req.query.code
+    try {
+        const code = req.headers.auth_code
+        if (!code) throw new Error('No code provided')
 
-    return res.json(Redirect(code))
+        // This request gets access_token
+        let accessTokenResponse = await axios.get(`https://www.linkedin.com/oauth/v2/accessToken?grant_type=authorization_code&code=${code}&client_id=${CLIENT_ID}&client_secret=${CLIENT_SECRET}&redirect_uri=${REDIRECT_URI}`)
+
+        // This request gets user info from access_token (given in the headers of the request)
+        let userInfoResponse = await axios.get('https://api.linkedin.com/v2/userinfo', {
+            headers: {
+                'Authorization': `Bearer ${accessTokenResponse.data.access_token}`
+            }
+        })
+
+        return res.status(200).json(userInfoResponse.data)
+
+    } catch (error) {
+        console.log(error)
+        return res.status(400).json({ error: error.message })
+
+    }
 }
 
 module.exports = {
     loginUser,
     signupUser,
-    authorizeLinkedinUser,
-    redirectLinkedinUser
+    getLinkedinInfoWithCode
 }

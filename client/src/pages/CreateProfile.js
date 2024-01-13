@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuthContext } from "../hooks/useAuthContext";
 import { ExperienceForm } from "../components/ExperienceForm";
-import { host } from "../util/apiRoutes";
+import { HOST } from "../util/apiRoutes";
 import Loading from "./Loading";
 
 function CreateProfile() {
@@ -21,7 +21,7 @@ function CreateProfile() {
     const fetchProfile = async () => {
         setLoading(true);
 
-        fetch(`${host}/api/profile/${user.profileId}`, {
+        fetch(`${HOST}/api/profile/${user.profileId}`, {
             method: "GET",
             headers: {
                 'Content-Type': 'application/json' // Specify the content type as JSON
@@ -106,7 +106,7 @@ function CreateProfile() {
             return;
         }
 
-        fetch(`${host}/api/profile/${user.profileId}`, {
+        fetch(`${HOST}/api/profile/${user.profileId}`, {
             method: "PATCH",
             headers: {
                 'Content-Type': 'application/json' // Specify the content type as JSON

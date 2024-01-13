@@ -2,8 +2,7 @@ const express = require('express')
 const {
     loginUser,
     signupUser,
-    authorizeLinkedinUser,
-    redirectLinkedinUser
+    getLinkedinInfoWithCode
 } = require('../controllers/authController')
 
 const router = express.Router()
@@ -14,10 +13,7 @@ router.post('/login', loginUser)
 // SIGN UP user
 router.post('/signup', signupUser)
 
-// AUTHORIZE linkedin user
-router.get('/linkedin/authorize', authorizeLinkedinUser)
-
-// REDIRECT linkedin user
-router.get('/linkedin/redirect', redirectLinkedinUser)
+// GET linkedin user info
+router.get('/linkedin/userinfo', getLinkedinInfoWithCode)
 
 module.exports = router;

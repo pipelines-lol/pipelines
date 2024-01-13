@@ -1,6 +1,9 @@
 import { Link, useNavigate } from "react-router-dom";
 import { useAuthContext } from "../hooks/useAuthContext";
-import { host } from "../util/apiRoutes";
+
+import { HOST } from "../util/apiRoutes";
+import { CLIENT_ID, SCOPE, REDIRECT_URI } from "../util/linkedinKeys";
+
 import { useEffect, useState } from "react";
 import { GalleryHorizontalEnd } from "lucide-react";
 
@@ -10,11 +13,15 @@ const Navbar = () => {
 
     const [pfp, setPfp] = useState(null);
 
+    const [accessToken, setAccessToken] = useState(null);
+
+    const linkedinRedirectUrl = `https://linkedin.com/oauth/v2/authorization?client_id=${CLIENT_ID}&response_type=code&scope=${SCOPE}&redirect_uri=${REDIRECT_URI}`
+
     const fetchPfp = async () => {
         if (!user || !user.profileCreated) return;
 
         try {
-            const response = await fetch(`${host}/api/pfp/${user.profileId}`, {
+            const response = await fetch(`${HOST}/api/pfp/${user.profileId}`, {
                 method: "GET",
                 headers: {
                     'Content-Type': 'application/json'
@@ -44,15 +51,51 @@ const Navbar = () => {
         window.location.reload();
     };
 
+    const handleLinkedinLogin = () => {
+        window.location.href = linkedinRedirectUrl;
+    }
+
     useEffect(() => {
-        const fetchInfo = async () => {
-            await fetchPfp();
+        async function checkForLinkedinToken () {
+            let windowUrl = window.location.href
+            if (windowUrl.includes('code=')) {
+                let codeMatch = windowUrl.match(/code=([a-zA-Z0-9_\-]+)/)
+
+                console.log(codeMatch[1]);
+                
+                try {
+                    const response = await fetch(`${HOST}/api/user/linkedin/userinfo`, {
+                        method: 'GET',
+                        headers: {
+                            auth_code: codeMatch[1]
+                        }
+                    });
+                
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! Status: ${response.status}`);
+                    }
+                
+                    const data = await response.json();
+                    console.log(data);
+                } catch (error) {
+                    console.error(error.message);
+                }
+            }
         }
+
+        checkForLinkedinToken();
     
-        fetchInfo();
-    
-        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
+
+    // useEffect(() => {
+    //     const fetchInfo = async () => {
+    //         await fetchPfp();
+    //     }
+    
+    //     fetchInfo();
+    
+    //     // eslint-disable-next-line react-hooks/exhaustive-deps
+    // }, []);
 
     return (
         <>
@@ -85,14 +128,14 @@ const Navbar = () => {
                         <>
                             <button 
                                 className="bg-pipelines-gray-500 px-8 py-2 rounded-lg shadow-md transition-colors duration-300 hover:bg-gray-700"
-                                onClick={() => navigate('/signup')}
+                                onClick={handleLinkedinLogin}
                             >
                                 <h1 className="text-white font-normal uppercase">Signup</h1>
                             </button>
 
                             <button 
                                 className="bg-white px-8 py-2 rounded-lg shadow-md transition-colors duration-300 hover:bg-gray-100"
-                                onClick={() => navigate('/login')}
+                                onClick={handleLinkedinLogin}
                             >
                                 <h1 className="text-pipelines-gray-500 font-light uppercase">Login</h1>
                             </button>
