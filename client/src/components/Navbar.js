@@ -233,7 +233,7 @@ const Navbar = () => {
             <FontAwesomeIcon icon={faBars} size="lg" />
           )}
         </div>
-        {nav && (
+        { nav && (
             <ul onClick={() => setNav(!nav)} className="z-40 flex flex-col justify-center items-center fixed top-0 bottom-0 left-0 right-0 bg-pink-700">
               <Link to="/" className="px-12 text-xl text-white font-light uppercase">
                 About
@@ -243,23 +243,16 @@ const Navbar = () => {
                 Search
               </Link>
 
-              {!user && (
+              {!user &&
                 <>
-                  <Link
-                    to="/signup"
-                    className="text-xl text-white font-light pb-5 uppercase"
+                  <button 
+                    className="bg-pipelines-gray-500 px-8 py-2 rounded-lg shadow-md transition-colors duration-300 hover:bg-gray-700"
+                    onClick={handleLinkedinLogin}
                   >
-                    Signup
-                  </Link> 
-
-                  <Link
-                    to="/login"
-                    className="text-xl text-white font-light uppercase"
-                  >
-                    Login
-                  </Link>
+                    <h1 className="text-white font-normal uppercase">Login</h1>
+                  </button>
                 </>
-              )}
+              }
 
               {user && (
                 <>
