@@ -49,10 +49,6 @@ const Navbar = () => {
     }
   };
 
-  const handleLinkedinLogin = () => {
-    window.location.href = linkedinRedirectUrl;
-  }
-
   useEffect(() => {
     async function checkForLinkedinToken () {
       let windowUrl = window.location.href
@@ -86,6 +82,7 @@ const Navbar = () => {
   useEffect(() => {
     async function checkForUserInfo () {
       if (!userInfo) return;
+      if (user) return;
 
       const email = userInfo.email;
       if (email) {
@@ -159,17 +156,9 @@ const Navbar = () => {
           {!user && (
             <>
               <Link
-                to="/signup"
+                to={linkedinRedirectUrl}
                 className="bg-pipelines-gray-500 px-8 py-2 rounded-lg shadow-md transition-colors duration-300 hover:bg-gray-700 
                                 text-white font-normal uppercase"
-              >
-                Signup
-              </Link>
-
-              <Link
-                to="/login"
-                className="bg-white px-8 py-2 rounded-lg shadow-md transition-colors duration-300 hover:bg-gray-100 
-                                text-pipelines-gray-500 font-light uppercase"
               >
                 Login
               </Link>
@@ -246,12 +235,13 @@ const Navbar = () => {
 
               {!user &&
                 <>
-                  <button 
-                    className="bg-pipelines-gray-500 px-8 py-2 rounded-lg shadow-md transition-colors duration-300 hover:bg-gray-700"
-                    onClick={handleLinkedinLogin}
+                  <Link
+                    to={linkedinRedirectUrl}
+                    className="bg-pipelines-gray-500 px-8 py-2 rounded-lg shadow-md transition-colors duration-300 hover:bg-gray-700 
+                                    text-white font-normal uppercase"
                   >
-                    <h1 className="text-white font-normal uppercase">Login</h1>
-                  </button>
+                    Login
+                  </Link>
                 </>
               }
 
