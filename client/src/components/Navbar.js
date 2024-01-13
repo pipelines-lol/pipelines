@@ -1,6 +1,9 @@
 import { Link, useNavigate } from "react-router-dom";
 import { useAuthContext } from "../hooks/useAuthContext";
-import { host } from "../util/apiRoutes";
+
+import { HOST } from "../util/apiRoutes";
+import { CLIENT_ID, SCOPE, REDIRECT_URI } from "../util/linkedinKeys";
+
 import { useEffect, useState } from "react";
 import { GalleryHorizontalEnd } from "lucide-react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -13,22 +16,24 @@ const Navbar = () => {
   const [pfp, setPfp] = useState(null);
   const [nav, setNav] = useState(false);
 
+  const [accessToken, setAccessToken] = useState(null);
+
+  const linkedinRedirectUrl = `https://linkedin.com/oauth/v2/authorization?client_id=${CLIENT_ID}&response_type=code&scope=${SCOPE}&redirect_uri=${REDIRECT_URI}`
+
   const fetchPfp = async () => {
     if (!user || !user.profileCreated) return;
 
     try {
-      const response = await fetch(`${host}/api/pfp/${user.profileId}`, {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-        },
+      const response = await fetch(`${HOST}/api/pfp/${user.profileId}`, {
+          method: "GET",
+          headers: {
+              'Content-Type': 'application/json'
+          }
       });
 
       if (!response.ok) {
         // Check if the response has JSON content
-        if (
-          response.headers.get("content-type")?.includes("application/json")
-        ) {
+        if (response.headers.get("content-type")?.includes("application/json")) {
           const errorData = await response.json();
           throw new Error(`${errorData.error}`);
         } else {
@@ -43,6 +48,42 @@ const Navbar = () => {
       setPfp(null);
     }
   };
+
+  const handleLinkedinLogin = () => {
+    window.location.href = linkedinRedirectUrl;
+  }
+
+  useEffect(() => {
+    async function checkForLinkedinToken () {
+      let windowUrl = window.location.href
+      if (windowUrl.includes('code=')) {
+        let codeMatch = windowUrl.match(/code=([a-zA-Z0-9_\-]+)/)
+
+        console.log(codeMatch[1]);
+        
+        try {
+          const response = await fetch(`${HOST}/api/user/linkedin/userinfo`, {
+            method: 'GET',
+            headers: {
+              auth_code: codeMatch[1]
+            }
+          });
+      
+          if (!response.ok) {
+            throw new Error(`HTTP error! Status: ${response.status}`);
+          }
+      
+          const data = await response.json();
+          console.log(data);
+        } catch (error) {
+          console.error(error.message);
+        }
+      }
+    }
+
+    checkForLinkedinToken();
+
+  }, []);
 
   useEffect(() => {
     const fetchInfo = async () => {
@@ -168,7 +209,7 @@ const Navbar = () => {
                     className="text-xl text-white font-light pb-5 uppercase"
                   >
                     Signup
-                  </Link>
+                  </Link> 
 
                   <Link
                     to="/login"

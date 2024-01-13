@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuthContext } from "../hooks/useAuthContext";
 import { ExperienceForm } from "../components/ExperienceForm";
-import { host } from "../util/apiRoutes";
+import { HOST } from "../util/apiRoutes";
 import Loading from "./Loading";
 
 function EditProfile() {

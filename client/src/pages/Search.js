@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 
 import { PipelineCard } from "../components/PipelineCard";
-import { host } from "../util/apiRoutes";
+import { HOST } from "../util/apiRoutes";
 import { QuerySearchInput } from "../components/QuerySearchInput";
 import Loading from "./Loading";
 

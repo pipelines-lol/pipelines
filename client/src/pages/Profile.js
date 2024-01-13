@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
-import { host } from "../util/apiRoutes";
+import { HOST } from "../util/apiRoutes";
 import { isMongoDBId } from "../util/isMongodbId";
 import { useAuthContext } from "../hooks/useAuthContext";
 

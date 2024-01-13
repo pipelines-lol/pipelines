@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 
 import { PipelineCard } from "../components/PipelineCard";
-import { host } from "../util/apiRoutes";
+import { HOST } from "../util/apiRoutes";
 import Loading from "./Loading";
 import { useNavigate } from "react-router-dom";
 
@@ -15,7 +15,7 @@ function Home() {
   const generateProfiles = async () => {
     const size = 1;
     setLoading(true);
-
+    
     fetch(`${host}/api/pipeline/random/${size}`, {
       method: "GET",
       headers: {

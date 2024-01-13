@@ -1,7 +1,8 @@
 import { useEffect, useState } from "react";
 import { companies } from "../data/companyData";
-import { homepage, host } from "../util/apiRoutes";
-import { ConditionalLink } from "./ConditionalLink";
+
+import { HOMEPAGE, HOST } from "../util/apiRoutes";
+import { ConditionalLink } from "./ConditionalLink"
 
 export const PipelineCard = ({ profileId, name, pfp, anonymous, pipeline }) => {
   const [pfpUrl, setPfpUrl] = useState(null);
