@@ -34,17 +34,17 @@ const Suggestions = () => {
               className="mt-7 mb-4 px-4 py-2 text-gray-800 bg-gray-100 rounded-full outline-none w-full"
               placeholder="You guys smell"
             />
+
+            <div className="flex justify-center">
+              <button
+                className="mt-7 bg-black px-12 py-2 rounded-full"
+
+              >
+                <h1 className="text-white">Submit Suggestion</h1>
+              </button>
+            </div>
           </form>
         </div>
-
-        <form action="/" method="POST">
-          <button
-            className="bg-black px-12 py-2 rounded-full"
-            onClick={() => {}}
-          >
-            <h1 className="text-white">Submit Suggestion</h1>
-          </button>
-        </form>
       </div>
     </div>
   );
