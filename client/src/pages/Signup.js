@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuthContext } from "../hooks/useAuthContext";
-import { host } from "../util/apiRoutes";
+import { HOST } from "../util/apiRoutes";
 
 function Signup() {
     const [email, setEmail] = useState('');
@@ -22,7 +22,7 @@ function Signup() {
             return;
         } 
 
-        fetch(`${host}/api/user/signup`, {
+        fetch(`${HOST}/api/user/signup`, {
             method: "POST",
             headers: {
                 'Content-Type': 'application/json' // Specify the content type as JSON

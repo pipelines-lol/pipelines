@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { PencilLine } from "lucide-react";
-import { host } from "../util/apiRoutes";
+import { HOST } from "../util/apiRoutes";
 import { useParams } from "react-router-dom";
 
 export const ProfilePicture = ({ profile, setPfp }) => {
@@ -14,7 +14,7 @@ export const ProfilePicture = ({ profile, setPfp }) => {
 
     const fetchPfp = async () => {
         try {
-            const response = await fetch(`${host}/api/pfp/${id}`, {
+            const response = await fetch(`${HOST}/api/pfp/${id}`, {
                 method: "GET",
                 headers: {
                     'Content-Type': 'application/json'
@@ -62,7 +62,7 @@ export const ProfilePicture = ({ profile, setPfp }) => {
         
                 try {
                 // Make a POST request to recognizeImage API
-                const recognitionResponse = await fetch(`${host}/api/imageModeration`, {
+                const recognitionResponse = await fetch(`${HOST}/api/imageModeration`, {
                     method: 'POST',
                     body: formData
                 });
@@ -87,7 +87,7 @@ export const ProfilePicture = ({ profile, setPfp }) => {
                 }
         
                 // Make a PATCH request to update the profile picture
-                const updateResponse = await fetch(`${host}/api/pfp/${profile._id}`, {
+                const updateResponse = await fetch(`${HOST}/api/pfp/${profile._id}`, {
                     method: "PATCH",
                     body: formData
                 });

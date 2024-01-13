@@ -1,34 +1,39 @@
 import { Link, useNavigate } from "react-router-dom";
 import { useAuthContext } from "../hooks/useAuthContext";
-import { host } from "../util/apiRoutes";
+
+import { HOST } from "../util/apiRoutes";
+import { CLIENT_ID, SCOPE, REDIRECT_URI } from "../util/linkedinKeys";
+
 import { useEffect, useState } from "react";
 import { GalleryHorizontalEnd } from "lucide-react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faBars, faTimes } from "@fortawesome/free-solid-svg-icons";
 
 const Navbar = () => {
+  const [nav, setNav] = useState(false);
   const navigate = useNavigate();
   const { user, dispatch } = useAuthContext();
 
+  // taken from linkedin api
+  const [userInfo, setUserInfo] = useState({});
   const [pfp, setPfp] = useState(null);
-  const [nav, setNav] = useState(false);
+
+  const linkedinRedirectUrl = `https://linkedin.com/oauth/v2/authorization?client_id=${CLIENT_ID}&response_type=code&scope=${SCOPE}&redirect_uri=${REDIRECT_URI}`
 
   const fetchPfp = async () => {
     if (!user || !user.profileCreated) return;
 
     try {
-      const response = await fetch(`${host}/api/pfp/${user.profileId}`, {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-        },
+      const response = await fetch(`${HOST}/api/pfp/${user.profileId}`, {
+          method: "GET",
+          headers: {
+              'Content-Type': 'application/json'
+          }
       });
 
       if (!response.ok) {
         // Check if the response has JSON content
-        if (
-          response.headers.get("content-type")?.includes("application/json")
-        ) {
+        if (response.headers.get("content-type")?.includes("application/json")) {
           const errorData = await response.json();
           throw new Error(`${errorData.error}`);
         } else {
@@ -43,6 +48,81 @@ const Navbar = () => {
       setPfp(null);
     }
   };
+
+  useEffect(() => {
+    async function checkForLinkedinToken () {
+      let windowUrl = window.location.href
+      if (windowUrl.includes('code=')) {
+        let codeMatch = windowUrl.match(/code=([a-zA-Z0-9_-]+)/);
+
+        try {
+          const response = await fetch(`${HOST}/api/user/linkedin/userinfo`, {
+            method: 'GET',
+            headers: {
+              auth_code: codeMatch[1]
+            }
+          });
+      
+          if (!response.ok) {
+            throw new Error(`HTTP error! Status: ${response.status}`);
+          }
+      
+          const data = await response.json();
+          setUserInfo(data);
+        } catch (error) {
+          console.error(error.message);
+        }
+      }
+    }
+
+    checkForLinkedinToken();
+
+  }, []);
+
+  useEffect(() => {
+    async function checkForUserInfo () {
+      if (!userInfo) return;
+      if (user) return;
+
+      const email = userInfo.email;
+      if (email) {
+        try {
+          const response = await fetch(`${HOST}/api/user/login`, {
+            method: "POST",
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ email })
+          });
+  
+          if (!response.ok) {
+            // Check if the response has JSON content
+            if (response.headers.get('content-type')?.includes('application/json')) {
+              const errorData = await response.json();
+              throw new Error(`${errorData.error}`);
+            } else {
+              throw new Error(`HTTP error! Status: ${response.status}`);
+            }
+          }
+    
+          const data = await response.json();
+          
+          localStorage.setItem('user', JSON.stringify(data));
+
+          // update AuthContext
+          dispatch({ type: "LOGIN", payload: data });
+
+          // redirect to home
+          navigate('/');
+        } catch (error) {
+            console.error(error.message);
+        }
+      }
+    }
+
+    checkForUserInfo();
+
+  }, [userInfo, user, dispatch, navigate]);
 
   useEffect(() => {
     const fetchInfo = async () => {
@@ -76,17 +156,9 @@ const Navbar = () => {
           {!user && (
             <>
               <Link
-                to="/signup"
+                to={linkedinRedirectUrl}
                 className="bg-pipelines-gray-500 px-8 py-2 rounded-lg shadow-md transition-colors duration-300 hover:bg-gray-700 
                                 text-white font-normal uppercase"
-              >
-                Signup
-              </Link>
-
-              <Link
-                to="/login"
-                className="bg-white px-8 py-2 rounded-lg shadow-md transition-colors duration-300 hover:bg-gray-100 
-                                text-pipelines-gray-500 font-light uppercase"
               >
                 Login
               </Link>
@@ -151,7 +223,7 @@ const Navbar = () => {
             <FontAwesomeIcon icon={faBars} size="lg" />
           )}
         </div>
-        {nav && (
+        { nav && (
             <ul onClick={() => setNav(!nav)} className="z-40 flex flex-col justify-center items-center fixed top-0 bottom-0 left-0 right-0 bg-pink-700">
               <Link to="/" className="px-12 text-xl text-white font-light uppercase">
                 About
@@ -161,23 +233,17 @@ const Navbar = () => {
                 Search
               </Link>
 
-              {!user && (
+              {!user &&
                 <>
                   <Link
-                    to="/signup"
-                    className="text-xl text-white font-light pb-5 uppercase"
-                  >
-                    Signup
-                  </Link>
-
-                  <Link
-                    to="/login"
-                    className="text-xl text-white font-light uppercase"
+                    to={linkedinRedirectUrl}
+                    className="bg-pipelines-gray-500 px-8 py-2 rounded-lg shadow-md transition-colors duration-300 hover:bg-gray-700 
+                                    text-white font-normal uppercase"
                   >
                     Login
                   </Link>
                 </>
-              )}
+              }
 
               {user && (
                 <>

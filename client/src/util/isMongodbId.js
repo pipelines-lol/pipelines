@@ -1,8 +1,8 @@
-import { host } from "./apiRoutes";
+import { HOST } from "./apiRoutes";
 
 export const isMongoDBId = async (id) => {
     try {
-        const response = await fetch(`${host}/api/mongodbId/${id}`, {
+        const response = await fetch(`${HOST}/api/mongodbId/${id}`, {
             method: "GET",
             headers: {
                 'Content-Type': 'application/json'

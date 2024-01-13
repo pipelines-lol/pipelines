@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 
 import { PipelineCard } from "../components/PipelineCard";
-import { host } from "../util/apiRoutes";
+import { HOST } from "../util/apiRoutes";
 import { QuerySearchInput } from "../components/QuerySearchInput";
 import Loading from "./Loading";
 
@@ -14,7 +14,7 @@ function Search() {
     const size = 1;
     setLoading(true);
 
-    fetch(`${host}/api/pipeline/random/${size}`, {
+    fetch(`${HOST}/api/pipeline/random/${size}`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json", // Specify the content type as JSON
@@ -47,7 +47,7 @@ function Search() {
     // loading state to load query
     setLoading(true);
 
-    fetch(`${host}/api/pipeline/search/${query}`, {
+    fetch(`${HOST}/api/pipeline/search/${query}`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json", // Specify the content type as JSON
