@@ -176,14 +176,7 @@ const Navbar = () => {
                                 className="bg-pipelines-gray-500 px-8 py-2 rounded-lg shadow-md transition-colors duration-300 hover:bg-gray-700"
                                 onClick={handleLinkedinLogin}
                             >
-                                <h1 className="text-white font-normal uppercase">Signup</h1>
-                            </button>
-
-                            <button 
-                                className="bg-white px-8 py-2 rounded-lg shadow-md transition-colors duration-300 hover:bg-gray-100"
-                                onClick={handleLinkedinLogin}
-                            >
-                                <h1 className="text-pipelines-gray-500 font-light uppercase">Login</h1>
+                                <h1 className="text-white font-normal uppercase">Login</h1>
                             </button>
                         </>
                     }  
