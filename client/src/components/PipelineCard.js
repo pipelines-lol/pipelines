@@ -12,7 +12,7 @@ export const PipelineCard = ({ profileId, name, pfp, anonymous, pipeline }) => {
     if (!pfp || pfp === "") return;
 
     try {
-      const response = await fetch(`${host}/api/pfp/${profileId}`, {
+      const response = await fetch(`${HOST}/api/pfp/${profileId}`, {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
@@ -93,7 +93,7 @@ export const ExperienceCard = ({ experience }) => {
     return foundCompany ? foundCompany.logo : null;
   }
 
-  const logo = `${homepage}/logos/${getLogoByName(experience.company)}`;
+  const logo = `${HOMEPAGE}/logos/${getLogoByName(experience.company)}`;
 
   return (
     <div
