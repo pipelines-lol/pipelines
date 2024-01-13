@@ -99,7 +99,7 @@ function Search() {
             </div>
             <QuerySearchInput handleSearch={handleSearch} />
           </div>
-          <div className="grid md:grid-cols-5 grid-cols-2 overflow-y-scroll col-span-5 gap-5 mx-10 py-12">
+          <div className="grid md:grid-cols-4 grid-cols-2 overflow-y-scroll col-span-5 gap-5 mx-10 py-12">
             {profiles.map((profile) => (
               <PipelineCard
                 key={`pipeline_${profile._id}`}
