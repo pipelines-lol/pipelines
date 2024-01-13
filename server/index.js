@@ -12,6 +12,7 @@ const pipelineRoutes = require('./routes/pipelines')
 const mongodbIdRoutes = require('./routes/mongodbId')
 const pfpRoutes = require('./routes/pfps')
 const imageModerationRoutes = require('./routes/imageModeration')
+const suggestionsRoue = require("./routes/suggestions")
 
 dotenv.config()
 
