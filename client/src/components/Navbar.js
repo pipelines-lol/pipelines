@@ -15,7 +15,7 @@ const Navbar = () => {
   const { user, dispatch } = useAuthContext();
 
   // taken from linkedin api
-  const [userInfo, setUserInfo] = useState({});
+  const [linkedinUserInfo, setUserLinkedinInfo] = useState({});
   const [pfp, setPfp] = useState(null);
 
   const linkedinRedirectUrl = `https://linkedin.com/oauth/v2/authorization?client_id=${CLIENT_ID}&response_type=code&scope=${SCOPE}&redirect_uri=${HOMEPAGE}`
@@ -40,12 +40,17 @@ const Navbar = () => {
         }
       }
 
-      const data = await response.json();
+      const user = await response.json();
       
-      localStorage.setItem('user', JSON.stringify(data));
+      localStorage.setItem('user', JSON.stringify(user));
 
       // update AuthContext
-      dispatch({ type: "LOGIN", payload: data });
+      dispatch({ type: "LOGIN", payload: user });
+
+      // SPECIAL CASE: first time user logged in
+      if (!user.profileCreated) {
+        await createProfile(user.profileId);
+      }
 
       // redirect to home
       navigate('/');
@@ -55,12 +60,63 @@ const Navbar = () => {
   }
 
   const logout = () => {
-    setUserInfo(null);
+    setUserLinkedinInfo(null);
     
     dispatch({ type: "LOGOUT" });
     localStorage.setItem("user", null);
 
     navigate("/");
+  }
+
+  const createProfile = async (profileId) => {
+
+    if (!linkedinUserInfo) {
+      return;
+    }
+
+    const { given_name, family_name, locale, picture } = linkedinUserInfo;
+
+    const profile = {
+      firstName: given_name,
+      lastName: family_name,
+      location: locale.country,
+      pfp: picture,
+      created: true,
+    };
+
+    try {
+      const response = await fetch(`${HOST}/api/profile/${profileId}`, {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json", // Specify the content type as JSON
+        },
+        body: JSON.stringify(profile),
+      });
+    
+      if (!response.ok) {
+        // Check if the response has JSON content
+        if (response.headers.get("content-type")?.includes("application/json")) {
+          const errorData = await response.json();
+          throw new Error(`${errorData.error}`);
+        } else {
+          throw new Error(`HTTP error! Status: ${response.status}`);
+        }
+      }
+    
+      const data = await response.json();
+    
+      // set user data
+      dispatch({ type: "CREATED" });
+    
+      // set new user in local storage (with profile created)
+      const storedUser = JSON.parse(localStorage.getItem("user"));
+      storedUser.profileCreated = true;
+      localStorage.setItem("user", JSON.stringify(storedUser));
+    
+      navigate("/");
+    } catch (error) {
+      console.error(error.message);
+    }
   }
 
   const fetchPfp = async () => {
@@ -111,7 +167,7 @@ const Navbar = () => {
           }
       
           const data = await response.json();
-          setUserInfo(data);
+          setUserLinkedinInfo(data);
         } catch (error) {
           console.error(error.message);
         }
@@ -124,10 +180,10 @@ const Navbar = () => {
 
   useEffect(() => {
     async function checkForUserInfo () {
-      if (!userInfo) return;
+      if (!linkedinUserInfo) return;
       if (user) return;
 
-      const email = userInfo.email;
+      const email = linkedinUserInfo.email;
       if (email) {
         login(email);
       }
@@ -136,7 +192,7 @@ const Navbar = () => {
     checkForUserInfo();
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [user]);
+  }, [user, linkedinUserInfo]);
 
   useEffect(() => {
     const fetchInfo = async () => {
