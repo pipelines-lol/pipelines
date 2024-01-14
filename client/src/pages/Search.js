@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 
 import { PipelineCard } from "../components/PipelineCard";
 import { HOST } from "../util/apiRoutes";
@@ -9,39 +9,6 @@ function Search() {
   const [profiles, setProfiles] = useState([]);
 
   const [loading, setLoading] = useState(false);
-
-  const generateProfiles = async () => {
-    const size = 1;
-    setLoading(true);
-
-    fetch(`${HOST}/api/pipeline/random/${size}`, {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json", // Specify the content type as JSON
-      },
-    })
-      .then((res) => {
-        if (!res.ok) {
-          // Check if the response has JSON content
-          if (res.headers.get("content-type")?.includes("application/json")) {
-            return res.json().then((errorData) => {
-              throw new Error(`${errorData.error}`);
-            });
-          } else {
-            throw new Error(`HTTP error! Status: ${res.status}`);
-          }
-        }
-        return res.json();
-      })
-      .then((data) => {
-        setProfiles([...data]);
-
-        setLoading(false);
-      })
-      .catch((error) => {
-        console.error(error.message);
-      });
-  };
 
   const handleSearch = async (query) => {
     // loading state to load query
@@ -75,10 +42,6 @@ function Search() {
         console.error(error.message);
       });
   };
-
-  /*useEffect(() => {
-    generateProfiles();
-  }, []);*/
 
   if (loading) {
     return <Loading />;
