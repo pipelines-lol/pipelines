@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react"
 import { ExperienceQuerySearchInput } from "./ExperienceQuerySearchInput";
 import { TitleQuerySearchInput } from "./TitleQuerySearchInput";
+import { X } from 'lucide-react';
 
 export const ExperienceForm = ({ experience, index, updateExperience, removeExperience }) => {
     const [company, setCompany] = useState('');
@@ -132,12 +133,15 @@ export const ExperienceForm = ({ experience, index, updateExperience, removeExpe
     return (
         <>
                                 
-            <div className="flex flex-col justify-center items-center h-auto w-auto bg-gray-200 gap-5 p-10">
+            <div className="flex flex-col justify-center items-center h-auto w-auto bg-white rounded-lg shadow-lg gap-5 p-10">
                 <button 
                     className="self-start" 
                     onClick={() => removeExperience(index)}
                 >
-                    <h1>X</h1>
+                    <X 
+                        size={20}
+                        className="-translate-x-5"
+                    />
                 </button>
                 <div className="flex flex-col justify-center items-center">
                     <label className="text-medium">Company</label>
