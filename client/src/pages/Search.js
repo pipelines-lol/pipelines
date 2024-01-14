@@ -49,7 +49,7 @@ function Search() {
 
   return (
     <>
-      <div className="flex flex-col justify-center items-center w-full h-full min-h-[100vh] bg-white gap-12 pt-20">
+      <div className="flex flex-col justify-center items-center w-full h-full min-h-[100vh] bg-white gap-12 pt-15">
           <div className="flex flex-col justify-center items-center text-center w-full h-[50vh] bg-pink-100 gap-5">
             <div className="flex flex-col justify-center items-center text-center w-full gap-3">
               <h1 className="text-pipelines-gray-500 font-bold text-4xl">
@@ -62,7 +62,7 @@ function Search() {
             </div>
             <QuerySearchInput handleSearch={handleSearch} />
           </div>
-          <div className="grid md:grid-cols-4 grid-cols-2 md:gap-4 sm:gap-2 gap-1 overflow-y-scroll pb-12">
+          <div className="grid md:grid-cols-4 grid-cols-2 md:gap-4 sm:gap-2 gap-1 pb-12">
             {profiles.map((profile) => (
               <PipelineCard
                 key={`pipeline_${profile._id}`}

@@ -223,7 +223,9 @@ const Navbar = () => {
     <>
       <header className="flex flex-row justify-between items-center w-full md:absolute fixed h-20 px-12 z-40 bg-white">
         <div className="hidden md:flex flex-row justify-start items-center gap-3">
-          <GalleryHorizontalEnd size={36} color="#444444" />
+          <Link to="/">
+            <GalleryHorizontalEnd size={36} color="#444444" />
+          </Link>
 
           <Link
             to="/"
@@ -295,7 +297,9 @@ const Navbar = () => {
           )}
         </div>
         {/* Mobile Nav */}
-        <GalleryHorizontalEnd className="md:hidden" size={36} color="#444444" />
+        <Link className="md:hidden" to="/">
+          <GalleryHorizontalEnd className="md:hidden" size={36} color="#444444" />
+        </Link>
         <div
           onClick={() => setNav(!nav)}
           className="md:hidden relative z-50 cursor-pointer"
