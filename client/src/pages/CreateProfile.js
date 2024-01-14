@@ -233,7 +233,7 @@ function CreateProfile() {
             {pipeline.map((experience, index) => (
               <div
                 key={`experience_${index}`}
-                className="flex flex-row justify-center items-center gap-3"
+                className="flex md:flex-row flex-col justify-center items-center gap-3"
               >
                 <ExperienceForm
                   key={`experience_form_${index}`}

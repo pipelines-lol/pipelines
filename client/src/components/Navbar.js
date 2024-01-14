@@ -15,7 +15,7 @@ const Navbar = () => {
   const { user, dispatch } = useAuthContext();
 
   // taken from linkedin api
-  const [userInfo, setUserInfo] = useState({});
+  const [linkedinUserInfo, setLinkedinUserInfo] = useState({});
   const [pfp, setPfp] = useState(null);
 
   const linkedinRedirectUrl = `https://linkedin.com/oauth/v2/authorization?client_id=${CLIENT_ID}&response_type=code&scope=${SCOPE}&redirect_uri=${HOMEPAGE}`
@@ -55,7 +55,7 @@ const Navbar = () => {
   }
 
   const logout = () => {
-    setUserInfo(null);
+    setLinkedinUserInfo(null);
     
     dispatch({ type: "LOGOUT" });
     localStorage.setItem("user", null);
@@ -111,7 +111,7 @@ const Navbar = () => {
           }
       
           const data = await response.json();
-          setUserInfo(data);
+          setLinkedinUserInfo(data);
         } catch (error) {
           console.error(error.message);
         }
@@ -124,10 +124,10 @@ const Navbar = () => {
 
   useEffect(() => {
     async function checkForUserInfo () {
-      if (!userInfo) return;
+      if (!linkedinUserInfo) return;
       if (user) return;
 
-      const email = userInfo.email;
+      const email = linkedinUserInfo.email;
       if (email) {
         login(email);
       }
@@ -136,7 +136,7 @@ const Navbar = () => {
     checkForUserInfo();
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [user]);
+  }, [user, linkedinUserInfo]);
 
   useEffect(() => {
     const fetchInfo = async () => {
