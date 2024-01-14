@@ -40,74 +40,74 @@ export const ProfilePicture = ({ profile, setPfp }) => {
         }
     }
 
-    const handleEditProfilePictureClick = () => {
-        // Trigger the file input when the button is clicked
-        fileInputRef.current.click();
-    };
+    // const handleEditProfilePictureClick = () => {
+    //     // Trigger the file input when the button is clicked
+    //     fileInputRef.current.click();
+    // };
 
-    const handleFileInputChange = async (e) => {
-        const selectedFile = e.target.files[0];
+    // const handleFileInputChange = async (e) => {
+    //     const selectedFile = e.target.files[0];
 
-        // clear error message
-        setErrorMessage('');
+    //     // clear error message
+    //     setErrorMessage('');
       
-        if (selectedFile) {
-            const reader = new FileReader();
+    //     if (selectedFile) {
+    //         const reader = new FileReader();
         
-            reader.onloadend = async () => {
-                setFilePreview(reader.result);
+    //         reader.onloadend = async () => {
+    //             setFilePreview(reader.result);
                 
-                const formData = new FormData();
-                formData.append("pfp", selectedFile);
+    //             const formData = new FormData();
+    //             formData.append("pfp", selectedFile);
         
-                try {
-                // Make a POST request to recognizeImage API
-                const recognitionResponse = await fetch(`${HOST}/api/imageModeration`, {
-                    method: 'POST',
-                    body: formData
-                });
+    //             try {
+    //             // Make a POST request to recognizeImage API
+    //             const recognitionResponse = await fetch(`${HOST}/api/imageModeration`, {
+    //                 method: 'POST',
+    //                 body: formData
+    //             });
         
-                if (!recognitionResponse.ok) {
-                    // Handle recognition error
-                    throw new Error(`Recognition API error! Status: ${recognitionResponse.status}`);
-                }
+    //             if (!recognitionResponse.ok) {
+    //                 // Handle recognition error
+    //                 throw new Error(`Recognition API error! Status: ${recognitionResponse.status}`);
+    //             }
         
-                const recognitionData = await recognitionResponse.json();
-                const moderationResults = recognitionData.moderationResult;
+    //             const recognitionData = await recognitionResponse.json();
+    //             const moderationResults = recognitionData.moderationResult;
                 
-                console.log("Recognition results: ", moderationResults, moderationResults.length);
+    //             console.log("Recognition results: ", moderationResults, moderationResults.length);
 
-                // inappropriate image found
-                if (moderationResults.length > 0) {
-                    setErrorMessage(`Image Flagged: ${moderationResults[0]}`);
+    //             // inappropriate image found
+    //             if (moderationResults.length > 0) {
+    //                 setErrorMessage(`Image Flagged: ${moderationResults[0]}`);
 
-                    await fetchPfp();
+    //                 await fetchPfp();
 
-                    return;
-                }
+    //                 return;
+    //             }
         
-                // Make a PATCH request to update the profile picture
-                const updateResponse = await fetch(`${HOST}/api/pfp/${profile._id}`, {
-                    method: "PATCH",
-                    body: formData
-                });
+    //             // Make a PATCH request to update the profile picture
+    //             const updateResponse = await fetch(`${HOST}/api/pfp/${profile._id}`, {
+    //                 method: "PATCH",
+    //                 body: formData
+    //             });
         
-                if (!updateResponse.ok) {
-                    // Handle update error
-                    throw new Error(`Update API error! Status: ${updateResponse.status}`);
-                }
+    //             if (!updateResponse.ok) {
+    //                 // Handle update error
+    //                 throw new Error(`Update API error! Status: ${updateResponse.status}`);
+    //             }
         
-                const updateData = await updateResponse.json();
-                console.log('Profile picture updated:', updateData);
+    //             const updateData = await updateResponse.json();
+    //             console.log('Profile picture updated:', updateData);
         
-                } catch (error) {
-                console.error(error.message);
-                }
-            };
+    //             } catch (error) {
+    //             console.error(error.message);
+    //             }
+    //         };
         
-            reader.readAsDataURL(selectedFile);
-        }
-    };
+    //         reader.readAsDataURL(selectedFile);
+    //     }
+    // };
     
 
     useEffect(() => {
@@ -130,22 +130,22 @@ export const ProfilePicture = ({ profile, setPfp }) => {
                     className="w-full h-full object-cover rounded-full transition-transform transform hover:scale-105"
                     alt={`${profile._id}_avatar`}
                 />
-                <button 
+                {/* <button 
                     className="absolute top-0 left-0 w-full h-full flex items-center justify-center opacity-0 hover:opacity-100"
                     onClick={handleEditProfilePictureClick}
                 >
                     <PencilLine 
                         className="w-12 h-12 text-gray-200 hover:text-gray-300 transition-transform transform hover:scale-110 cursor-pointer"
                     />
-                </button>
+                </button> */}
 
                 {/* Hidden file input */}
-                <input
+                {/* <input
                     type="file"
                     ref={fileInputRef}
                     style={{ display: 'none' }}
                     onChange={handleFileInputChange}
-                />
+                /> */}
             </div>
 
             { errorMessage &&
