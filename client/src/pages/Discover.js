@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { HOST } from "../util/apiRoutes";
 import { PipelineCard } from "../components/PipelineCard";
+import Loading from "./Loading";
 
 function Discover() {
   const [profiles, setProfiles] = useState([]);
@@ -42,6 +43,10 @@ function Discover() {
   useEffect(() => {
     generateProfiles();
   }, []);
+
+  if (loading) {
+    return <Loading />;
+  }
 
   return (
     <div className="flex flex-col w-full justify-center items-center text-center bg-white min-h-screen pt-20">
