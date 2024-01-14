@@ -18,21 +18,23 @@ const Navbar = () => {
   const [linkedinUserInfo, setLinkedinUserInfo] = useState({});
   const [pfp, setPfp] = useState(null);
 
-  const linkedinRedirectUrl = `https://linkedin.com/oauth/v2/authorization?client_id=${CLIENT_ID}&response_type=code&scope=${SCOPE}&redirect_uri=${HOMEPAGE}`
+  const linkedinRedirectUrl = `https://linkedin.com/oauth/v2/authorization?client_id=${CLIENT_ID}&response_type=code&scope=${SCOPE}&redirect_uri=${HOMEPAGE}`;
 
   const login = async (email) => {
     try {
       const response = await fetch(`${HOST}/api/user/login`, {
         method: "POST",
         headers: {
-            'Content-Type': 'application/json'
+          "Content-Type": "application/json",
         },
-        body: JSON.stringify({ email })
+        body: JSON.stringify({ email }),
       });
 
       if (!response.ok) {
         // Check if the response has JSON content
-        if (response.headers.get('content-type')?.includes('application/json')) {
+        if (
+          response.headers.get("content-type")?.includes("application/json")
+        ) {
           const errorData = await response.json();
           throw new Error(`${errorData.error}`);
         } else {
@@ -40,43 +42,100 @@ const Navbar = () => {
         }
       }
 
-      const data = await response.json();
-      
-      localStorage.setItem('user', JSON.stringify(data));
+      const user = await response.json();
+
+      localStorage.setItem("user", JSON.stringify(user));
 
       // update AuthContext
-      dispatch({ type: "LOGIN", payload: data });
+      dispatch({ type: "LOGIN", payload: user });
+
+      // SPECIAL CASE: first time user logged in
+      if (!user.profileCreated) {
+        await createProfile(user.profileId);
+      }
 
       // redirect to home
-      navigate('/');
+      navigate("/");
     } catch (error) {
-        console.error(error.message);
+      console.error(error.message);
     }
-  }
+  };
 
   const logout = () => {
     setLinkedinUserInfo(null);
-    
+
     dispatch({ type: "LOGOUT" });
     localStorage.setItem("user", null);
 
     navigate("/");
-  }
+  };
+
+  const createProfile = async (profileId) => {
+    if (!linkedinUserInfo) {
+      return;
+    }
+
+    const { given_name, family_name, locale, picture } = linkedinUserInfo;
+
+    const profile = {
+      firstName: given_name,
+      lastName: family_name,
+      location: locale.country,
+      pfp: picture,
+      created: true,
+    };
+
+    try {
+      const response = await fetch(`${HOST}/api/profile/${profileId}`, {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json", // Specify the content type as JSON
+        },
+        body: JSON.stringify(profile),
+      });
+
+      if (!response.ok) {
+        // Check if the response has JSON content
+        if (
+          response.headers.get("content-type")?.includes("application/json")
+        ) {
+          const errorData = await response.json();
+          throw new Error(`${errorData.error}`);
+        } else {
+          throw new Error(`HTTP error! Status: ${response.status}`);
+        }
+      }
+
+      // set user data
+      dispatch({ type: "CREATED" });
+
+      // set new user in local storage (with profile created)
+      const storedUser = JSON.parse(localStorage.getItem("user"));
+      storedUser.profileCreated = true;
+      localStorage.setItem("user", JSON.stringify(storedUser));
+
+      navigate("/");
+    } catch (error) {
+      console.error(error.message);
+    }
+  };
 
   const fetchPfp = async () => {
     if (!user || !user.profileCreated) return;
 
     try {
       const response = await fetch(`${HOST}/api/pfp/${user.profileId}`, {
-          method: "GET",
-          headers: {
-              'Content-Type': 'application/json'
-          }
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
       });
 
       if (!response.ok) {
         // Check if the response has JSON content
-        if (response.headers.get("content-type")?.includes("application/json")) {
+        if (
+          response.headers.get("content-type")?.includes("application/json")
+        ) {
           const errorData = await response.json();
           throw new Error(`${errorData.error}`);
         } else {
@@ -93,23 +152,23 @@ const Navbar = () => {
   };
 
   useEffect(() => {
-    async function checkForLinkedinToken () {
-      let windowUrl = window.location.href
-      if (windowUrl.includes('code=')) {
+    async function checkForLinkedinToken() {
+      let windowUrl = window.location.href;
+      if (windowUrl.includes("code=")) {
         let codeMatch = windowUrl.match(/code=([a-zA-Z0-9_-]+)/);
 
         try {
           const response = await fetch(`${HOST}/api/user/linkedin/userinfo`, {
-            method: 'GET',
+            method: "GET",
             headers: {
-              auth_code: codeMatch[1]
-            }
+              auth_code: codeMatch[1],
+            },
           });
-      
+
           if (!response.ok) {
             throw new Error(`HTTP error! Status: ${response.status}`);
           }
-      
+
           const data = await response.json();
           setLinkedinUserInfo(data);
         } catch (error) {
@@ -119,11 +178,10 @@ const Navbar = () => {
     }
 
     checkForLinkedinToken();
-
   }, []);
 
   useEffect(() => {
-    async function checkForUserInfo () {
+    async function checkForUserInfo() {
       if (!linkedinUserInfo) return;
       if (user) return;
 
@@ -161,7 +219,10 @@ const Navbar = () => {
             About
           </Link>
 
-          <Link to="/search" className="px-12 text-pipelines-gray-500 font-light uppercase">
+          <Link
+            to="/search"
+            className="px-12 text-pipelines-gray-500 font-light uppercase"
+          >
             Search
           </Link>
         </div>
@@ -232,65 +293,82 @@ const Navbar = () => {
             <FontAwesomeIcon icon={faBars} size="lg" />
           )}
         </div>
-        { nav && (
-            <ul onClick={() => setNav(!nav)} className="z-40 flex flex-col justify-center items-center fixed top-0 bottom-0 left-0 right-0 bg-pink-700">
-              <Link to="/" className="px-12 text-xl text-white font-light uppercase">
-                About
-              </Link>
+        {nav && (
+          <ul
+            onClick={() => setNav(!nav)}
+            className="z-40 flex flex-col justify-center items-center fixed top-0 bottom-0 left-0 right-0 bg-pink-700"
+          >
+            <Link
+              to="/"
+              className="px-12 text-xl text-white font-light uppercase"
+            >
+              About
+            </Link>
 
-              <Link to="/search" className="text-xl px-12 py-8 text-white font-light uppercase">
-                Search
-              </Link>
+            <Link
+              to="/search"
+              className="text-xl px-12 py-8 text-white font-light uppercase"
+            >
+              Search
+            </Link>
 
-              {!user &&
-                <>
-                  <Link
-                    to={linkedinRedirectUrl}
-                    className="bg-pipelines-gray-500 px-8 py-2 rounded-lg shadow-md transition-colors duration-300 hover:bg-gray-700 
+            {!user && (
+              <>
+                <Link
+                  to={linkedinRedirectUrl}
+                  className="bg-pipelines-gray-500 px-8 py-2 rounded-lg shadow-md transition-colors duration-300 hover:bg-gray-700 
                                     text-white font-normal uppercase"
-                  >
-                    Login
-                  </Link>
-                </>
-              }
+                >
+                  Login
+                </Link>
+              </>
+            )}
 
-              {user && (
-                <>
-                  {user.profileCreated ? (
-                    <>
-                      <Link
-                        to={`/user/${user.profileId}`}
-                        className="text-xl text-white pb-7 font-light uppercase"
-                      >
-                        User
-                      </Link>
+            {user && (
+              <>
+                {user.profileCreated ? (
+                  <>
+                    <Link
+                      to={`/user/${user.profileId}`}
+                      className="text-xl text-white pb-7 font-light uppercase"
+                    >
+                      User
+                    </Link>
 
-                      <Link to="/edit" className="text-xl text-white pb-7 font-light uppercase">
-                        Edit Profile
-                      </Link>
-                    </>
-                  ) : (
-                    <>
-                      <Link to="/create" className="text-xl text-white pb-7 py-12 font-light uppercase">
-                        Create Profile
-                      </Link>
-                    </>
-                  )}
+                    <Link
+                      to="/edit"
+                      className="text-xl text-white pb-7 font-light uppercase"
+                    >
+                      Edit Profile
+                    </Link>
+                  </>
+                ) : (
+                  <>
+                    <Link
+                      to="/create"
+                      className="text-xl text-white pb-7 py-12 font-light uppercase"
+                    >
+                      Create Profile
+                    </Link>
+                  </>
+                )}
 
-                  <button
-                    onClick={() => {
-                      dispatch({ type: "LOGOUT" });
-                      localStorage.setItem("user", null);
+                <button
+                  onClick={() => {
+                    dispatch({ type: "LOGOUT" });
+                    localStorage.setItem("user", null);
 
-                      navigate("/");
-                    }}
-                  >
-                    <h1 className="text-xl text-white font-light uppercase">Logout</h1>
-                  </button>
-                </>
-              )}
-            </ul>
-          )}
+                    navigate("/");
+                  }}
+                >
+                  <h1 className="text-xl text-white font-light uppercase">
+                    Logout
+                  </h1>
+                </button>
+              </>
+            )}
+          </ul>
+        )}
       </header>
     </>
   );
