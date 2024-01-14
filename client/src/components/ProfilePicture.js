@@ -1,16 +1,17 @@
 import { useEffect, useRef, useState } from "react";
-import { PencilLine } from "lucide-react";
 import { HOST } from "../util/apiRoutes";
 import { useParams } from "react-router-dom";
+
+// import { PencilLine } from "lucide-react";
 
 export const ProfilePicture = ({ profile, setPfp }) => {
     const { id } = useParams();
 
-    const fileInputRef = useRef(null);
+    // const fileInputRef = useRef(null);
     const [fetchedPfp, setFetchedPfp] = useState(null);
-    const [filePreview, setFilePreview] = useState(null);
+    // const [filePreview, setFilePreview] = useState(null);
     
-    const [errorMessage, setErrorMessage] = useState('');
+    // const [errorMessage, setErrorMessage] = useState('');
 
     const fetchPfp = async () => {
         try {
