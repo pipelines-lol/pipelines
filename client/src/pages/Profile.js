@@ -398,7 +398,7 @@ function Profile() {
           </div>
 
           {/* Pipeline */}
-          <div className="flex flex-col justify-center items-center md:w-1/3 w-full h-full bg-white p-10 gap-3">
+          <div className="flex flex-col justify-center items-center md:w-1/3 w-full h-full bg-white p-10 gap-3 pt-20">
             {profile.pipeline &&
               profile.pipeline.map((experience, i) => (
                 <div

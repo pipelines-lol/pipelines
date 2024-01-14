@@ -49,7 +49,7 @@ function Search() {
 
   return (
     <>
-      <div className="flex flex-col justify-center items-center w-full h-full min-h-[100vh] bg-white gap-12">
+      <div className="flex flex-col justify-center items-center w-full h-full min-h-[100vh] bg-white gap-12 pt-20">
           <div className="flex flex-col justify-center items-center text-center w-full h-[50vh] bg-pink-100 gap-5">
             <div className="flex flex-col justify-center items-center text-center w-full gap-3">
               <h1 className="text-pipelines-gray-500 font-bold text-4xl">

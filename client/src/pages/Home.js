@@ -54,7 +54,7 @@ function Home() {
 
   return (
     <>
-      <div className="flex flex-col justify-center items-center w-full h-full bg-white gap-12">
+      <div className="flex flex-col justify-center items-center w-full h-full bg-white gap-12 pt-20">
         <div className="flex flex-row w-full h-[50vh] bg-pink-100">
           <div className="flex flex-col justify-center items-center text-center w-1/2 h-full gap-3">
             <h1 className="text-pipelines-gray-500 font-bold text-4xl">
