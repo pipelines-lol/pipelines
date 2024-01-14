@@ -78,13 +78,14 @@ const Navbar = () => {
       return;
     }
 
-    const { given_name, family_name, locale, picture } = linkedinUserInfo;
+    const { given_name, family_name, locale, picture, vanity_name } = linkedinUserInfo;
 
     const profile = {
       firstName: given_name,
       lastName: family_name,
       location: locale.country,
       pfp: picture,
+      linkedin: `https://linkedin.com/in/${vanity_name}`,
       created: true,
     };
 
@@ -155,6 +156,7 @@ const Navbar = () => {
     }
   };
 
+  // checking for code after linkedin login
   useEffect(() => {
     async function checkForLinkedinToken() {
       let windowUrl = window.location.href;
@@ -185,6 +187,7 @@ const Navbar = () => {
     checkForLinkedinToken();
   }, []);
 
+  // check if user info is available, if so, log in user
   useEffect(() => {
 
     async function checkForUserInfo () {
@@ -211,7 +214,7 @@ const Navbar = () => {
     fetchInfo();
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [user]);
 
   return (
     <>

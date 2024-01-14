@@ -66,6 +66,7 @@ function Profile() {
         setUsername(data.username);
         setLinkedin(extractLinkedinUsername(data.linkedin));
         setLocation(data.location);
+        setPfp(data.pfp);
       } else {
         setProfile(null);
       }
@@ -302,15 +303,15 @@ function Profile() {
   return (
     <>
       {profile && !profile.anonymous ? (
-        <div className="flex md:flex-row flex-col justify-center items-center w-full h-full p-16 gap-10">
+        <div className="flex md:flex-row flex-col justify-center items-center w-full min-h-[90vh] h-full p-16 gap-10">
           {/* Profile picture + few fields */}
-          <div className="flex flex-col justify-center items-center bg-white md:w-1/3 w-full h-full p-10 gap-5 shadow-md">
+          <div className="flex flex-col justify-center items-center bg-white md:w-1/3 min-w-96 w-full h-full p-10 gap-5 shadow-md">
             {admin ? (
               <ProfilePicture profile={profile} setPfp={setPfp} />
             ) : (
               <img
                 src={pfp ? pfp : "/avatar.png"}
-                className="w-auto h-auto rounded-full"
+                className="w-96 h-96 rounded-full object-cover"
                 alt={`${profile._id}_avatar`}
               />
             )}
