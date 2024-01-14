@@ -10,6 +10,8 @@ import Footer from './components/Footer';
 import Login from './pages/Login';
 import Signup from './pages/Signup';
 
+import Discover from './pages/Discover';
+
 import Profile from './pages/Profile';
 import EditProfile from './pages/EditProfile';
 import Suggestions from './pages/Suggestions';
@@ -39,6 +41,8 @@ function App() {
 
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<Signup />} />
+
+          <Route path="/discover" element={<Discover />} />
           
           { user && user.profileCreated && <Route path="/edit" element={<EditProfile />} /> }
 

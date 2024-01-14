@@ -238,6 +238,13 @@ const Navbar = () => {
           >
             Search
           </Link>
+
+          <Link
+            to="/discover"
+            className="px-12 text-pipelines-gray-500 font-light uppercase"
+          >
+            Discover
+          </Link>
         </div>
 
         <div className="hidden md:flex flex-row gap-5">
