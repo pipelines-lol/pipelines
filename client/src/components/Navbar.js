@@ -135,7 +135,8 @@ const Navbar = () => {
 
     checkForUserInfo();
 
-  }, [userInfo, user, dispatch, navigate]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [user]);
 
   useEffect(() => {
     const fetchInfo = async () => {
