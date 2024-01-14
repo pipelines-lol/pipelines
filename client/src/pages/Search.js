@@ -76,9 +76,9 @@ function Search() {
       });
   };
 
-  useEffect(() => {
+  /*useEffect(() => {
     generateProfiles();
-  }, []);
+  }, []);*/
 
   if (loading) {
     return <Loading />;
