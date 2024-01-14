@@ -890,6 +890,10 @@ export const companies = [
     {
         name: "Wolverine Trading",
         logo: "Wolverine_Trading.png"
+    },
+    {
+        name: "AMD",
+        logo: "AMD.png"
     }
 ]
 
