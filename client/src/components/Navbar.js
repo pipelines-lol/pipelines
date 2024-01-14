@@ -103,8 +103,6 @@ const Navbar = () => {
         }
       }
     
-      const data = await response.json();
-    
       // set user data
       dispatch({ type: "CREATED" });
     
