@@ -53,7 +53,7 @@ function Discover() {
       <h1 className="w-full text-pipelines-gray-500 font-bold text-3xl">
         Discover Other Pipelines
       </h1>
-      <div className="grid md:grid-cols-4 grid-cols-2 grid-template-columns:repeat(2, minmax(0, 2[fr])); min-h-96 gap-2 md:gap-5 overflow-y-scroll pt-20 pb-12">
+      <div className="grid md:grid-cols-4 grid-cols-2 md:gap-4 sm:gap-2 gap-1 pb-12 min-h-96 overflow-y-scroll pt-20">
         {profiles.map((profile) => (
           <div key={`profile_${profile._id}`}>
             <div className="p-5"></div>
