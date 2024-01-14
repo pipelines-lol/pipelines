@@ -115,12 +115,12 @@ function Home() {
           </div>
         </div>
 
-        <div className="grid md:grid-cols-4 grid-cols-2 grid-template-columns:repeat(2, minmax(0, 2[fr])); gap-2 md:gap-5 overflow-y-scroll pb-12">
+        <div className="grid md:grid-cols-4 grid-cols-2 md:gap-4 sm:gap-2 gap-1 pb-12">
           {profiles.map((profile) => (
             <div 
               key={`profile_${profile._id}`}
             >
-              <div className="p-5"></div>
+              <div className="py-5"></div>
               <PipelineCard
                 key={`pipeline_${profile._id}`}
                 profileId={profile._id}
