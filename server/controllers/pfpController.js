@@ -22,6 +22,12 @@ const s3 = new S3Client({
     region: BUCKET_REGION 
 })
 
+const isLinkedInImage = (pfp) => {
+    const linkedInImageRegex = /^https:\/\/media\.licdn\.com\/dms\/image\/.+$/;
+
+    return linkedInImageRegex.test(pfp);
+};
+
 const getPfp = async (req, res) => {
     const { id } = req.params
 
@@ -37,6 +43,10 @@ const getPfp = async (req, res) => {
         return res.status(404).json({ error: 'No such profile picture.' });
     } else if (pfp === "") {
         return res.status(200).json({ pfp: "" });
+    }
+
+    if (isLinkedInImage(pfp)) {
+        return res.status(200).json({ pfp: pfp });
     }
 
     const getObjectParams = {
