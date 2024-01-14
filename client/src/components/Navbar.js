@@ -238,6 +238,13 @@ const Navbar = () => {
           >
             Search
           </Link>
+
+          <Link
+            to="/discover"
+            className="px-12 text-pipelines-gray-500 font-light uppercase md:hidden"
+          >
+            Discover
+          </Link>
         </div>
 
         <div className="hidden md:flex flex-row gap-5">
@@ -323,6 +330,13 @@ const Navbar = () => {
               className="text-xl px-12 py-8 text-white font-light uppercase"
             >
               Search
+            </Link>
+
+            <Link
+              to="/discover"
+              className="text-xl px-12 py-8 text-white font-light uppercase"
+            >
+              Discover
             </Link>
 
             {!user && (
