@@ -375,7 +375,7 @@ function Profile() {
 
             {profile.pipeline && profile.pipeline.length > 0 && (
               
-                <h1>
+                <h1 className="md:text-start text-center">
                   {profile.pipeline[profile.pipeline.length-1].title} at{" "}
                   <span className="font-medium">
                     {profile.pipeline[profile.pipeline.length-1].company}
