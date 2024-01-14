@@ -336,6 +336,13 @@ const Navbar = () => {
               Search
             </Link>
 
+            <Link
+              to="/discover"
+              className="text-xl px-12 py-8 text-white font-light uppercase"
+            >
+              Discover
+            </Link>
+
             {!user && (
               <>
                 <Link
