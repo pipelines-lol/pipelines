@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, /* useRef, */ useState } from "react";
 import { HOST } from "../util/apiRoutes";
 import { useParams } from "react-router-dom";
 
@@ -121,7 +121,7 @@ export const ProfilePicture = ({ profile, setPfp }) => {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
-    const src = filePreview || (fetchedPfp ? fetchedPfp : '/avatar.png');
+    const src = (fetchedPfp ? fetchedPfp : '/avatar.png');
 
     return (
         <>
@@ -149,9 +149,9 @@ export const ProfilePicture = ({ profile, setPfp }) => {
                 /> */}
             </div>
 
-            { errorMessage &&
+            {/* { errorMessage &&
                 <h1 className="text-red-400">{errorMessage}</h1>
-            }
+            } */}
         </>
     )
 }
