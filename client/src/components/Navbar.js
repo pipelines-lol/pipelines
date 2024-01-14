@@ -243,7 +243,7 @@ const Navbar = () => {
 
           <Link
             to="/discover"
-            className="px-12 text-pipelines-gray-500 font-light uppercase md:hidden"
+            className="px-12 text-pipelines-gray-500 font-light uppercase"
           >
             Discover
           </Link>
