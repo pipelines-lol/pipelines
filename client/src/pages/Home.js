@@ -120,7 +120,7 @@ function Home() {
             <div 
               key={`profile_${profile._id}`}
             >
-              <div className="p-5"></div>
+              <div className="py-5"></div>
               <PipelineCard
                 key={`pipeline_${profile._id}`}
                 profileId={profile._id}
