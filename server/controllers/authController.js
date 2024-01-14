@@ -71,6 +71,19 @@ const getLinkedinInfoWithCode = async (req, res) => {
             }
         })
 
+        // This request gets profile info from access_token (given in the headers of the request)
+        let userBasicProfileResponse = await axios.get('https://api.linkedin.com/v2/me', {
+            headers: {
+                'Authorization': `Bearer ${accessTokenResponse.data.access_token}`
+            }
+        })
+        
+        // Get the "vanityName" value from userBasicProfileResponse
+        const vanity_name = userBasicProfileResponse.data.vanityName;
+
+        // Attach the "vanityName" value to the userInfoResponse object as "vanity_name"
+        userInfoResponse.data.vanity_name = vanity_name;
+
         return res.status(200).json(userInfoResponse.data)
 
     } catch (error) {
