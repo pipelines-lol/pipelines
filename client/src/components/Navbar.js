@@ -123,54 +123,6 @@ const Navbar = () => {
     }
   };
 
-  const createProfile = async (profileId) => {
-
-    if (!linkedinUserInfo) {
-      return;
-    }
-
-    const { given_name, family_name, locale, picture } = linkedinUserInfo;
-
-    const profile = {
-      firstName: given_name,
-      lastName: family_name,
-      location: locale.country,
-      pfp: picture,
-      created: true,
-    };
-
-    try {
-      const response = await fetch(`${HOST}/api/profile/${profileId}`, {
-        method: "PATCH",
-        headers: {
-          "Content-Type": "application/json", // Specify the content type as JSON
-        },
-        body: JSON.stringify(profile),
-      });
-    
-      if (!response.ok) {
-        // Check if the response has JSON content
-        if (response.headers.get("content-type")?.includes("application/json")) {
-          const errorData = await response.json();
-          throw new Error(`${errorData.error}`);
-        } else {
-          throw new Error(`HTTP error! Status: ${response.status}`);
-        }
-      }
-    
-      // set user data
-      dispatch({ type: "CREATED" });
-    
-      // set new user in local storage (with profile created)
-      const storedUser = JSON.parse(localStorage.getItem("user"));
-      storedUser.profileCreated = true;
-      localStorage.setItem("user", JSON.stringify(storedUser));
-    
-      navigate("/");
-    } catch (error) {
-      console.error(error.message);
-    }
-  }
 
   const fetchPfp = async () => {
     if (!user || !user.profileCreated) return;
