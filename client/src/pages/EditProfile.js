@@ -4,6 +4,7 @@ import { useAuthContext } from "../hooks/useAuthContext";
 import { ExperienceForm } from "../components/ExperienceForm";
 import { HOST } from "../util/apiRoutes";
 import Loading from "./Loading";
+import { PlusCircle } from "lucide-react";
 
 function EditProfile() {
   const [firstName, setFirstName] = useState("");
@@ -170,14 +171,14 @@ function EditProfile() {
 
   return (
     <>
-      <div className="flex justify-center items-center w-full h-auto min-h-[100vh] bg-gray-100">
+      <div className="flex justify-center items-center w-full h-auto min-h-[100vh] bg-gray-100 pt-20">
         <div className="flex flex-col justify-center items-center h-2/3 bg-white shadow-md p-5 gap-10">
           <h1 className="text-black font-semibold text-2xl tracking-wide uppercase">
             Profile
           </h1>
 
           <div className="flex flex-col gap-3">
-            <div className="flex flex-row gap-3">
+            <div className="flex md:flex-row flex-col gap-3">
               <div className="flex flex-col gap-1">
                 <label className="text-medium">First Name</label>
                 <input
@@ -215,10 +216,10 @@ function EditProfile() {
           <div className="flex md:flex-row flex-col justify-center items-center flex-wrap w-full gap-3">
             <button
               key={0}
-              className="w-10 h-10 bg-gray-200 rounded-full"
+              className="flex justify-center items-center w-10 h-10 rounded-full"
               onClick={() => addExperience(0)}
             >
-              <h1>+</h1>
+              <PlusCircle size={30} />
             </button>
             {pipeline.map((experience, index) => (
               <div
@@ -234,12 +235,12 @@ function EditProfile() {
                 />
                 <button
                   key={`add_experience_button_${index + 1}`}
-                  className="w-10 h-10 bg-gray-200 rounded-full"
+                  className="flex justify-center items-center w-10 h-10 rounded-full"
                   onClick={() => {
                     addExperience(index + 1);
                   }}
                 >
-                  <h1>+</h1>
+                  <PlusCircle size={30} />
                 </button>
               </div>
             ))}

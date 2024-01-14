@@ -375,7 +375,7 @@ function Profile() {
 
             {profile.pipeline && profile.pipeline.length > 0 && (
               
-                <h1>
+                <h1 className="md:text-start text-center">
                   {profile.pipeline[profile.pipeline.length-1].title} at{" "}
                   <span className="font-medium">
                     {profile.pipeline[profile.pipeline.length-1].company}
@@ -398,7 +398,7 @@ function Profile() {
           </div>
 
           {/* Pipeline */}
-          <div className="flex flex-col justify-center items-center md:w-1/3 w-full h-full bg-white p-10 gap-3">
+          <div className="flex flex-col justify-center items-center md:w-1/3 w-full h-full bg-white p-10 gap-3 pt-20">
             {profile.pipeline &&
               profile.pipeline.map((experience, i) => (
                 <div
