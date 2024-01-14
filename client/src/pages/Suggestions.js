@@ -2,13 +2,10 @@ import React, { useState } from "react";
 
 const Suggestions = () => {
   const [suggestionType, setSuggestionType] = useState("");
-  
 
   const handleDropdown = (event) => {
     setSuggestionType(event.target.value);
   };
-
-  
 
   return (
     <div className="flex justify-center items-center w-full h-[90vh] bg-gray-100">
@@ -32,9 +29,14 @@ const Suggestions = () => {
             <option value="other">Other</option>
           </select>
 
-          <form action="https://getform.io/f/0f9b59be-ed87-4f61-b536-63e11c134c9e" method="POST">
+          <form
+            action="https://getform.io/f/0f9b59be-ed87-4f61-b536-63e11c134c9e"
+            method="POST"
+          >
             {suggestionType === "company" && (
-              <input type="text" name ="company"
+              <input
+                type="text"
+                name="company"
                 className="mt-7 mb-4 px-4 py-2 text-gray-800 bg-gray-100 rounded-full outline-none w-full"
                 placeholder="Can you add Ouckah LLC?"
                 required
@@ -42,14 +44,18 @@ const Suggestions = () => {
             )}
 
             {suggestionType === "website-issues" && (
-              <input type="text" name="website-issues"
+              <input
+                type="text"
+                name="website-issues"
                 className="mt-7 mb-4 px-4 py-2 text-gray-800 bg-gray-100 rounded-full outline-none w-full"
                 placeholder="Error when I try to add a company"
                 required
               />
             )}
             {suggestionType === "other" && (
-              <input type ="text" name="other"
+              <input
+                type="text"
+                name="other"
                 className="mt-7 mb-4 px-4 py-2 text-gray-800 bg-gray-100 rounded-full outline-none w-full"
                 placeholder="You guys smell"
                 required
@@ -57,11 +63,7 @@ const Suggestions = () => {
             )}
 
             <div className="flex justify-center">
-              <button 
-                className="mt-7 bg-black px-12 py-2 rounded-full"
-                
-
-              >
+              <button className="mt-7 bg-black px-12 py-2 rounded-full">
                 <h1 className="text-white">Submit Suggestion</h1>
               </button>
             </div>
