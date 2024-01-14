@@ -51,7 +51,7 @@ export const PipelineCard = ({ profileId, name, pfp, anonymous, pipeline }) => {
 
   return (
     <div
-      className="flex flex-col justify-center items-center gap-3"
+      className="flex flex-col justify-center items-center gap-3 p-5"
       key={pipeline._id}
     >
       <ConditionalLink
