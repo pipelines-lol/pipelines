@@ -20,6 +20,49 @@ const Navbar = () => {
 
   const linkedinRedirectUrl = `https://linkedin.com/oauth/v2/authorization?client_id=${CLIENT_ID}&response_type=code&scope=${SCOPE}&redirect_uri=${HOMEPAGE}`
 
+  const login = async (email) => {
+    try {
+      const response = await fetch(`${HOST}/api/user/login`, {
+        method: "POST",
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ email })
+      });
+
+      if (!response.ok) {
+        // Check if the response has JSON content
+        if (response.headers.get('content-type')?.includes('application/json')) {
+          const errorData = await response.json();
+          throw new Error(`${errorData.error}`);
+        } else {
+          throw new Error(`HTTP error! Status: ${response.status}`);
+        }
+      }
+
+      const data = await response.json();
+      
+      localStorage.setItem('user', JSON.stringify(data));
+
+      // update AuthContext
+      dispatch({ type: "LOGIN", payload: data });
+
+      // redirect to home
+      navigate('/');
+    } catch (error) {
+        console.error(error.message);
+    }
+  }
+
+  const logout = () => {
+    setUserInfo(null);
+    
+    dispatch({ type: "LOGOUT" });
+    localStorage.setItem("user", null);
+
+    navigate("/");
+  }
+
   const fetchPfp = async () => {
     if (!user || !user.profileCreated) return;
 
@@ -86,43 +129,14 @@ const Navbar = () => {
 
       const email = userInfo.email;
       if (email) {
-        try {
-          const response = await fetch(`${HOST}/api/user/login`, {
-            method: "POST",
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({ email })
-          });
-  
-          if (!response.ok) {
-            // Check if the response has JSON content
-            if (response.headers.get('content-type')?.includes('application/json')) {
-              const errorData = await response.json();
-              throw new Error(`${errorData.error}`);
-            } else {
-              throw new Error(`HTTP error! Status: ${response.status}`);
-            }
-          }
-    
-          const data = await response.json();
-          
-          localStorage.setItem('user', JSON.stringify(data));
-
-          // update AuthContext
-          dispatch({ type: "LOGIN", payload: data });
-
-          // redirect to home
-          navigate('/');
-        } catch (error) {
-            console.error(error.message);
-        }
+        login(email);
       }
     }
 
     checkForUserInfo();
 
-  }, [userInfo, user, dispatch, navigate]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [user]);
 
   useEffect(() => {
     const fetchInfo = async () => {
@@ -197,12 +211,7 @@ const Navbar = () => {
 
               <button
                 className="bg-white px-8 py-2 rounded-lg shadow-md transition-colors duration-300 hover:bg-gray-100"
-                onClick={() => {
-                  dispatch({ type: "LOGOUT" });
-                  localStorage.setItem("user", null);
-
-                  navigate("/");
-                }}
+                onClick={logout}
               >
                 <h1 className="text-pipelines-gray-500 font-light uppercase">
                   Logout
