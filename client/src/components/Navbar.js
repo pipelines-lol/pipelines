@@ -150,7 +150,7 @@ const Navbar = () => {
 
   return (
     <>
-      <header className="flex flex-row justify-between items-center w-full h-20 px-12 z-100 bg-white">
+      <header className="flex flex-row justify-between items-center w-full md:absolute fixed h-20 px-12 z-40 bg-white">
         <div className="hidden md:flex flex-row justify-start items-center gap-3">
           <GalleryHorizontalEnd size={36} color="#444444" />
 

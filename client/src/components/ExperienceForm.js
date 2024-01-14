@@ -132,7 +132,7 @@ export const ExperienceForm = ({ experience, index, updateExperience, removeExpe
     return (
         <>
                                 
-            <div className="flex flex-col justify-center items-center h-96 bg-gray-200 gap-5 p-10">
+            <div className="flex flex-col justify-center items-center h-auto w-auto bg-gray-200 gap-5 p-10">
                 <button 
                     className="self-start" 
                     onClick={() => removeExperience(index)}

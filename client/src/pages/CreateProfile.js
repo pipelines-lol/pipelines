@@ -181,7 +181,7 @@ function CreateProfile() {
 
   return (
     <>
-      <div className="flex justify-center items-center w-full h-[90vh] bg-gray-100">
+      <div className="flex justify-center items-center w-full h-full min-h-[100vh] bg-gray-100">
         <div className="flex flex-col justify-center items-center h-2/3 bg-white shadow-md p-5 gap-10">
           <h1 className="text-black font-semibold text-2xl tracking-wide uppercase">
             Profile
@@ -222,7 +222,7 @@ function CreateProfile() {
             </label>
           </div>
 
-          <div className="flex flex-row justify-center items-center w-full gap-3">
+          <div className="flex md:flex-row flex-col justify-center items-center flex-wrap w-full gap-3">
             <button
               key={`add_experience_button_0`}
               className="w-10 h-10 bg-gray-200 rounded-full"

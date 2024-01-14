@@ -59,7 +59,7 @@ export const ExperienceQuerySearchInput = ({ value, handleSearch }) => {
                     onChange={handleInputChange}
                     placeholder="Google"
                 />
-                <div className={`bg-white w-full max-h-96 z-20 -translate-y-2 overflow-y-scroll shadow-md ${hasResults ? "absolute top-full" : ""}`}>
+                <div className={`bg-white w-full max-h-96 z-30 -translate-y-2 overflow-y-scroll shadow-md ${hasResults ? "absolute top-full" : ""}`}>
                     {hasResults && results.map((company) => (
                         <div 
                             key={`${company.name}_result`}
