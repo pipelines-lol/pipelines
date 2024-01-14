@@ -170,14 +170,14 @@ function EditProfile() {
 
   return (
     <>
-      <div className="flex justify-center items-center w-full h-auto min-h-[100vh] bg-gray-100">
+      <div className="flex justify-center items-center w-full h-auto min-h-[100vh] bg-gray-100 pt-20">
         <div className="flex flex-col justify-center items-center h-2/3 bg-white shadow-md p-5 gap-10">
           <h1 className="text-black font-semibold text-2xl tracking-wide uppercase">
             Profile
           </h1>
 
           <div className="flex flex-col gap-3">
-            <div className="flex flex-row gap-3">
+            <div className="flex md:flex-row flex-col gap-3">
               <div className="flex flex-col gap-1">
                 <label className="text-medium">First Name</label>
                 <input
