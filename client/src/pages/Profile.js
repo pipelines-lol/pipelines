@@ -310,7 +310,7 @@ function Profile() {
             ) : (
               <img
                 src={pfp ? pfp : "/avatar.png"}
-                className="w-96 h-96 rounded-full"
+                className="w-auto h-auto rounded-full"
                 alt={`${profile._id}_avatar`}
               />
             )}
@@ -367,22 +367,19 @@ function Profile() {
           </div>
 
           {/* Name + job info */}
-          <div className="flex flex-col justify-center items-start md:w-1/3 w-full h-full gap-3">
+          <div className="flex flex-col justify-center md:items-start items-center md:w-1/3 w-full h-full gap-3">
             <h1 className="text-black font-semibold text-2xl">
               {profile.firstName} {profile.lastName}
             </h1>
 
-            <div className="flex justify-center items-center w-24 h-8 bg-gray-200 border-gray-500 border-2 rounded-full">
-              <h1 className="text-gray-800 font-semibold">Intern</h1>
-            </div>
-
             {profile.pipeline && profile.pipeline.length > 0 && (
-              <h1>
-                {profile.pipeline[0].title} at{" "}
-                <span className="font-medium">
-                  {profile.pipeline[0].company}
-                </span>
-              </h1>
+              
+                <h1>
+                  {profile.pipeline[profile.pipeline.length-1].title} at{" "}
+                  <span className="font-medium">
+                    {profile.pipeline[profile.pipeline.length-1].company}
+                  </span>
+                </h1>
             )}
 
             <div className="flex flex-row justify-center items-center gap-2">
