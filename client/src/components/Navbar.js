@@ -192,6 +192,9 @@ const Navbar = () => {
 
     async function checkForUserInfo () {
 
+      // edge case for old logged in users
+      if (!linkedinUserInfo && user) return logout();
+
       if (!linkedinUserInfo) return;
       if (user) return;
 
