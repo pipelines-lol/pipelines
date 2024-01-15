@@ -17,8 +17,9 @@ export const TitleQuerySearchInput = ({ value, handleSearch }) => {
         if (value) {
             setQuery(value);
         }
+
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [value])
+    }, [query])
 
     const handleInputChange = async (event) => {
         const inputValue = event.target.value;
@@ -57,9 +58,9 @@ export const TitleQuerySearchInput = ({ value, handleSearch }) => {
                     type="text"
                     value={query}
                     onChange={handleInputChange}
-                    placeholder="Google"
+                    placeholder="Software Engineer Intern"
                 />
-                <div className={`bg-white w-full max-h-96 z-20 -translate-y-2 overflow-y-scroll shadow-md ${hasResults ? "absolute top-full" : ""}`}>
+                <div className={`bg-white w-full max-h-44 z-10 -translate-y-2 overflow-y-scroll p-2 shadow-md ${hasResults ? "absolute top-full" : "hidden"}`}>
                     {hasResults && results.map((title) => (
                         <div 
                             key={`${title}_result`}
@@ -67,7 +68,7 @@ export const TitleQuerySearchInput = ({ value, handleSearch }) => {
                         >
                             <button
                                 key={title} // Add a unique key for each button
-                                className="flex items-center w-full h-16 p-5 text-start"
+                                className="flex items-center w-full h-auto text-start"
                                 onClick={() => handleTitleButtonClick(title)}
                             >
                                 <h1>{title}</h1>
