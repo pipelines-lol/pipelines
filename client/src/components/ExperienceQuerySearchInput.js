@@ -53,13 +53,13 @@ export const ExperienceQuerySearchInput = ({ value, handleSearch }) => {
                 onSubmit={(e) => e.preventDefault()} // Prevent form submission
             >
                 <input
-                    className={`px-4 py-2 z-30 bg-gray-100 rounded-2xl`}
+                    className={`px-4 py-2 z-40 bg-gray-100 rounded-2xl`}
                     type="text"
                     value={query}
                     onChange={handleInputChange}
                     placeholder="Google"
                 />
-                <div className={`bg-white w-full max-h-96 z-30 -translate-y-2 overflow-y-scroll shadow-md ${hasResults ? "absolute top-full" : ""}`}>
+                <div className={`bg-white w-full max-h-44 z-30 -translate-y-2 overflow-y-scroll shadow-md ${hasResults ? "absolute top-full" : ""}`}>
                     {hasResults && results.map((company) => (
                         <div 
                             key={`${company.name}_result`}

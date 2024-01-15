@@ -175,7 +175,7 @@ export const ExperienceForm = ({ experience, index, updateExperience, removeExpe
     return (
         <>
                                 
-            <div className="flex flex-col justify-center items-center h-auto w-auto bg-white rounded-lg shadow-lg gap-5 p-10">
+            <div className="flex flex-col justify-center items-center h-auto w-auto overflow-y-hidden bg-white rounded-lg shadow-lg gap-5 p-10">
                 <button 
                     className="self-start" 
                     onClick={() => removeExperience(index)}
@@ -195,7 +195,7 @@ export const ExperienceForm = ({ experience, index, updateExperience, removeExpe
 
                 <div className="flex flex-col justify-center items-center">
                     <label className="text-medium">Title</label>
-                    <TitleQuerySearchInput 
+                    <TitleQuerySearchInput
                         value={title}
                         handleSearch={handleTitleChange}
                     />
