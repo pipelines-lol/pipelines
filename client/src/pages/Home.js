@@ -13,7 +13,7 @@ function Home() {
   const navigate = useNavigate();
 
   const generateProfiles = async () => {
-    const size = 8;
+    const size = 4;
     setLoading(true);
 
     fetch(`${HOST}/api/pipeline/random/${size}`, {
