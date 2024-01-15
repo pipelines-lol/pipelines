@@ -83,6 +83,12 @@ export const ExperienceForm = ({ experience, index, updateExperience, removeExpe
 
             setStartDate(value);
 
+            // Check if endDate is earlier than startDate and adjust it if necessary
+            if (new Date(value) > new Date(endDate)) {
+                setStartDate(endDate);
+                console.log("startDate: ", startDate);
+            }
+
             const newExperience = {
                 company: company,
                 title: title,
@@ -94,6 +100,12 @@ export const ExperienceForm = ({ experience, index, updateExperience, removeExpe
         } else if (field === "endDate") {
 
             setEndDate(value);
+
+            // Check if endDate is earlier than startDate and adjust startDate if necessary
+            if (new Date(value) < new Date(startDate)) {
+                setEndDate(startDate);
+                console.log("endDate: ", endDate);
+            }
 
             const newExperience = {
                 company: company,
