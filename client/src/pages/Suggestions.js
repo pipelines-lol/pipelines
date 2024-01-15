@@ -9,7 +9,7 @@ const Suggestions = () => {
 
   return (
     <div className="flex justify-center items-center w-full h-[90vh] bg-gray-100">
-      <div className="flex flex-col justify-center items-center w-96 h-2/3 bg-white shadow-md py-10 gap-10">
+      <div className="flex flex-col justify-center items-center w-1/2 md:w=[28rem] lg:w-[32rem] xl:w-[36rem] h-7/10 bg-white shadow-md py-10 gap-10 mt-20">
         <h1 className="text-black font-semibold text-2xl tracking-wide uppercase">
           Suggestions
         </h1>
@@ -34,30 +34,33 @@ const Suggestions = () => {
             method="POST"
           >
             {suggestionType === "company" && (
-              <input
+              <textarea
                 type="text"
                 name="company"
-                className="mt-7 mb-4 px-4 py-2 text-gray-800 bg-gray-100 rounded-full outline-none w-full"
+                className="mt-7 mb-4 px-4 py-4 text-gray-800 bg-gray-100 rounded-md outline-none w-full resize-none"
                 placeholder="Can you add Ouckah LLC?"
+                rows="4"
                 required
               />
             )}
 
             {suggestionType === "website-issues" && (
-              <input
+              <textarea
                 type="text"
                 name="website-issues"
-                className="mt-7 mb-4 px-4 py-2 text-gray-800 bg-gray-100 rounded-full outline-none w-full"
+                className="mt-7 mb-4 px-4 py-4 text-gray-800 bg-gray-100 rounded-md outline-none w-full resize-none"
                 placeholder="Error when I try to add a company"
+                rows="4"
                 required
               />
             )}
             {suggestionType === "other" && (
-              <input
+              <textarea
                 type="text"
                 name="other"
-                className="mt-7 mb-4 px-4 py-2 text-gray-800 bg-gray-100 rounded-full outline-none w-full"
+                className="mt-7 mb-4 px-4 py-4 text-gray-800 bg-gray-100 rounded-md outline-none w-full resize-none"
                 placeholder="You guys smell"
+                rows="4"
                 required
               />
             )}
