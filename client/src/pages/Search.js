@@ -6,46 +6,45 @@ import { HOST } from '../util/apiRoutes'
 import Loading from './Loading'
 
 function Search() {
-    const [profiles, setProfiles] = useState([])
+  const [profiles, setProfiles] = useState([])
 
-    const [loading, setLoading] = useState(false)
+  const [loading, setLoading] = useState(false)
 
-    const handleSearch = async (query) => {
-        // loading state to load query
-        setLoading(true)
+  const [searchPerformed, setSearchPerformed] = useState(false);
 
-        fetch(`${HOST}/api/pipeline/search/${query}`, {
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json', // Specify the content type as JSON
-            },
-        })
-            .then((res) => {
-                if (!res.ok) {
-                    // Check if the response has JSON content
-                    if (
-                        res.headers
-                            .get('content-type')
-                            ?.includes('application/json')
-                    ) {
-                        return res.json().then((errorData) => {
-                            throw new Error(`${errorData.error}`)
-                        })
-                    } else {
-                        throw new Error(`HTTP error! Status: ${res.status}`)
-                    }
-                }
-                return res.json()
-            })
-            .then((data) => {
-                setProfiles([...data])
+  const handleSearch = async (query) => {
+    // loading state to load query
+    setLoading(true);
+    setSearchPerformed(true);
 
-                setLoading(false)
-            })
-            .catch((error) => {
-                console.error(error.message)
-            })
-    }
+    fetch(`${HOST}/api/pipeline/search/${query}`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json", // Specify the content type as JSON
+      },
+    })
+      .then((res) => {
+        if (!res.ok) {
+          // Check if the response has JSON content
+          if (res.headers.get("content-type")?.includes("application/json")) {
+            return res.json().then((errorData) => {
+              throw new Error(`${errorData.error}`);
+            });
+          } else {
+            throw new Error(`HTTP error! Status: ${res.status}`);
+          }
+        }
+        return res.json();
+      })
+      .then((data) => {
+        setProfiles([...data]);
+        setLoading(false);
+      })
+      .catch((error) => {
+        console.error(error.message);
+        setLoading(false);
+      });
+  };
 
     if (loading) {
         return <Loading />
@@ -81,6 +80,11 @@ function Search() {
                     <QuerySearchInput handleSearch={handleSearch} />
                 </div>
                 <div className="grid grid-cols-2 gap-1 pb-12 sm:gap-2 md:grid-cols-4 md:gap-4">
+                {searchPerformed && profiles.length === 0 && !loading && (
+                  <div className="col-span-full text-center text-pipelines-gray-500 mt-9 text-3xl font-bold">
+                    No users on this site for this company :/
+                  </div>
+                )}
                     {profiles.map((profile) => (
                         <PipelineCard
                             key={`pipeline_${profile._id}`}

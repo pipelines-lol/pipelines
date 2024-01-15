@@ -4,19 +4,11 @@ import { ExperienceQuerySearchInput } from './ExperienceQuerySearchInput'
 import { TitleQuerySearchInput } from './TitleQuerySearchInput'
 
 export const ExperienceForm = ({
-<<<<<<< HEAD
     experience,
     index,
     updateExperience,
     removeExperience,
     setIsValid,
-=======
-  experience,
-  index,
-  updateExperience,
-  removeExperience,
-  setIsValid,
->>>>>>> 8f7f6ad (Created and tested create company procedure)
 }) => {
     const [company, setCompany] = useState('')
     const [title, setTitle] = useState('')
@@ -169,26 +161,8 @@ export const ExperienceForm = ({
             date: `${flipDateFormat(startDate)} - ${flipDateFormat(endDate)}`,
         }
 
-<<<<<<< HEAD
         updateExperience(newExperience, index)
     }
-=======
-        <div className="flex flex-col justify-center items-center">
-          <label className="text-medium">Rate your experience</label>
-        </div>
-
-        <div className="flex flex-col justify-center items-center">
-          <label className="text-medium">Date</label>
-          <div className="flex flex-col justify-center items-center gap-2">
-            <input
-              className="px-4 py-2 text-gray-800 bg-gray-100 rounded-full outline-none"
-              placeholder="September 2020 - September 2021"
-              value={startDate}
-              type="month"
-              pattern="\d{4}-\d{2}"
-              onChange={(e) => handleExperienceChange(e, "startDate")}
-            />
->>>>>>> 8f7f6ad (Created and tested create company procedure)
 
     const handleIndefiniteCheckboxChange = (e) => {
         setIsIndefinite(e.target.checked)
