@@ -19,7 +19,7 @@ export const TitleQuerySearchInput = ({ value, handleSearch }) => {
         }
 
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [query])
+    }, [value])
 
     const handleInputChange = async (event) => {
         const inputValue = event.target.value;

@@ -953,7 +953,6 @@ export const titles = [
     "Principal Software Developer Engineer",
     "Senior Principal Software Developer Engineer",
     "Technical Fellow",
-    "Senior Associate",
     "Junior Software Engineer",
     "Software Engineer Intern",
     "Software Developer Intern",
