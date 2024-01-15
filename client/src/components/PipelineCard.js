@@ -56,13 +56,13 @@ export const PipelineCard = ({ profileId, name, pfp, anonymous, pipeline }) => {
     >
       <ConditionalLink
         className="w-2/3"
-        condition={!anonymous}
+        condition={true}
         to={`/user/${profileId}`}
       >
         <div className="flex flex-row justify-end items-center w-full sm:gap-5 md:gap-3 gap-1">
           <img
             className="w-12 h-12 rounded-full object-cover"
-            src={pfpUrl ? pfpUrl : "avatar.png"}
+            src={anonymous ? "avatar.png" : (pfpUrl || "avatar.png")}
             alt="avatar"
           />
           <h1 className="text-black font-light text-xl uppercase">

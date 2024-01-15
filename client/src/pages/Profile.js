@@ -412,10 +412,111 @@ function Profile() {
           </div>
         </div>
       ) : (
-        <div className="flex flex-row justify-center items-center w-full h-full p-16">
-          <h1 className="text-black font-bold text-4xl">
-            404 Profile Not Found.
-          </h1>
+        <div className="flex md:flex-row flex-col justify-center items-center w-full min-h-[90vh] h-full p-16 gap-10">
+          {/* Profile picture + few fields */}
+          <div className="flex flex-col justify-center items-center bg-white md:w-1/3 min-w-96 w-full h-full p-10 gap-5 shadow-md">
+            {admin ? (
+              <ProfilePicture profile={profile} setPfp={setPfp} />
+            ) : (
+              <img
+                src={"/avatar.png"}
+                className="w-96 h-96 rounded-full object-cover"
+                alt={`${profile._id}_avatar`}
+              />
+            )}
+
+            {admin ? (
+              <div className="flex flex-col justify-center items-center gap-3">
+                <label>Username</label>
+                <input
+                  className="p-3 bg-gray-100 rounded-full"
+                  value={username}
+                  onChange={handleUsernameChange}
+                />
+                {usernameErrorMessage && (
+                  <h1 className="text-red-400">{usernameErrorMessage}</h1>
+                )}
+
+                <label>Linkedin</label>
+                <div className="flex flex-row justify-center items-center gap-2">
+                  <h1>linkedin.com/in/</h1>
+                  <input
+                    className="p-3 bg-gray-100 rounded-full"
+                    value={linkedin}
+                    onChange={handleLinkedinChange}
+                  />
+                </div>
+                {linkedinErrorMessage && (
+                  <h1 className="text-red-400">{linkedinErrorMessage}</h1>
+                )}
+
+                <div className="h-4" />
+
+                {saveable && !hasError ? (
+                  <button
+                    className={"bg-black px-12 py-1 rounded-full"}
+                    onClick={handleEditProfile}
+                  >
+                    <h1 className="text-white font-normal uppercase">Save</h1>
+                  </button>
+                ) : (
+                  <div className="h-8" />
+                )}
+              </div>
+            ) : (
+              <div className="flex flex-col justify-center items-center gap-3">
+                <label className="text-black font-medium">Username</label>
+                <h1>Anonymous</h1>
+
+                <label className="text-black font-medium">Linkedin</label>
+                <h1>Anonymous</h1>
+              </div>
+            )}
+          </div>
+
+          {/* Name + job info */}
+          <div className="flex flex-col justify-center md:items-start items-center md:w-1/3 w-full h-full gap-3">
+            <h1 className="text-black font-semibold text-2xl">
+              Anonymous
+            </h1>
+
+            {profile.pipeline && profile.pipeline.length > 0 && (
+              
+                <h1 className="md:text-start text-center">
+                  {profile.pipeline[profile.pipeline.length-1].title} at{" "}
+                  <span className="font-medium">
+                    {profile.pipeline[profile.pipeline.length-1].company}
+                  </span>
+                </h1>
+            )}
+
+            <div className="flex flex-row justify-center items-center gap-2">
+              <MapPin />
+              {admin ? (
+                <input
+                  className="p-3 bg-white rounded-full"
+                  value={location}
+                  onChange={handleLocationChange}
+                />
+              ) : (
+                <h1 className="italic">{location}</h1>
+              )}
+            </div>
+          </div>
+
+          {/* Pipeline */}
+          <div className="flex flex-col justify-center items-center md:w-1/3 w-full h-full bg-white p-10 gap-3 pt-20">
+            {profile.pipeline &&
+              profile.pipeline.map((experience, i) => (
+                <div
+                  className="flex flex-col justify-center items-center gap-3"
+                  key={experience._id}
+                >
+                  <ExperienceCard experience={experience} />
+                  {i !== profile.pipeline.length - 1 ? <h1>--</h1> : <></>}
+                </div>
+              ))}
+          </div>
         </div>
       )}
     </>

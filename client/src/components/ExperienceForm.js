@@ -34,6 +34,13 @@ export const ExperienceForm = ({ experience, index, updateExperience, removeExpe
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [experience])
 
+    useEffect(() => {
+        // Validation logic here
+        if (endDate < startDate) {
+            setEndDate(startDate);
+        }
+    }, [endDate, startDate]);
+
     function flipDateFormat(inputDate) {
         // Parse the input date string
         const [year, month] = inputDate.split('-');
