@@ -3,11 +3,12 @@ import { ExperienceQuerySearchInput } from "./ExperienceQuerySearchInput";
 import { TitleQuerySearchInput } from "./TitleQuerySearchInput";
 import { X } from 'lucide-react';
 
-export const ExperienceForm = ({ experience, index, updateExperience, removeExperience }) => {
+export const ExperienceForm = ({ experience, index, updateExperience, removeExperience, setIsValid, setIsValidPresent }) => {
     const [company, setCompany] = useState('');
     const [title, setTitle] = useState('');
     const [startDate, setStartDate] = useState('');
     const [endDate, setEndDate] = useState('');
+    const [isPresent, setIsPresent] = useState(false);
 
     // initialize experience if one exists
     useEffect(() => {
@@ -35,11 +36,26 @@ export const ExperienceForm = ({ experience, index, updateExperience, removeExpe
     }, [experience])
 
     useEffect(() => {
+        const currentDate = new Date();
+
+        if (isPresent && new Date(startDate) > currentDate)
+        {
+            setIsValidPresent(false);
+        } else {
+            setIsValidPresent(true);
+        }
+
         // Validation logic here
         if (endDate < startDate) {
-            setEndDate(startDate);
+            setIsValid(false);
+        } else {
+            setIsValid(true);
         }
-    }, [endDate, startDate]);
+
+        
+    }, [endDate, startDate, isPresent, setIsValid, setIsValidPresent]);
+
+    
 
     function flipDateFormat(inputDate) {
         // Parse the input date string
@@ -87,14 +103,16 @@ export const ExperienceForm = ({ experience, index, updateExperience, removeExpe
         const value = e.target.value;
             
         if (field === "startDate") {
-
             setStartDate(value);
+           
 
             const newExperience = {
                 company: company,
                 title: title,
-                date: `${flipDateFormat(value)} - ${flipDateFormat(endDate)}`
+                date: `${flipDateFormat(value)} - ${isPresent ? "Present" : flipDateFormat(endDate)}`
             }
+
+           
 
             updateExperience(newExperience, index);
             
@@ -102,11 +120,14 @@ export const ExperienceForm = ({ experience, index, updateExperience, removeExpe
 
             setEndDate(value);
 
+
             const newExperience = {
                 company: company,
                 title: title,
                 date: `${flipDateFormat(startDate)} - ${flipDateFormat(value)}`
             }
+
+          
 
             updateExperience(newExperience, index);
             
@@ -119,7 +140,7 @@ export const ExperienceForm = ({ experience, index, updateExperience, removeExpe
         const newExperience = {
             company: value,
             title: title,
-            date: `${flipDateFormat(startDate)} - ${flipDateFormat(endDate)}`
+            date: `${flipDateFormat(value)} - ${flipDateFormat(endDate)}`
         }
 
         updateExperience(newExperience, index);
@@ -136,6 +157,20 @@ export const ExperienceForm = ({ experience, index, updateExperience, removeExpe
 
         updateExperience(newExperience, index);
     }
+
+    const handlePresentCheckboxChange = (e) => {
+        setIsPresent(e.target.checked);
+
+        const newExperience = {
+            company: company,
+            title: title,
+            date: `${flipDateFormat(startDate)} - ${!isPresent ? "Present" : flipDateFormat(endDate)}`
+        }
+
+
+        updateExperience(newExperience, index);
+    }
+
 
     return (
         <>
@@ -178,6 +213,7 @@ export const ExperienceForm = ({ experience, index, updateExperience, removeExpe
                             onChange={(e) => handleExperienceChange(e, "startDate")}
                         />
 
+                        {!isPresent ? 
                         <input 
                             className="px-4 py-2 text-gray-800 bg-gray-100 rounded-full outline-none" 
                             placeholder="September 2020 - September 2021"
@@ -185,7 +221,15 @@ export const ExperienceForm = ({ experience, index, updateExperience, removeExpe
                             type="month"
                             pattern="\d{4}-\d{2}"
                             onChange={(e) => handleExperienceChange(e, "endDate")}
-                        />
+                        /> : <div></div>}
+                        <div className="flex md:flex-row flex-col">
+                            <label className="ml-2 text-medium pr-2">Present</label>
+                            <input
+                                type="checkbox"
+                                checked={isPresent}
+                                onChange={handlePresentCheckboxChange}
+                            />
+                        </div>
                     </div>
                 </div>
             </div>
