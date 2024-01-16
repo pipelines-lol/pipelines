@@ -101,7 +101,7 @@ export const ExperienceCard = ({ experience }) => {
       key={experience._id}
     >
       <img
-        className="w-24 h-24 rounded-md"
+        className="w-24 h-24 rounded-md object-contain"
         src={logo}
         alt={`${experience.company}_logo`}
       />
