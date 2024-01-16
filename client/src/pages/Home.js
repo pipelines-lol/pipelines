@@ -115,7 +115,7 @@ function Home() {
           </div>
         </div>
 
-        <div className="grid md:grid-cols-4 grid-cols-2 md:gap-4 sm:gap-2 gap-1 pb-12">
+        <div className="grid md:grid-cols-4 sm:grid-cols-2 grid-cols-1 md:gap-4 sm:gap-2 gap-2 pb-12">
           {profiles.map((profile) => (
             <div 
               key={`profile_${profile._id}`}
