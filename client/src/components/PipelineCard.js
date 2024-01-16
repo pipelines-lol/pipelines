@@ -59,7 +59,7 @@ export const PipelineCard = ({ profileId, name, pfp, anonymous, pipeline }) => {
         condition={true}
         to={`/user/${profileId}`}
       >
-        <div className="flex flex-row justify-end items-center w-full sm:gap-5 md:gap-3 gap-1">
+        <div className="flex flex-row justify-end items-center w-full sm:gap-5 gap-3 ">
           <img
             className="w-12 h-12 rounded-full object-cover"
             src={anonymous ? "avatar.png" : (pfpUrl || "avatar.png")}
