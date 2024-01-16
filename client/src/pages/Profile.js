@@ -327,44 +327,29 @@ function Profile() {
                 {usernameErrorMessage && (
                   <h1 className="text-red-400">{usernameErrorMessage}</h1>
                 )}
-
-                <label>Linkedin</label>
-                <div className="flex flex-row justify-center items-center gap-2">
-                  <h1>linkedin.com/in/</h1>
-                  <input
-                    className="p-3 bg-gray-100 rounded-full"
-                    value={linkedin}
-                    onChange={handleLinkedinChange}
-                  />
-                </div>
-                {linkedinErrorMessage && (
-                  <h1 className="text-red-400">{linkedinErrorMessage}</h1>
-                )}
-
-                <div className="h-4" />
-
-                {saveable && !hasError ? (
-                  <button
-                    className={"bg-black px-12 py-1 rounded-full"}
-                    onClick={handleEditProfile}
-                  >
-                    <h1 className="text-white font-normal uppercase">Save</h1>
-                  </button>
-                ) : (
-                  <div className="h-8" />
-                )}
               </div>
             ) : (
               <div className="flex flex-col justify-center items-center gap-3">
                 <label className="text-black font-medium">Username</label>
                 <h1>{username}</h1>
-
-                <label className="text-black font-medium">Linkedin</label>
-                <Link to={buildLinkedinUrl(linkedin)} target="_blank">
-                  <h1 className="hover:underline">{linkedin}</h1>
-                </Link>
               </div>
             )}
+            
+            {/* Linkedin Section */}
+            <label className="text-black font-medium">Linkedin</label>
+            <Link to={buildLinkedinUrl(linkedin)} target="_blank">
+              <h1 className="hover:underline">{linkedin}</h1>
+            </Link>
+
+            {/* Save Button */}
+            {admin && saveable && !hasError ? (
+              <button
+                className={"bg-black px-12 py-1 rounded-full"}
+                onClick={handleEditProfile}
+              >
+                <h1 className="text-white font-normal uppercase">Save</h1>
+              </button>
+            ) : (<></>)}
           </div>
 
           {/* Name + job info */}
