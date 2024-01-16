@@ -13,6 +13,7 @@ const Navbar = () => {
   const [nav, setNav] = useState(false);
   const navigate = useNavigate();
   const { user, dispatch } = useAuthContext();
+  const path = window.location.pathname;
 
   // taken from linkedin api
 
@@ -222,28 +223,28 @@ const Navbar = () => {
   return (
     <>
       <header className="flex flex-row justify-between items-center w-full md:absolute fixed h-20 px-12 z-40 bg-white">
-        <div className="hidden md:flex flex-row justify-start items-center gap-3">
+        <div className="h-full hidden md:flex flex-row justify-center items-center text-center">
           <Link to="/">
-            <GalleryHorizontalEnd size={36} color="#444444" />
+            <GalleryHorizontalEnd size={36} color="#444444" className="pr-2" />
           </Link>
 
           <Link
             to="/"
-            className="px-12 text-pipelines-gray-500 font-light uppercase"
+            className={`flex justify-center items-center h-full px-12 text-pipelines-gray-500 text-center ${path === "/" ? "bg-gray-100 cursor-default" : ""} font-light uppercase transition-colors duration-300 hover:bg-gray-50`}
           >
             About
           </Link>
 
           <Link
             to="/search"
-            className="px-12 text-pipelines-gray-500 font-light uppercase"
+            className={`flex justify-center items-center h-full px-12 text-pipelines-gray-500 text-center ${path === "/search" ? "bg-gray-100 cursor-default" : ""} font-light uppercase transition-colors duration-300 hover:bg-gray-50`}
           >
             Search
           </Link>
 
           <Link
             to="/discover"
-            className="px-12 text-pipelines-gray-500 font-light uppercase"
+            className={`flex justify-center items-center h-full px-12 text-pipelines-gray-500 text-center ${path === "/discover" ? "bg-gray-100 cursor-default" : ""} font-light uppercase transition-colors duration-300 hover:bg-gray-50`}
           >
             Discover
           </Link>
