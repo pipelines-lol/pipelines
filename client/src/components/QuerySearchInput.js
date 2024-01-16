@@ -50,7 +50,7 @@ export const QuerySearchInput = ({ handleSearch }) => {
                             className="flex flex-row justify-center items-center px-5 py-2 hover:bg-gray-100"
                         >
                             <img 
-                                className="w-10 h-10 rounded-lg" 
+                                className="w-10 h-10 rounded-lg object-contain" 
                                 src={`logos/${company.logo}`} 
                                 alt={`logo_${company.name}`}
                             />
