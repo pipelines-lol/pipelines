@@ -108,6 +108,47 @@ function Profile() {
       });
   };
 
+  const getCurrentExperience = () => {
+    
+    function splitDateString(dateString) {
+      const dateParts = dateString.split(' - ');
+      const startDate = parseDateString(dateParts[0]);
+      const endDate = parseDateString(dateParts[1]);
+  
+      return [startDate, endDate];
+    }
+
+    function parseDateString(dateString) {
+      const months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+
+      const [month, year] = dateString.split(' ');
+      const monthIndex = months.indexOf(month);
+      const parsedDate = new Date(year, monthIndex);
+
+      return parsedDate;
+    }
+    
+    if (!profile || !profile.pipeline) return;
+
+    // compare experience dates to todays date
+    const currentDate = new Date();
+    for (const [index, experience] of profile.pipeline.entries()) {
+      const [startDate, endDate] = splitDateString(experience.date);
+
+      // check if current experience date range overlaps current date
+      if (startDate.getTime() <= currentDate.getTime() && currentDate.getTime() <= endDate.getTime()) {
+        return ["Currently ", profile.pipeline[index]];
+      }
+
+      // check if current experience is in the future compared to current date
+      if (startDate.getTime() >= currentDate.getTime() && endDate.getTime() >= currentDate.getTime()) {
+        return ["Incoming ", profile.pipeline[index]];
+      }
+    }
+
+    return ["Previously ", profile.pipeline[profile.pipeline.length - 1]];
+  }
+
   const validateUsername = async (username) => {
     const isValidUsername = async (username) => {
       const mongodbConflict = await isMongoDBId(username);
@@ -296,6 +337,8 @@ function Profile() {
 
   const admin = user && (user.profileId === id || user.username === id);
 
+  const currentExperienceInfo = (profile && profile.pipeline && profile.pipeline.length > 0) ? (getCurrentExperience()) : (null)
+
   if (loading) {
     return <Loading />;
   }
@@ -373,15 +416,14 @@ function Profile() {
               {profile.firstName} {profile.lastName}
             </h1>
 
-            {profile.pipeline && profile.pipeline.length > 0 && (
-              
+            {currentExperienceInfo && 
                 <h1 className="md:text-start text-center">
-                  {profile.pipeline[profile.pipeline.length-1].title} at{" "}
+                  {currentExperienceInfo[0] + currentExperienceInfo[1].title} at{" "}
                   <span className="font-medium">
-                    {profile.pipeline[profile.pipeline.length-1].company}
+                    {currentExperienceInfo[1].company}
                   </span>
                 </h1>
-            )}
+            } 
 
             <div className="flex flex-row justify-center items-center gap-2">
               <MapPin />
@@ -480,15 +522,14 @@ function Profile() {
               Anonymous
             </h1>
 
-            {profile.pipeline && profile.pipeline.length > 0 && (
-              
+            {currentExperienceInfo && 
                 <h1 className="md:text-start text-center">
-                  {profile.pipeline[profile.pipeline.length-1].title} at{" "}
+                  {currentExperienceInfo[0] + currentExperienceInfo[1].title} at{" "}
                   <span className="font-medium">
-                    {profile.pipeline[profile.pipeline.length-1].company}
+                    {currentExperienceInfo[1].company}
                   </span>
                 </h1>
-            )}
+            }
 
             <div className="flex flex-row justify-center items-center gap-2">
               <MapPin />
