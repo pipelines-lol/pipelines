@@ -656,8 +656,8 @@ export const companies = [
         logo: "Freddie_Mac.png"
     },
     {
-        name: "General Dynamic",
-        logo: "General_Dynamic.png"
+        name: "General Dynamics",
+        logo: "General_Dynamics.png"
     },
     {
         name: "General Electric",
@@ -674,10 +674,6 @@ export const companies = [
     {
         name: "HCA",
         logo: "HCA.png"
-    },
-    {
-        name: "HF Sinclair",
-        logo: "HF_Sinclair.png"
     },
     {
         name: "Honeywell",
@@ -817,7 +813,7 @@ export const companies = [
     },
     {
         name: "TD Synnex",
-        logo: "TD Synnex.png"
+        logo: "TD_Synnex.png"
     },
     {
         name: "TD",
@@ -865,7 +861,7 @@ export const companies = [
     },
     {
         name: "Wells Fargo",
-        logo: "Wells_Fargo"
+        logo: "Wells_Fargo.png"
     },
     {
         name: "Barclays",
@@ -953,7 +949,6 @@ export const titles = [
     "Principal Software Developer Engineer",
     "Senior Principal Software Developer Engineer",
     "Technical Fellow",
-    "Senior Associate",
     "Junior Software Engineer",
     "Software Engineer Intern",
     "Software Developer Intern",

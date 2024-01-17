@@ -11,6 +11,8 @@ function EditProfile() {
   const [lastName, setLastName] = useState("");
   const [anonymous, setAnonymous] = useState(false);
   const [pipeline, setPipeline] = useState([]);
+  const [dateValid, setDateValid] = useState(true);
+  const [presentValid, setPresentValid] = useState(true);
 
   const [loading, setLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
@@ -134,6 +136,14 @@ function EditProfile() {
       return;
     }
 
+    if(!dateValid || !presentValid) {
+     
+      setErrorMessage("Invalid Date input");
+      return;
+    }
+
+
+
     fetch(`${HOST}/api/profile/${user.profileId}`, {
       method: "PATCH",
       headers: {
@@ -232,6 +242,8 @@ function EditProfile() {
                   index={index}
                   updateExperience={updateExperience}
                   removeExperience={removeExperience}
+                  setIsValid={setDateValid}
+                  setIsValidPresent={setPresentValid}
                 />
                 <button
                   key={`add_experience_button_${index + 1}`}
