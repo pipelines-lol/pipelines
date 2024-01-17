@@ -69,7 +69,7 @@ function Search() {
         </div>
         <div className="grid md:grid-cols-4 grid-cols-2 md:gap-4 sm:gap-2 gap-1 pb-12">
           {searchPerformed && profiles.length === 0 && !loading && (
-            <div className="col-span-full text-center text-pipelines-gray-500 mt-9 text-3xl font-bold">
+            <div className="col-span-full text-center text-pipelines-gray-500 mt-12 text-3xl font-bold">
               No users on this site for this company :/
             </div>
           )}
