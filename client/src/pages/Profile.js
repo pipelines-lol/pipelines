@@ -137,7 +137,7 @@ function Profile() {
 
       // check if current experience date range overlaps current date
       if (startDate.getTime() <= currentDate.getTime() && currentDate.getTime() <= endDate.getTime()) {
-        return ["Currently ", profile.pipeline[index]];
+        return ["Current ", profile.pipeline[index]];
       }
 
       // check if current experience is in the future compared to current date
@@ -146,7 +146,7 @@ function Profile() {
       }
     }
 
-    return ["Previously ", profile.pipeline[profile.pipeline.length - 1]];
+    return ["Previous ", profile.pipeline[profile.pipeline.length - 1]];
   }
 
   const validateUsername = async (username) => {
