@@ -1,53 +1,51 @@
-import { useEffect, useState } from "react";
-import { companies } from "../data/companyData";
+import { useEffect, useState } from 'react'
+import { companies } from '../data/companyData'
 
-import { HOMEPAGE, HOST } from "../util/apiRoutes";
-import { ConditionalLink } from "./ConditionalLink"
+import { HOMEPAGE, HOST } from '../util/apiRoutes'
+import { ConditionalLink } from './ConditionalLink'
 
 export const PipelineCard = ({ profileId, name, pfp, anonymous, pipeline }) => {
-  const [pfpUrl, setPfpUrl] = useState(null);
+  const [pfpUrl, setPfpUrl] = useState(null)
 
   const fetchPfp = async () => {
-    if (!profileId || profileId === "") return;
-    if (!pfp || pfp === "") return;
+    if (!profileId || profileId === '') return
+    if (!pfp || pfp === '') return
 
     try {
       const response = await fetch(`${HOST}/api/pfp/${profileId}`, {
-        method: "GET",
+        method: 'GET',
         headers: {
-          "Content-Type": "application/json",
-        },
-      });
+          'Content-Type': 'application/json'
+        }
+      })
 
       if (!response.ok) {
         // Check if the response has JSON content
         if (
-          response.headers.get("content-type")?.includes("application/json")
+          response.headers.get('content-type')?.includes('application/json')
         ) {
-          const errorData = await response.json();
-          throw new Error(`${errorData.error}`);
+          const errorData = await response.json()
+          throw new Error(`${errorData.error}`)
         } else {
-          throw new Error(`HTTP error! Status: ${response.status}`);
+          throw new Error(`HTTP error! Status: ${response.status}`)
         }
       }
 
-      const data = await response.json();
-      setPfpUrl(data.pfp);
+      const data = await response.json()
+      setPfpUrl(data.pfp)
     } catch (error) {
-      console.error(error.message);
-      setPfpUrl(null);
+      console.error(error.message)
+      setPfpUrl(null)
     }
-  };
+  }
 
   useEffect(() => {
     const fetchInfo = async () => {
-      await fetchPfp();
-    };
+      await fetchPfp()
+    }
 
-    fetchInfo();
-
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+    fetchInfo()
+  }, [])
 
   return (
     <div
@@ -62,11 +60,11 @@ export const PipelineCard = ({ profileId, name, pfp, anonymous, pipeline }) => {
         <div className="flex flex-row justify-end items-center w-full sm:gap-5 gap-3 ">
           <img
             className="w-12 h-12 rounded-full object-cover"
-            src={anonymous ? "avatar.png" : (pfpUrl || "avatar.png")}
+            src={anonymous ? 'avatar.png' : (pfpUrl || 'avatar.png')}
             alt="avatar"
           />
           <h1 className="text-black font-light text-xl uppercase">
-            {anonymous ? "Anonymous" : name}
+            {anonymous ? 'Anonymous' : name}
           </h1>
         </div>
       </ConditionalLink>
@@ -82,18 +80,18 @@ export const PipelineCard = ({ profileId, name, pfp, anonymous, pipeline }) => {
         )}
       </div>
     </div>
-  );
-};
+  )
+}
 
 export const ExperienceCard = ({ experience }) => {
-  function getLogoByName(companyName) {
+  function getLogoByName (companyName) {
     const foundCompany = companies.find(
       (company) => company.name === companyName
-    );
-    return foundCompany ? foundCompany.logo : null;
+    )
+    return foundCompany ? foundCompany.logo : null
   }
 
-  const logo = `${HOMEPAGE}/logos/${getLogoByName(experience.company)}`;
+  const logo = `${HOMEPAGE}/logos/${getLogoByName(experience.company)}`
 
   return (
     <div
@@ -117,5 +115,5 @@ export const ExperienceCard = ({ experience }) => {
         </h1>
       </div>
     </div>
-  );
-};
+  )
+}

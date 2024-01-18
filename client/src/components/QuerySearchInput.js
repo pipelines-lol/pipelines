@@ -1,57 +1,57 @@
-import { useState } from "react";
-import { companies } from "../data/companyData"
+import { useState } from 'react'
+import { companies } from '../data/companyData'
 
 export const QuerySearchInput = ({ handleSearch }) => {
-    const [query, setQuery] = useState("");
-    const [results, setResults] = useState([]);
-    let hasResults = results.length > 0;
+  const [query, setQuery] = useState('')
+  const [results, setResults] = useState([])
+  const hasResults = results.length > 0
 
-    const handleInputChange = (event) => {
-        const inputValue = event.target.value;
-        setQuery(inputValue);
+  const handleInputChange = (event) => {
+    const inputValue = event.target.value
+    setQuery(inputValue)
 
-        // make sure theres an input before querying
-        if (inputValue.length > 0) {
-            const filteredCompanies = companies.filter((company) =>
-                company.name.toLowerCase().startsWith(inputValue.toLowerCase())
-            );
-            setResults(filteredCompanies);
-        } else {
-            setResults([]);
-        }
-    };
-
-    const handleCompanyButtonClick = async (company) => {
-        // reset text input
-        setQuery("");
-        setResults([]);
-
-        await handleSearch(company.name);
+    // make sure theres an input before querying
+    if (inputValue.length > 0) {
+      const filteredCompanies = companies.filter((company) =>
+        company.name.toLowerCase().startsWith(inputValue.toLowerCase())
+      )
+      setResults(filteredCompanies)
+    } else {
+      setResults([])
     }
+  }
 
-    return (
+  const handleCompanyButtonClick = async (company) => {
+    // reset text input
+    setQuery('')
+    setResults([])
+
+    await handleSearch(company.name)
+  }
+
+  return (
         <>
-        
+
             <form
-                className={`flex flex-col justify-center items-center w-full ${hasResults ? "relative" : ""}`}
+                className={`flex flex-col justify-center items-center w-full ${hasResults ? 'relative' : ''}`}
                 onSubmit={(e) => e.preventDefault()} // Prevent form submission
             >
                 <input
-                    className={`w-1/2 h-20 z-20 bg-white rounded-2xl text-xl p-10`}
+                    className={'w-1/2 h-20 z-20 bg-white rounded-2xl text-xl p-10'}
                     type="text"
                     value={query}
                     onChange={handleInputChange}
                     placeholder="Search companies..."
                 />
-                <div className={`bg-white w-1/2 max-h-96 z-10 -translate-y-2 overflow-y-scroll shadow-md ${hasResults ? "absolute top-full" : ""}`}>
+                <div className={`bg-white w-1/2 max-h-96 z-10 -translate-y-2 overflow-y-scroll shadow-md ${hasResults ? 'absolute top-full' : ''}`}>
                     {hasResults && results.map((company) => (
-                        <div 
+                        <div
                             key={`${company.name}_result`}
                             className="flex flex-row justify-center items-center px-5 py-2 hover:bg-gray-100"
                         >
-                            <img 
-                                className="w-10 h-10 rounded-lg object-contain" 
-                                src={`logos/${company.logo}`} 
+                            <img
+                                className="w-10 h-10 rounded-lg object-contain"
+                                src={`logos/${company.logo}`}
                                 alt={`logo_${company.name}`}
                             />
                             <button
@@ -66,5 +66,5 @@ export const QuerySearchInput = ({ handleSearch }) => {
                 </div>
             </form>
         </>
-    )
+  )
 }

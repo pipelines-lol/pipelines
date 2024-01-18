@@ -1,13 +1,13 @@
-import { Loader2 } from "lucide-react";
+import { Loader2 } from 'lucide-react'
 
-function Loading() {
+function Loading () {
   return (
     <>
       <div className="flex justify-center items-center w-full h-[90vh] pt-20">
         <Loader2 className="w-48 h-48 text-blue-950 animate-spin" />
       </div>
     </>
-  );
+  )
 }
 
-export default Loading;
+export default Loading

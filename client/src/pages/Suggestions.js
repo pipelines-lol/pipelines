@@ -1,11 +1,11 @@
-import React, { useState } from "react";
+import { useState } from 'react'
 
 const Suggestions = () => {
-  const [suggestionType, setSuggestionType] = useState("");
+  const [suggestionType, setSuggestionType] = useState('')
 
   const handleDropdown = (event) => {
-    setSuggestionType(event.target.value);
-  };
+    setSuggestionType(event.target.value)
+  }
 
   return (
     <div className="flex justify-center items-center w-full h-[90vh] bg-gray-100">
@@ -21,7 +21,7 @@ const Suggestions = () => {
             className="mb-3 px-4 py-2 text-gray-800 bg-gray-100 rounded-full outline-none w-full" // Adjusted the class to match the input style
           >
             <option value="" disabled hidden>
-              {" "}
+              {' '}
               Suggestion Type
             </option>
             <option value="company">Company</option>
@@ -33,7 +33,7 @@ const Suggestions = () => {
             action="https://getform.io/f/0f9b59be-ed87-4f61-b536-63e11c134c9e"
             method="POST"
           >
-            {suggestionType === "company" && (
+            {suggestionType === 'company' && (
               <textarea
                 type="text"
                 name="company"
@@ -44,7 +44,7 @@ const Suggestions = () => {
               />
             )}
 
-            {suggestionType === "website-issues" && (
+            {suggestionType === 'website-issues' && (
               <textarea
                 type="text"
                 name="website-issues"
@@ -54,7 +54,7 @@ const Suggestions = () => {
                 required
               />
             )}
-            {suggestionType === "other" && (
+            {suggestionType === 'other' && (
               <textarea
                 type="text"
                 name="other"
@@ -74,7 +74,7 @@ const Suggestions = () => {
         </div>
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default Suggestions;
+export default Suggestions

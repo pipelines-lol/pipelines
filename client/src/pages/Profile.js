@@ -1,365 +1,358 @@
-import { useEffect, useState } from "react";
-import { Link, useParams } from "react-router-dom";
-import { HOST } from "../util/apiRoutes";
-import { isMongoDBId } from "../util/isMongodbId";
-import { useAuthContext } from "../hooks/useAuthContext";
+import { useEffect, useState } from 'react'
+import { Link, useParams } from 'react-router-dom'
+import { HOST } from '../util/apiRoutes'
+import { isMongoDBId } from '../util/isMongodbId'
+import { useAuthContext } from '../hooks/useAuthContext'
 
-import Loading from "./Loading";
+import Loading from './Loading'
 
-import { ExperienceCard } from "../components/PipelineCard";
+import { ExperienceCard } from '../components/PipelineCard'
 
-import { MapPin } from "lucide-react";
-import { ProfilePicture } from "../components/ProfilePicture";
+import { MapPin } from 'lucide-react'
+import { ProfilePicture } from '../components/ProfilePicture'
 
-function Profile() {
-  const { id } = useParams();
-  const [profile, setProfile] = useState({});
+function Profile () {
+  const { id } = useParams()
+  const [profile, setProfile] = useState({})
 
   // for searching through profiles that have
   // id as a username instead of id
-  const [profiles, setProfiles] = useState([]);
+  const [profiles, setProfiles] = useState([])
 
-  const { user } = useAuthContext();
-  const [loading, setLoading] = useState(false);
+  const { user } = useAuthContext()
+  const [loading, setLoading] = useState(false)
 
-  const [saveable, setSaveable] = useState(false);
+  const [saveable, setSaveable] = useState(false)
 
-  const [pfp, setPfp] = useState("");
-  const [username, setUsername] = useState("");
-  const [usernameErrorMessage, setUsernameErrorMessage] = useState("");
-  const [linkedin, setLinkedin] = useState("");
-  const [linkedinErrorMessage, setLinkedinErrorMessage] = useState("");
+  const [pfp, setPfp] = useState('')
+  const [username, setUsername] = useState('')
+  const [usernameErrorMessage, setUsernameErrorMessage] = useState('')
+  const [linkedin, setLinkedin] = useState('')
+  const [linkedinErrorMessage, setLinkedinErrorMessage] = useState('')
 
-  const [location, setLocation] = useState("");
+  const [location, setLocation] = useState('')
 
   const hasError =
-    usernameErrorMessage.length !== 0 && linkedinErrorMessage.length !== 0;
+    usernameErrorMessage.length !== 0 && linkedinErrorMessage.length !== 0
 
   const fetchProfile = async () => {
     try {
-      setLoading(true);
-      const isValidId = await isMongoDBId(id);
+      setLoading(true)
+      const isValidId = await isMongoDBId(id)
 
       if (isValidId) {
         const response = await fetch(`${HOST}/api/profile/${id}`, {
-          method: "GET",
+          method: 'GET',
           headers: {
-            "Content-Type": "application/json",
-          },
-        });
+            'Content-Type': 'application/json'
+          }
+        })
 
         if (!response.ok) {
           // Check if the response has JSON content
           if (
-            response.headers.get("content-type")?.includes("application/json")
+            response.headers.get('content-type')?.includes('application/json')
           ) {
-            const errorData = await response.json();
-            throw new Error(`${errorData.error}`);
+            const errorData = await response.json()
+            throw new Error(`${errorData.error}`)
           } else {
-            throw new Error(`HTTP error! Status: ${response.status}`);
+            throw new Error(`HTTP error! Status: ${response.status}`)
           }
         }
 
-        const data = await response.json();
-        setProfile(data);
+        const data = await response.json()
+        setProfile(data)
 
-        setUsername(data.username);
-        setLinkedin(extractLinkedinUsername(data.linkedin));
-        setLocation(data.location);
-        setPfp(data.pfp);
+        setUsername(data.username)
+        setLinkedin(extractLinkedinUsername(data.linkedin))
+        setLocation(data.location)
+        setPfp(data.pfp)
       } else {
-        setProfile(null);
+        setProfile(null)
       }
     } catch (error) {
-      console.error(error.message);
-      setProfile(null);
-      setLoading(false);
+      console.error(error.message)
+      setProfile(null)
+      setLoading(false)
     }
-  };
+  }
 
   const fetchProfiles = async () => {
     fetch(`${HOST}/api/profile/`, {
-      method: "GET",
+      method: 'GET',
       headers: {
-        "Content-Type": "application/json", // Specify the content type as JSON
-      },
+        'Content-Type': 'application/json' // Specify the content type as JSON
+      }
     })
       .then((res) => {
         if (!res.ok) {
           // Check if the response has JSON content
-          if (res.headers.get("content-type")?.includes("application/json")) {
+          if (res.headers.get('content-type')?.includes('application/json')) {
             return res.json().then((errorData) => {
-              throw new Error(`${errorData.error}`);
-            });
+              throw new Error(`${errorData.error}`)
+            })
           } else {
-            throw new Error(`HTTP error! Status: ${res.status}`);
+            throw new Error(`HTTP error! Status: ${res.status}`)
           }
         }
 
-        return res.json();
+        return res.json()
       })
       .then((data) => {
-        setProfiles(data);
+        setProfiles(data)
 
-        setLoading(false);
+        setLoading(false)
       })
       .catch((error) => {
-        console.error(error.message);
-      });
-  };
+        console.error(error.message)
+      })
+  }
 
   const getCurrentExperience = () => {
-    
-    function splitDateString(dateString) {
-      const dateParts = dateString.split(' - ');
-      const startDate = parseDateString(dateParts[0]);
-      const endDate = parseDateString(dateParts[1]);
-  
-      return [startDate, endDate];
+    function splitDateString (dateString) {
+      const dateParts = dateString.split(' - ')
+      const startDate = parseDateString(dateParts[0])
+      const endDate = parseDateString(dateParts[1])
+
+      return [startDate, endDate]
     }
 
-    function parseDateString(dateString) {
-      const months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+    function parseDateString (dateString) {
+      const months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
 
-      const [month, year] = dateString.split(' ');
-      const monthIndex = months.indexOf(month);
-      const parsedDate = new Date(year, monthIndex);
+      const [month, year] = dateString.split(' ')
+      const monthIndex = months.indexOf(month)
+      const parsedDate = new Date(year, monthIndex)
 
-      return parsedDate;
+      return parsedDate
     }
-    
-    if (!profile || !profile.pipeline) return;
+
+    if (!profile || !profile.pipeline) return
 
     // compare experience dates to todays date
-    const currentDate = new Date();
+    const currentDate = new Date()
     for (const [index, experience] of profile.pipeline.entries()) {
-      const [startDate, endDate] = splitDateString(experience.date);
+      const [startDate, endDate] = splitDateString(experience.date)
 
       // check if current experience date range overlaps current date
       if (startDate.getTime() <= currentDate.getTime() && currentDate.getTime() <= endDate.getTime()) {
-        return ["Current ", profile.pipeline[index]];
+        return ['Current ', profile.pipeline[index]]
       }
 
       // check if current experience is in the future compared to current date
       if (startDate.getTime() >= currentDate.getTime() && endDate.getTime() >= currentDate.getTime()) {
-        return ["Incoming ", profile.pipeline[index]];
+        return ['Incoming ', profile.pipeline[index]]
       }
     }
 
-    return ["Previous ", profile.pipeline[profile.pipeline.length - 1]];
+    return ['Previous ', profile.pipeline[profile.pipeline.length - 1]]
   }
 
   const validateUsername = async (username) => {
     const isValidUsername = async (username) => {
-      const mongodbConflict = await isMongoDBId(username);
+      const mongodbConflict = await isMongoDBId(username)
       const usernameRegex =
-        /^[a-zA-Z0-9_](?!.*[._]{2})[a-zA-Z0-9_.]{1,30}[a-zA-Z0-9_]$/;
-      return !mongodbConflict && usernameRegex.test(username);
-    };
+        /^[a-zA-Z0-9_](?!.*[._]{2})[a-zA-Z0-9_.]{1,30}[a-zA-Z0-9_]$/
+      return !mongodbConflict && usernameRegex.test(username)
+    }
 
     const isAvailable = (username) => {
       const filteredProfiles = profiles.filter(
         (profile) => profile.username.toLowerCase() === username.toLowerCase()
-      );
+      )
 
       // check if the one profile there is the current user's
       if (filteredProfiles.length === 1) {
-        const filteredProfile = filteredProfiles[0];
+        const filteredProfile = filteredProfiles[0]
 
-        return profile.username === filteredProfile.username;
+        return profile.username === filteredProfile.username
       }
 
-      return filteredProfiles.length === 0;
-    };
+      return filteredProfiles.length === 0
+    }
 
     // blank username
     if (username.length === 0) {
-      setUsernameErrorMessage("Invalid username.");
-      return false;
+      setUsernameErrorMessage('Invalid username.')
+      return false
+    } else if (username.indexOf('/') !== -1) {
+      // contains '/'
+      setUsernameErrorMessage('Invalid username.')
+      return false
+    } else if (!(await isValidUsername(username))) {
+      // invalid regex
+      setUsernameErrorMessage('Invalid username.')
+      return false
+    } else if (!isAvailable(username)) {
+      // taken username
+      setUsernameErrorMessage('Username already taken.')
+      return false
+    } else {
+      // valid username
+      setUsernameErrorMessage('')
+      return true
     }
-
-    // contains '/'
-    if (username.indexOf("/") !== -1) {
-      setUsernameErrorMessage("Invalid username.");
-      return false;
-    }
-
-    // invalid regex
-    else if (!(await isValidUsername(username))) {
-      setUsernameErrorMessage("Invalid username.");
-      return false;
-    }
-
-    // taken username
-    else if (!isAvailable(username)) {
-      setUsernameErrorMessage("Username already taken.");
-      return false;
-    }
-
-    // valid username
-    else {
-      setUsernameErrorMessage("");
-      return true;
-    }
-  };
+  }
 
   const validateLinkedin = async (linkedin) => {
     // Regular expression for a basic LinkedIn username check
-    const regex = /^[a-z0-9-]+$/i;
+    const regex = /^[a-z0-9-]+$/i
 
     // Check if the username matches the pattern
     if (!regex.test(linkedin)) {
-      setLinkedinErrorMessage("Invalid Linkedin username.");
-      return false;
+      setLinkedinErrorMessage('Invalid Linkedin username.')
+      return false
     } else {
-      setLinkedinErrorMessage("");
-      return true;
+      setLinkedinErrorMessage('')
+      return true
     }
-  };
+  }
 
   const extractLinkedinUsername = (linkedin) => {
-    const regex = /https:\/\/linkedin\.com\/in\/([^/]+)/;
-    const match = linkedin.match(regex);
+    const regex = /https:\/\/linkedin\.com\/in\/([^/]+)/
+    const match = linkedin.match(regex)
 
     // Check if the regex matched and has the expected parts
     if (match && match[1]) {
-      return match[1];
+      return match[1]
     }
 
     // If no match, return null or handle it according to your requirements
-    return null;
-  };
+    return null
+  }
 
   const buildLinkedinUrl = (username) => {
-    const baseLinkedinUrl = "https://linkedin.com/in/";
-    return `${baseLinkedinUrl}${username}`;
-  };
+    const baseLinkedinUrl = 'https://linkedin.com/in/'
+    return `${baseLinkedinUrl}${username}`
+  }
 
   const handleUsernameChange = async (e) => {
     // change -> saveable progress
-    setSaveable(true);
+    setSaveable(true)
 
     // remove previous errors
-    setUsernameErrorMessage("");
+    setUsernameErrorMessage('')
 
-    const value = e.target.value;
-    setUsername(value);
-  };
+    const value = e.target.value
+    setUsername(value)
+  }
 
   const handleLinkedinChange = async (e) => {
     // change -> saveable progress
-    setSaveable(true);
+    setSaveable(true)
 
     // remove previous errors
-    setLinkedinErrorMessage("");
+    setLinkedinErrorMessage('')
 
-    const value = e.target.value;
-    setLinkedin(value);
-  };
+    const value = e.target.value
+    setLinkedin(value)
+  }
 
   const handleLocationChange = async (e) => {
     // change -> saveable progress
-    setSaveable(true);
+    setSaveable(true)
 
-    const value = e.target.value;
-    setLocation(value);
-  };
+    const value = e.target.value
+    setLocation(value)
+  }
 
   const handleEditProfile = async () => {
     const updatedProfile = {
-      username: username,
+      username,
       linkedin: buildLinkedinUrl(linkedin),
-      location: location,
-    };
+      location
+    }
 
     // check all fields are filled out
     if (!username || username.length === 0) {
-      setUsernameErrorMessage("All fields must be filled.");
-      return;
+      setUsernameErrorMessage('All fields must be filled.')
+      return
     }
 
     if (!linkedin || linkedin.length === 0) {
       // clear linkedin if user left blank / deleted
-      updatedProfile.linkedin = "";
+      updatedProfile.linkedin = ''
     }
 
     if (!location || location.length === 0) {
       // clear location if user left blank / deleted
-      updatedProfile.location = "";
+      updatedProfile.location = ''
     }
 
     // field validation
     if (!validateUsername(username)) {
-      return;
+      return
     }
 
     if (!validateLinkedin(linkedin)) {
-      return;
+      return
     }
 
     try {
       const response = await fetch(`${HOST}/api/profile/${user.profileId}`, {
-        method: "PATCH",
+        method: 'PATCH',
         headers: {
-          "Content-Type": "application/json", // Specify the content type as JSON
+          'Content-Type': 'application/json' // Specify the content type as JSON
         },
-        body: JSON.stringify(updatedProfile),
-      });
+        body: JSON.stringify(updatedProfile)
+      })
 
       if (!response.ok) {
         // Check if the response has JSON content
         if (
-          response.headers.get("content-type")?.includes("application/json")
+          response.headers.get('content-type')?.includes('application/json')
         ) {
-          const errorData = await response.json();
-          throw new Error(`${errorData.error}`);
+          const errorData = await response.json()
+          throw new Error(`${errorData.error}`)
         } else {
-          throw new Error(`HTTP error! Status: ${response.status}`);
+          throw new Error(`HTTP error! Status: ${response.status}`)
         }
       }
     } catch (error) {
-      console.error(error.message);
+      console.error(error.message)
     }
 
-    setSaveable(false);
-  };
+    setSaveable(false)
+  }
 
   useEffect(() => {
     const fetchInfo = async () => {
-      await fetchProfile();
-      await fetchProfiles();
-    };
+      await fetchProfile()
+      await fetchProfiles()
+    }
 
-    fetchInfo();
+    fetchInfo()
+  }, [id])
 
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [id]);
-
-  const admin = user && (user.profileId === id || user.username === id);
+  const admin = user && (user.profileId === id || user.username === id)
 
   const currentExperienceInfo = (profile && profile.pipeline && profile.pipeline.length > 0) ? (getCurrentExperience()) : (null)
 
   if (loading) {
-    return <Loading />;
+    return <Loading />
   }
 
   return (
     <>
-      {profile && !profile.anonymous ? (
+      {profile && !profile.anonymous
+        ? (
         <div className="flex md:flex-row flex-col justify-center items-center w-full min-h-[90vh] h-full p-16 gap-10">
           {/* Profile picture + few fields */}
           <div className="flex flex-col justify-center items-center bg-white md:w-1/3 min-w-96 w-full h-full p-10 gap-5 shadow-md">
-            {admin ? (
+            {admin
+              ? (
               <ProfilePicture profile={profile} setPfp={setPfp} />
-            ) : (
+                )
+              : (
               <img
-                src={pfp ? pfp : "/avatar.png"}
+                src={pfp || '/avatar.png'}
                 className="w-96 h-96 rounded-full object-cover"
                 alt={`${profile._id}_avatar`}
               />
-            )}
+                )}
 
-            {admin ? (
+            {admin
+              ? (
               <div className="flex flex-col justify-center items-center gap-3">
                 <label>Username</label>
                 <input
@@ -371,13 +364,14 @@ function Profile() {
                   <h1 className="text-red-400">{usernameErrorMessage}</h1>
                 )}
               </div>
-            ) : (
+                )
+              : (
               <div className="flex flex-col justify-center items-center gap-3">
                 <label className="text-black font-medium">Username</label>
                 <h1>{username}</h1>
               </div>
-            )}
-            
+                )}
+
             {/* Linkedin Section */}
             <label className="text-black font-medium">Linkedin</label>
             <Link to={buildLinkedinUrl(linkedin)} target="_blank">
@@ -385,14 +379,16 @@ function Profile() {
             </Link>
 
             {/* Save Button */}
-            {admin && saveable && !hasError ? (
+            {admin && saveable && !hasError
+              ? (
               <button
-                className={"bg-black px-12 py-1 rounded-full"}
+                className={'bg-black px-12 py-1 rounded-full'}
                 onClick={handleEditProfile}
               >
                 <h1 className="text-white font-normal uppercase">Save</h1>
               </button>
-            ) : (<></>)}
+                )
+              : (<></>)}
           </div>
 
           {/* Name + job info */}
@@ -401,26 +397,28 @@ function Profile() {
               {profile.firstName} {profile.lastName}
             </h1>
 
-            {currentExperienceInfo && 
+            {currentExperienceInfo &&
                 <h1 className="md:text-start text-center">
-                  {currentExperienceInfo[0] + currentExperienceInfo[1].title} at{" "}
+                  {currentExperienceInfo[0] + currentExperienceInfo[1].title} at{' '}
                   <span className="font-medium">
                     {currentExperienceInfo[1].company}
                   </span>
                 </h1>
-            } 
+            }
 
             <div className="flex flex-row justify-center items-center gap-2">
               <MapPin />
-              {admin ? (
+              {admin
+                ? (
                 <input
                   className="p-3 bg-white rounded-full"
                   value={location}
                   onChange={handleLocationChange}
                 />
-              ) : (
+                  )
+                : (
                 <h1 className="italic">{location}</h1>
-              )}
+                  )}
             </div>
           </div>
 
@@ -438,21 +436,25 @@ function Profile() {
               ))}
           </div>
         </div>
-      ) : (
+          )
+        : (
         <div className="flex md:flex-row flex-col justify-center items-center w-full min-h-[90vh] h-full p-16 gap-10">
           {/* Profile picture + few fields */}
           <div className="flex flex-col justify-center items-center bg-white md:w-1/3 min-w-96 w-full h-full p-10 gap-5 shadow-md">
-            {admin ? (
+            {admin
+              ? (
               <ProfilePicture profile={profile} setPfp={setPfp} />
-            ) : (
+                )
+              : (
               <img
-                src={"/avatar.png"}
+                src={'/avatar.png'}
                 className="w-96 h-96 rounded-full object-cover"
                 alt={`${profile._id}_avatar`}
               />
-            )}
+                )}
 
-            {admin ? (
+            {admin
+              ? (
               <div className="flex flex-col justify-center items-center gap-3">
                 <label>Username</label>
                 <input
@@ -479,18 +481,21 @@ function Profile() {
 
                 <div className="h-4" />
 
-                {saveable && !hasError ? (
+                {saveable && !hasError
+                  ? (
                   <button
-                    className={"bg-black px-12 py-1 rounded-full"}
+                    className={'bg-black px-12 py-1 rounded-full'}
                     onClick={handleEditProfile}
                   >
                     <h1 className="text-white font-normal uppercase">Save</h1>
                   </button>
-                ) : (
+                    )
+                  : (
                   <div className="h-8" />
-                )}
+                    )}
               </div>
-            ) : (
+                )
+              : (
               <div className="flex flex-col justify-center items-center gap-3">
                 <label className="text-black font-medium">Username</label>
                 <h1>Anonymous</h1>
@@ -498,7 +503,7 @@ function Profile() {
                 <label className="text-black font-medium">Linkedin</label>
                 <h1>Anonymous</h1>
               </div>
-            )}
+                )}
           </div>
 
           {/* Name + job info */}
@@ -507,9 +512,9 @@ function Profile() {
               Anonymous
             </h1>
 
-            {currentExperienceInfo && 
+            {currentExperienceInfo &&
                 <h1 className="md:text-start text-center">
-                  {currentExperienceInfo[0] + currentExperienceInfo[1].title} at{" "}
+                  {currentExperienceInfo[0] + currentExperienceInfo[1].title} at{' '}
                   <span className="font-medium">
                     {currentExperienceInfo[1].company}
                   </span>
@@ -518,15 +523,17 @@ function Profile() {
 
             <div className="flex flex-row justify-center items-center gap-2">
               <MapPin />
-              {admin ? (
+              {admin
+                ? (
                 <input
                   className="p-3 bg-white rounded-full"
                   value={location}
                   onChange={handleLocationChange}
                 />
-              ) : (
+                  )
+                : (
                 <h1 className="italic">{location}</h1>
-              )}
+                  )}
             </div>
           </div>
 
@@ -544,9 +551,9 @@ function Profile() {
               ))}
           </div>
         </div>
-      )}
+          )}
     </>
-  );
+  )
 }
 
-export default Profile;
+export default Profile

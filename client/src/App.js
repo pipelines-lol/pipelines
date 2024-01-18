@@ -1,34 +1,31 @@
-import './App.css';
-import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import './App.css'
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom'
 
 // pages
-import Home from './pages/Home';
+import Home from './pages/Home'
 
-import Navbar from './components/Navbar';
-import Footer from './components/Footer';
+import Navbar from './components/Navbar'
+import Footer from './components/Footer'
 
-import Login from './pages/Login';
-import Signup from './pages/Signup';
+import Login from './pages/Login'
+import Signup from './pages/Signup'
 
-import Discover from './pages/Discover';
+import Discover from './pages/Discover'
 
-import Profile from './pages/Profile';
-import EditProfile from './pages/EditProfile';
-import Suggestions from './pages/Suggestions';
-
+import Profile from './pages/Profile'
+import EditProfile from './pages/EditProfile'
+import Suggestions from './pages/Suggestions'
 
 // import Test from './testing/Test';
 
 // context
-import { useAuthContext } from "./hooks/useAuthContext";
+import { useAuthContext } from './hooks/useAuthContext'
 
 // components
-import Search from './pages/Search';
+import Search from './pages/Search'
 
-
-function App() {
-
-  const { user } = useAuthContext();
+function App () {
+  const { user } = useAuthContext()
 
   return (
     <Router>
@@ -43,7 +40,7 @@ function App() {
           <Route path="/signup" element={<Signup />} />
 
           <Route path="/discover" element={<Discover />} />
-          
+
           { user && user.profileCreated && <Route path="/edit" element={<EditProfile />} /> }
 
           { /* User Profiles */ }
@@ -59,7 +56,7 @@ function App() {
         <Footer />
       </div>
     </Router>
-  );
+  )
 }
 
-export default App;
+export default App

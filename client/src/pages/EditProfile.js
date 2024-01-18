@@ -1,182 +1,178 @@
-import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { useAuthContext } from "../hooks/useAuthContext";
-import { ExperienceForm } from "../components/ExperienceForm";
-import { HOST } from "../util/apiRoutes";
-import Loading from "./Loading";
-import { PlusCircle } from "lucide-react";
+import { useEffect, useState } from 'react'
+import { useNavigate } from 'react-router-dom'
+import { useAuthContext } from '../hooks/useAuthContext'
+import { ExperienceForm } from '../components/ExperienceForm'
+import { HOST } from '../util/apiRoutes'
+import Loading from './Loading'
+import { PlusCircle } from 'lucide-react'
 
-function EditProfile() {
-  const [firstName, setFirstName] = useState("");
-  const [lastName, setLastName] = useState("");
-  const [anonymous, setAnonymous] = useState(false);
-  const [pipeline, setPipeline] = useState([]);
-  const [dateValid, setDateValid] = useState(true);
-  const [presentValid, setPresentValid] = useState(true);
+function EditProfile () {
+  const [firstName, setFirstName] = useState('')
+  const [lastName, setLastName] = useState('')
+  const [anonymous, setAnonymous] = useState(false)
+  const [pipeline, setPipeline] = useState([])
+  const [dateValid, setDateValid] = useState(true)
+  const [presentValid, setPresentValid] = useState(true)
 
-  const [loading, setLoading] = useState(false);
-  const [errorMessage, setErrorMessage] = useState("");
+  const [loading, setLoading] = useState(false)
+  const [errorMessage, setErrorMessage] = useState('')
 
-  const navigate = useNavigate();
+  const navigate = useNavigate()
 
-  const { user } = useAuthContext();
+  const { user } = useAuthContext()
 
   const fetchProfile = async () => {
-    setLoading(true);
+    setLoading(true)
 
     fetch(`${HOST}/api/profile/${user.profileId}`, {
-      method: "GET",
+      method: 'GET',
       headers: {
-        "Content-Type": "application/json", // Specify the content type as JSON
-      },
+        'Content-Type': 'application/json' // Specify the content type as JSON
+      }
     })
       .then((res) => {
         if (!res.ok) {
           // Check if the response has JSON content
-          if (res.headers.get("content-type")?.includes("application/json")) {
+          if (res.headers.get('content-type')?.includes('application/json')) {
             return res.json().then((errorData) => {
-              throw new Error(`${errorData.error}`);
-            });
+              throw new Error(`${errorData.error}`)
+            })
           } else {
-            throw new Error(`HTTP error! Status: ${res.status}`);
+            throw new Error(`HTTP error! Status: ${res.status}`)
           }
         }
 
-        return res.json();
+        return res.json()
       })
       .then((data) => {
-        setFirstName(data.firstName);
-        setLastName(data.lastName);
-        setAnonymous(data.anonymous);
-        setPipeline(data.pipeline);
+        setFirstName(data.firstName)
+        setLastName(data.lastName)
+        setAnonymous(data.anonymous)
+        setPipeline(data.pipeline)
 
-        setLoading(false);
+        setLoading(false)
       })
       .catch((error) => {
-        console.error(error.message);
-      });
-  };
+        console.error(error.message)
+      })
+  }
 
   const addExperience = async (index) => {
     const placeholder = {
-      company: "",
-      title: "",
-      date: "",
-    };
-    const newPipeline = [...pipeline];
+      company: '',
+      title: '',
+      date: ''
+    }
+    const newPipeline = [...pipeline]
 
-    newPipeline.splice(index, 0, placeholder);
+    newPipeline.splice(index, 0, placeholder)
 
-    setPipeline(newPipeline);
-  };
+    setPipeline(newPipeline)
+  }
 
   const updateExperience = async (experience, index) => {
-    const newPipeline = [...pipeline];
+    const newPipeline = [...pipeline]
 
-    newPipeline.splice(index, 1, experience);
+    newPipeline.splice(index, 1, experience)
 
-    setPipeline(newPipeline);
-  };
+    setPipeline(newPipeline)
+  }
 
   const removeExperience = async (index) => {
-    const newPipeline = [...pipeline];
+    const newPipeline = [...pipeline]
 
-    newPipeline.splice(index, 1);
+    newPipeline.splice(index, 1)
 
-    setPipeline(newPipeline);
-  };
+    setPipeline(newPipeline)
+  }
 
   const validateSubmission = () => {
-    function isValidDateFormat(date) {
-      return !date.includes("undefined");
+    function isValidDateFormat (date) {
+      return !date.includes('undefined')
     }
 
-    function checkPipelineForEmptyFields(pipeline) {
+    function checkPipelineForEmptyFields (pipeline) {
       for (const experience of pipeline) {
         for (const key in experience) {
           if (experience.hasOwnProperty(key)) {
             // validate date
-            if (key === "date" && !isValidDateFormat(experience[key])) {
-              return false;
+            if (key === 'date' && !isValidDateFormat(experience[key])) {
+              return false
             }
 
             // empty field
             if (
-              typeof experience[key] === "string" &&
-              experience[key].trim() === ""
+              typeof experience[key] === 'string' &&
+              experience[key].trim() === ''
             ) {
-              return false;
+              return false
             }
           }
         }
       }
-      return true;
+      return true
     }
 
     // check none of the singular fields are blank
-    if (firstName === "" || lastName === "") return false;
+    if (firstName === '' || lastName === '') return false
 
     // check none of the fields in the pipeline are blank
-    if (!checkPipelineForEmptyFields(pipeline)) return false;
+    if (!checkPipelineForEmptyFields(pipeline)) return false
 
-    return true;
-  };
+    return true
+  }
 
   const handleEditProfile = async () => {
     const profile = {
-      firstName: firstName,
-      lastName: lastName,
-      anonymous: anonymous,
-      pipeline: pipeline,
-    };
+      firstName,
+      lastName,
+      anonymous,
+      pipeline
+    }
 
     // make sure no input fields are blank
     if (!validateSubmission()) {
-      setErrorMessage("Must fill out all input fields.");
-      return;
+      setErrorMessage('Must fill out all input fields.')
+      return
     }
 
-    if(!dateValid || !presentValid) {
-     
-      setErrorMessage("Invalid Date input");
-      return;
+    if (!dateValid || !presentValid) {
+      setErrorMessage('Invalid Date input')
+      return
     }
-
-
 
     fetch(`${HOST}/api/profile/${user.profileId}`, {
-      method: "PATCH",
+      method: 'PATCH',
       headers: {
-        "Content-Type": "application/json", // Specify the content type as JSON
+        'Content-Type': 'application/json' // Specify the content type as JSON
       },
-      body: JSON.stringify(profile),
+      body: JSON.stringify(profile)
     })
       .then((res) => {
         if (!res.ok) {
           // Check if the response has JSON content
-          if (res.headers.get("content-type")?.includes("application/json")) {
+          if (res.headers.get('content-type')?.includes('application/json')) {
             return res.json().then((errorData) => {
-              throw new Error(`${errorData.error}`);
-            });
+              throw new Error(`${errorData.error}`)
+            })
           } else {
-            throw new Error(`HTTP error! Status: ${res.status}`);
+            throw new Error(`HTTP error! Status: ${res.status}`)
           }
         }
       })
       .catch((error) => {
-        console.error(error.message);
-      });
+        console.error(error.message)
+      })
 
-    navigate("/");
-  };
+    navigate('/')
+  }
 
   useEffect(() => {
-    fetchProfile();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+    fetchProfile()
+  }, [])
 
   if (loading) {
-    return <Loading />;
+    return <Loading />
   }
 
   return (
@@ -249,7 +245,7 @@ function EditProfile() {
                   key={`add_experience_button_${index + 1}`}
                   className="flex justify-center items-center w-10 h-10 rounded-full"
                   onClick={() => {
-                    addExperience(index + 1);
+                    addExperience(index + 1)
                   }}
                 >
                   <PlusCircle size={30} />
@@ -273,7 +269,7 @@ function EditProfile() {
         </div>
       </div>
     </>
-  );
+  )
 }
 
-export default EditProfile;
+export default EditProfile

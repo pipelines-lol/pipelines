@@ -1,23 +1,23 @@
-import { HOST } from "./apiRoutes";
+import { HOST } from './apiRoutes'
 
 export const isMongoDBId = async (id) => {
-    try {
-        const response = await fetch(`${HOST}/api/mongodbId/${id}`, {
-            method: "GET",
-            headers: {
-                'Content-Type': 'application/json'
-            }
-        });
+  try {
+    const response = await fetch(`${HOST}/api/mongodbId/${id}`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    })
 
-        if (!response.ok) {
-            const errorData = await response.json();
-            throw new Error(`${errorData.error}`);
-        }
-
-        const data = await response.json();
-        return data.response;
-    } catch (error) {
-        console.error(error.message);
-        return true;
+    if (!response.ok) {
+      const errorData = await response.json()
+      throw new Error(`${errorData.error}`)
     }
+
+    const data = await response.json()
+    return data.response
+  } catch (error) {
+    console.error(error.message)
+    return true
+  }
 }

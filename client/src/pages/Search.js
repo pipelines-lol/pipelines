@@ -1,50 +1,50 @@
-import { useState } from "react";
+import { useState } from 'react'
 
-import { PipelineCard } from "../components/PipelineCard";
-import { HOST } from "../util/apiRoutes";
-import { QuerySearchInput } from "../components/QuerySearchInput";
-import Loading from "./Loading";
+import { PipelineCard } from '../components/PipelineCard'
+import { HOST } from '../util/apiRoutes'
+import { QuerySearchInput } from '../components/QuerySearchInput'
+import Loading from './Loading'
 
-function Search() {
-  const [profiles, setProfiles] = useState([]);
+function Search () {
+  const [profiles, setProfiles] = useState([])
 
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(false)
 
   const handleSearch = async (query) => {
     // loading state to load query
-    setLoading(true);
+    setLoading(true)
 
     fetch(`${HOST}/api/pipeline/search/${query}`, {
-      method: "GET",
+      method: 'GET',
       headers: {
-        "Content-Type": "application/json", // Specify the content type as JSON
-      },
+        'Content-Type': 'application/json' // Specify the content type as JSON
+      }
     })
       .then((res) => {
         if (!res.ok) {
           // Check if the response has JSON content
-          if (res.headers.get("content-type")?.includes("application/json")) {
+          if (res.headers.get('content-type')?.includes('application/json')) {
             return res.json().then((errorData) => {
-              throw new Error(`${errorData.error}`);
-            });
+              throw new Error(`${errorData.error}`)
+            })
           } else {
-            throw new Error(`HTTP error! Status: ${res.status}`);
+            throw new Error(`HTTP error! Status: ${res.status}`)
           }
         }
-        return res.json();
+        return res.json()
       })
       .then((data) => {
-        setProfiles([...data]);
+        setProfiles([...data])
 
-        setLoading(false);
+        setLoading(false)
       })
       .catch((error) => {
-        console.error(error.message);
-      });
-  };
+        console.error(error.message)
+      })
+  }
 
   if (loading) {
-    return <Loading />;
+    return <Loading />
   }
 
   return (
@@ -67,7 +67,7 @@ function Search() {
               <PipelineCard
                 key={`pipeline_${profile._id}`}
                 profileId={profile._id}
-                name={profile.firstName + " " + profile.lastName}
+                name={profile.firstName + ' ' + profile.lastName}
                 pfp={profile.pfp}
                 anonymous={profile.anonymous}
                 pipeline={profile.pipeline}
@@ -76,7 +76,7 @@ function Search() {
           </div>
       </div>
     </>
-  );
+  )
 }
 
-export default Search;
+export default Search
