@@ -19,6 +19,12 @@
         "react/react-in-jsx-scope": "off",
         "react/jsx-uses-react": "off",
         "react/prop-types" : 0,
-        "no-prototype-builtins": "off"
+        "no-prototype-builtins": "off",
+        "prettier/prettier": [
+            "error",
+            {
+                "endOfLine": "auto"
+            }
+        ]
     }
 }
