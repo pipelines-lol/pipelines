@@ -1,15 +1,12 @@
 /** @type {import('tailwindcss').Config} */
 module.exports = {
-  content: [
-    "./src/**/*.{js,jsx,ts,tsx}",
-  ],
+  content: ["./src/**/*.{js,jsx,ts,tsx}"],
   theme: {
     extend: {
       colors: {
-        'pipelines-gray-500': '#444444',
+        "pipelines-gray-500": "#444444",
       },
     },
   },
   plugins: [],
-}
-
+};

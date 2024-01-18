@@ -1,51 +1,51 @@
-import { useEffect, useState } from 'react'
-import { HOST } from '../util/apiRoutes'
-import { PipelineCard } from '../components/PipelineCard'
-import Loading from './Loading'
+import { useEffect, useState } from "react";
+import { HOST } from "../util/apiRoutes";
+import { PipelineCard } from "../components/PipelineCard";
+import Loading from "./Loading";
 
-function Discover () {
-  const [profiles, setProfiles] = useState([])
+function Discover() {
+  const [profiles, setProfiles] = useState([]);
 
-  const [loading, setLoading] = useState(false)
+  const [loading, setLoading] = useState(false);
 
   const generateProfiles = async () => {
-    const size = 24
-    setLoading(true)
+    const size = 24;
+    setLoading(true);
 
     fetch(`${HOST}/api/pipeline/random/${size}`, {
-      method: 'GET',
+      method: "GET",
       headers: {
-        'Content-Type': 'application/json' // Specify the content type as JSON
-      }
+        "Content-Type": "application/json", // Specify the content type as JSON
+      },
     })
       .then((res) => {
         if (!res.ok) {
           // Check if the response has JSON content
-          if (res.headers.get('content-type')?.includes('application/json')) {
+          if (res.headers.get("content-type")?.includes("application/json")) {
             return res.json().then((errorData) => {
-              throw new Error(`${errorData.error}`)
-            })
+              throw new Error(`${errorData.error}`);
+            });
           } else {
-            throw new Error(`HTTP error! Status: ${res.status}`)
+            throw new Error(`HTTP error! Status: ${res.status}`);
           }
         }
-        return res.json()
+        return res.json();
       })
       .then((data) => {
-        setProfiles([...data])
-        setLoading(false)
+        setProfiles([...data]);
+        setLoading(false);
       })
       .catch((error) => {
-        console.error(error.message)
-      })
-  }
+        console.error(error.message);
+      });
+  };
 
   useEffect(() => {
-    generateProfiles()
-  }, [])
+    generateProfiles();
+  }, []);
 
   if (loading) {
-    return <Loading />
+    return <Loading />;
   }
 
   return (
@@ -60,7 +60,7 @@ function Discover () {
             <PipelineCard
               key={`pipeline_${profile._id}`}
               profileId={profile._id}
-              name={profile.firstName + ' ' + profile.lastName}
+              name={profile.firstName + " " + profile.lastName}
               pfp={profile.pfp}
               anonymous={profile.anonymous}
               pipeline={profile.pipeline}
@@ -69,7 +69,7 @@ function Discover () {
         ))}
       </div>
     </div>
-  )
+  );
 }
 
-export default Discover
+export default Discover;

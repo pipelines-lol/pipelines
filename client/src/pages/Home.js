@@ -1,55 +1,55 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect } from "react";
 
-import { PipelineCard } from '../components/PipelineCard'
-import { HOST } from '../util/apiRoutes'
-import Loading from './Loading'
-import { useNavigate } from 'react-router-dom'
+import { PipelineCard } from "../components/PipelineCard";
+import { HOST } from "../util/apiRoutes";
+import Loading from "./Loading";
+import { useNavigate } from "react-router-dom";
 
-function Home () {
-  const [profiles, setProfiles] = useState([])
+function Home() {
+  const [profiles, setProfiles] = useState([]);
 
-  const [loading, setLoading] = useState(false)
+  const [loading, setLoading] = useState(false);
 
-  const navigate = useNavigate()
+  const navigate = useNavigate();
 
   const generateProfiles = async () => {
-    const size = 4
-    setLoading(true)
+    const size = 4;
+    setLoading(true);
 
     fetch(`${HOST}/api/pipeline/random/${size}`, {
-      method: 'GET',
+      method: "GET",
       headers: {
-        'Content-Type': 'application/json' // Specify the content type as JSON
-      }
+        "Content-Type": "application/json", // Specify the content type as JSON
+      },
     })
       .then((res) => {
         if (!res.ok) {
           // Check if the response has JSON content
-          if (res.headers.get('content-type')?.includes('application/json')) {
+          if (res.headers.get("content-type")?.includes("application/json")) {
             return res.json().then((errorData) => {
-              throw new Error(`${errorData.error}`)
-            })
+              throw new Error(`${errorData.error}`);
+            });
           } else {
-            throw new Error(`HTTP error! Status: ${res.status}`)
+            throw new Error(`HTTP error! Status: ${res.status}`);
           }
         }
-        return res.json()
+        return res.json();
       })
       .then((data) => {
-        setProfiles([...data])
-        setLoading(false)
+        setProfiles([...data]);
+        setLoading(false);
       })
       .catch((error) => {
-        console.error(error.message)
-      })
-  }
+        console.error(error.message);
+      });
+  };
 
   useEffect(() => {
-    generateProfiles()
-  }, [])
+    generateProfiles();
+  }, []);
 
   if (loading) {
-    return <Loading />
+    return <Loading />;
   }
 
   return (
@@ -67,7 +67,7 @@ function Home () {
 
             <button
               className="px-8 py-3 bg-pipelines-gray-500 rounded-xl"
-              onClick={() => navigate('/search')}
+              onClick={() => navigate("/search")}
             >
               <h1 className="text-white font-medium uppercase">Find Now</h1>
             </button>
@@ -76,8 +76,8 @@ function Home () {
           <div className="flex justify-center items-center w-1/2 h-full">
             <img
               className="w-full h-[50vh] translate-y-12 object-contain"
-              src={'Hero.webp'}
-              alt={'Hero'}
+              src={"Hero.webp"}
+              alt={"Hero"}
             />
           </div>
         </div>
@@ -91,8 +91,8 @@ function Home () {
             <div className="flex flex-col justify-center items-end w-1/2 h-full">
               <img
                 className="w-72 h-72 object-contain"
-                src={'Hero2.png'}
-                alt={'Hero2'}
+                src={"Hero2.png"}
+                alt={"Hero2"}
               />
             </div>
 
@@ -117,14 +117,12 @@ function Home () {
 
         <div className="grid md:grid-cols-4 sm:grid-cols-2 grid-cols-1 md:gap-4 sm:gap-2 gap-2 pb-12">
           {profiles.map((profile) => (
-            <div
-              key={`profile_${profile._id}`}
-            >
+            <div key={`profile_${profile._id}`}>
               <div className="py-5"></div>
               <PipelineCard
                 key={`pipeline_${profile._id}`}
                 profileId={profile._id}
-                name={profile.firstName + ' ' + profile.lastName}
+                name={profile.firstName + " " + profile.lastName}
                 pfp={profile.pfp}
                 anonymous={profile.anonymous}
                 pipeline={profile.pipeline}
@@ -134,7 +132,7 @@ function Home () {
         </div>
       </div>
     </>
-  )
+  );
 }
 
-export default Home
+export default Home;

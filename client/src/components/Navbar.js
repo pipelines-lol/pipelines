@@ -1,83 +1,84 @@
-import { Link, useNavigate } from 'react-router-dom'
-import { useAuthContext } from '../hooks/useAuthContext'
+import { Link, useNavigate } from "react-router-dom";
+import { useAuthContext } from "../hooks/useAuthContext";
 
-import { HOST, HOMEPAGE } from '../util/apiRoutes'
-import { CLIENT_ID, SCOPE } from '../util/linkedinKeys'
+import { HOST, HOMEPAGE } from "../util/apiRoutes";
+import { CLIENT_ID, SCOPE } from "../util/linkedinKeys";
 
-import { useEffect, useState } from 'react'
-import { GalleryHorizontalEnd } from 'lucide-react'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faBars, faTimes } from '@fortawesome/free-solid-svg-icons'
+import { useEffect, useState } from "react";
+import { GalleryHorizontalEnd } from "lucide-react";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faBars, faTimes } from "@fortawesome/free-solid-svg-icons";
 
 const Navbar = () => {
-  const [nav, setNav] = useState(false)
-  const navigate = useNavigate()
-  const { user, dispatch } = useAuthContext()
-  const path = window.location.pathname
+  const [nav, setNav] = useState(false);
+  const navigate = useNavigate();
+  const { user, dispatch } = useAuthContext();
+  const path = window.location.pathname;
 
   // taken from linkedin api
 
-  const [linkedinUserInfo, setUserLinkedinInfo] = useState({})
-  const [pfp, setPfp] = useState(null)
+  const [linkedinUserInfo, setUserLinkedinInfo] = useState({});
+  const [pfp, setPfp] = useState(null);
 
-  const linkedinRedirectUrl = `https://linkedin.com/oauth/v2/authorization?client_id=${CLIENT_ID}&response_type=code&scope=${SCOPE}&redirect_uri=${HOMEPAGE}`
+  const linkedinRedirectUrl = `https://linkedin.com/oauth/v2/authorization?client_id=${CLIENT_ID}&response_type=code&scope=${SCOPE}&redirect_uri=${HOMEPAGE}`;
 
   const login = async (email) => {
     try {
       const response = await fetch(`${HOST}/api/user/login`, {
-        method: 'POST',
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json'
+          "Content-Type": "application/json",
         },
-        body: JSON.stringify({ email })
-      })
+        body: JSON.stringify({ email }),
+      });
 
       if (!response.ok) {
         // Check if the response has JSON content
         if (
-          response.headers.get('content-type')?.includes('application/json')
+          response.headers.get("content-type")?.includes("application/json")
         ) {
-          const errorData = await response.json()
-          throw new Error(`${errorData.error}`)
+          const errorData = await response.json();
+          throw new Error(`${errorData.error}`);
         } else {
-          throw new Error(`HTTP error! Status: ${response.status}`)
+          throw new Error(`HTTP error! Status: ${response.status}`);
         }
       }
 
-      const user = await response.json()
+      const user = await response.json();
 
-      localStorage.setItem('user', JSON.stringify(user))
+      localStorage.setItem("user", JSON.stringify(user));
 
       // update AuthContext
-      dispatch({ type: 'LOGIN', payload: user })
+      dispatch({ type: "LOGIN", payload: user });
 
       // SPECIAL CASE: first time user logged in
       if (!user.profileCreated) {
-        await createProfile(user.profileId)
+        await createProfile(user.profileId);
       }
 
       // redirect to home
-      navigate('/')
+      navigate("/");
     } catch (error) {
-      console.error(error.message)
+      console.error(error.message);
     }
-  }
+  };
 
   const logout = () => {
-    setUserLinkedinInfo(null)
+    setUserLinkedinInfo(null);
 
-    dispatch({ type: 'LOGOUT' })
-    localStorage.setItem('user', null)
+    dispatch({ type: "LOGOUT" });
+    localStorage.setItem("user", null);
 
-    navigate('/')
-  }
+    navigate("/");
+  };
 
   const createProfile = async (profileId) => {
     if (!linkedinUserInfo) {
-      return
+      return;
     }
 
-    const { givenName, familyName, locale, picture, vanityName } = linkedinUserInfo
+    const { givenName, familyName, locale, picture, vanityName } =
+      linkedinUserInfo;
 
     const profile = {
       firstName: givenName,
@@ -85,131 +86,131 @@ const Navbar = () => {
       location: locale.country,
       pfp: picture,
       linkedin: `https://linkedin.com/in/${vanityName}`,
-      created: true
-    }
+      created: true,
+    };
 
     try {
       const response = await fetch(`${HOST}/api/profile/${profileId}`, {
-        method: 'PATCH',
+        method: "PATCH",
         headers: {
-          'Content-Type': 'application/json' // Specify the content type as JSON
+          "Content-Type": "application/json", // Specify the content type as JSON
         },
-        body: JSON.stringify(profile)
-      })
+        body: JSON.stringify(profile),
+      });
 
       if (!response.ok) {
         // Check if the response has JSON content
         if (
-          response.headers.get('content-type')?.includes('application/json')
+          response.headers.get("content-type")?.includes("application/json")
         ) {
-          const errorData = await response.json()
-          throw new Error(`${errorData.error}`)
+          const errorData = await response.json();
+          throw new Error(`${errorData.error}`);
         } else {
-          throw new Error(`HTTP error! Status: ${response.status}`)
+          throw new Error(`HTTP error! Status: ${response.status}`);
         }
       }
 
       // set user data
-      dispatch({ type: 'CREATED' })
+      dispatch({ type: "CREATED" });
 
       // set new user in local storage (with profile created)
-      const storedUser = JSON.parse(localStorage.getItem('user'))
-      storedUser.profileCreated = true
-      localStorage.setItem('user', JSON.stringify(storedUser))
+      const storedUser = JSON.parse(localStorage.getItem("user"));
+      storedUser.profileCreated = true;
+      localStorage.setItem("user", JSON.stringify(storedUser));
 
-      navigate('/')
+      navigate("/");
     } catch (error) {
-      console.error(error.message)
+      console.error(error.message);
     }
-  }
+  };
 
   const fetchPfp = async () => {
-    if (!user || !user.profileCreated) return
+    if (!user || !user.profileCreated) return;
 
     try {
       const response = await fetch(`${HOST}/api/pfp/${user.profileId}`, {
-        method: 'GET',
+        method: "GET",
         headers: {
-          'Content-Type': 'application/json'
-        }
-      })
+          "Content-Type": "application/json",
+        },
+      });
 
       if (!response.ok) {
         // Check if the response has JSON content
         if (
-          response.headers.get('content-type')?.includes('application/json')
+          response.headers.get("content-type")?.includes("application/json")
         ) {
-          const errorData = await response.json()
-          throw new Error(`${errorData.error}`)
+          const errorData = await response.json();
+          throw new Error(`${errorData.error}`);
         } else {
-          throw new Error(`HTTP error! Status: ${response.status}`)
+          throw new Error(`HTTP error! Status: ${response.status}`);
         }
       }
 
-      const data = await response.json()
-      setPfp(data.pfp)
+      const data = await response.json();
+      setPfp(data.pfp);
     } catch (error) {
-      console.error(error.message)
-      setPfp(null)
+      console.error(error.message);
+      setPfp(null);
     }
-  }
+  };
 
   // checking for code after linkedin login
   useEffect(() => {
-    async function checkForLinkedinToken () {
-      const windowUrl = window.location.href
-      if (windowUrl.includes('code=')) {
-        const codeMatch = windowUrl.match(/code=([a-zA-Z0-9_-]+)/)
+    async function checkForLinkedinToken() {
+      const windowUrl = window.location.href;
+      if (windowUrl.includes("code=")) {
+        const codeMatch = windowUrl.match(/code=([a-zA-Z0-9_-]+)/);
 
         try {
           const response = await fetch(`${HOST}/api/user/linkedin/userinfo`, {
-            method: 'GET',
+            method: "GET",
             headers: {
-              auth_code: codeMatch[1]
-            }
-          })
+              auth_code: codeMatch[1],
+            },
+          });
 
           if (!response.ok) {
-            throw new Error(`HTTP error! Status: ${response.status}`)
+            throw new Error(`HTTP error! Status: ${response.status}`);
           }
 
-          const data = await response.json()
+          const data = await response.json();
 
-          setUserLinkedinInfo(data)
+          setUserLinkedinInfo(data);
         } catch (error) {
-          console.error(error.message)
+          console.error(error.message);
         }
       }
     }
 
-    checkForLinkedinToken()
-  }, [])
+    checkForLinkedinToken();
+  }, []);
 
   // check if user info is available, if so, log in user
   useEffect(() => {
-    async function checkForUserInfo () {
+    async function checkForUserInfo() {
       // edge case for old logged in users
-      if (!linkedinUserInfo && user) return logout()
+      if (!linkedinUserInfo && user) return logout();
 
-      if (!linkedinUserInfo) return
-      if (user) return
+      if (!linkedinUserInfo) return;
+      if (user) return;
 
-      const email = linkedinUserInfo.email
+      const email = linkedinUserInfo.email;
       if (email) {
-        login(email)
+        login(email);
       }
     }
 
-    checkForUserInfo()
-  }, [user, linkedinUserInfo])
+    checkForUserInfo();
+  }, [user, linkedinUserInfo]);
 
   useEffect(() => {
     const fetchInfo = async () => {
-      await fetchPfp()
-    }
+      await fetchPfp();
+    };
 
-    fetchInfo()
-  }, [user])
+    fetchInfo();
+  }, [user]);
 
   return (
     <>
@@ -221,21 +222,21 @@ const Navbar = () => {
 
           <Link
             to="/"
-            className={`flex justify-center items-center h-full px-12 text-pipelines-gray-500 text-center ${path === '/' ? 'bg-gray-100 cursor-default' : ''} font-light uppercase transition-colors duration-300 hover:bg-gray-50`}
+            className={`flex justify-center items-center h-full px-12 text-pipelines-gray-500 text-center ${path === "/" ? "bg-gray-100 cursor-default" : ""} font-light uppercase transition-colors duration-300 hover:bg-gray-50`}
           >
             About
           </Link>
 
           <Link
             to="/search"
-            className={`flex justify-center items-center h-full px-12 text-pipelines-gray-500 text-center ${path === '/search' ? 'bg-gray-100 cursor-default' : ''} font-light uppercase transition-colors duration-300 hover:bg-gray-50`}
+            className={`flex justify-center items-center h-full px-12 text-pipelines-gray-500 text-center ${path === "/search" ? "bg-gray-100 cursor-default" : ""} font-light uppercase transition-colors duration-300 hover:bg-gray-50`}
           >
             Search
           </Link>
 
           <Link
             to="/discover"
-            className={`flex justify-center items-center h-full px-12 text-pipelines-gray-500 text-center ${path === '/discover' ? 'bg-gray-100 cursor-default' : ''} font-light uppercase transition-colors duration-300 hover:bg-gray-50`}
+            className={`flex justify-center items-center h-full px-12 text-pipelines-gray-500 text-center ${path === "/discover" ? "bg-gray-100 cursor-default" : ""} font-light uppercase transition-colors duration-300 hover:bg-gray-50`}
           >
             Discover
           </Link>
@@ -256,14 +257,13 @@ const Navbar = () => {
 
           {user && (
             <>
-              {user.profileCreated
-                ? (
+              {user.profileCreated ? (
                 <>
                   <Link to={`/user/${user.profileId}`}>
                     <img
-                      src={pfp || '/avatar.png'}
+                      src={pfp || "/avatar.png"}
                       className="w-12 h-12 rounded-full object-cover"
-                      alt={'user_pfp'}
+                      alt={"user_pfp"}
                     />
                   </Link>
 
@@ -274,8 +274,7 @@ const Navbar = () => {
                     Edit Profile
                   </Link>
                 </>
-                  )
-                : (
+              ) : (
                 <>
                   <Link
                     to="/create"
@@ -284,7 +283,7 @@ const Navbar = () => {
                     Create Profile
                   </Link>
                 </>
-                  )}
+              )}
 
               <button
                 className="bg-white px-8 py-2 rounded-lg shadow-md transition-colors duration-300 hover:bg-gray-100"
@@ -299,19 +298,21 @@ const Navbar = () => {
         </div>
         {/* Mobile Nav */}
         <Link className="md:hidden" to="/">
-          <GalleryHorizontalEnd className="md:hidden" size={36} color="#444444" />
+          <GalleryHorizontalEnd
+            className="md:hidden"
+            size={36}
+            color="#444444"
+          />
         </Link>
         <div
           onClick={() => setNav(!nav)}
           className="md:hidden relative z-50 cursor-pointer"
         >
-          {nav
-            ? (
+          {nav ? (
             <FontAwesomeIcon icon={faTimes} size="lg" />
-              )
-            : (
+          ) : (
             <FontAwesomeIcon icon={faBars} size="lg" />
-              )}
+          )}
         </div>
         {nav && (
           <ul
@@ -353,8 +354,7 @@ const Navbar = () => {
 
             {user && (
               <>
-                {user.profileCreated
-                  ? (
+                {user.profileCreated ? (
                   <>
                     <Link
                       to={`/user/${user.profileId}`}
@@ -370,8 +370,7 @@ const Navbar = () => {
                       Edit Profile
                     </Link>
                   </>
-                    )
-                  : (
+                ) : (
                   <>
                     <Link
                       to="/create"
@@ -380,14 +379,14 @@ const Navbar = () => {
                       Create Profile
                     </Link>
                   </>
-                    )}
+                )}
 
                 <button
                   onClick={() => {
-                    dispatch({ type: 'LOGOUT' })
-                    localStorage.setItem('user', null)
+                    dispatch({ type: "LOGOUT" });
+                    localStorage.setItem("user", null);
 
-                    navigate('/')
+                    navigate("/");
                   }}
                 >
                   <h1 className="text-xl text-white font-light uppercase">
@@ -400,7 +399,7 @@ const Navbar = () => {
         )}
       </header>
     </>
-  )
-}
+  );
+};
 
-export default Navbar
+export default Navbar;

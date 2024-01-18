@@ -1,60 +1,60 @@
-import { useState } from 'react'
-import { useNavigate } from 'react-router-dom'
-import { useAuthContext } from '../hooks/useAuthContext'
-import { HOST } from '../util/apiRoutes'
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { useAuthContext } from "../hooks/useAuthContext";
+import { HOST } from "../util/apiRoutes";
 
-function Login () {
-  const [email, setEmail] = useState('')
-  const [password, setPassword] = useState('')
+function Login() {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
 
-  const [errorMessage, setErrorMessage] = useState('')
+  const [errorMessage, setErrorMessage] = useState("");
 
-  const { dispatch } = useAuthContext()
+  const { dispatch } = useAuthContext();
 
-  const navigate = useNavigate()
+  const navigate = useNavigate();
 
   const login = (email, password) => {
-    const user = { email, password }
+    const user = { email, password };
 
     // validation
-    if (email.includes(' ') || password.includes(' ')) {
-      setErrorMessage('Invalid username or password.')
-      return
+    if (email.includes(" ") || password.includes(" ")) {
+      setErrorMessage("Invalid username or password.");
+      return;
     }
 
     fetch(`${HOST}/api/user/login`, {
-      method: 'POST',
+      method: "POST",
       headers: {
-        'Content-Type': 'application/json' // Specify the content type as JSON
+        "Content-Type": "application/json", // Specify the content type as JSON
       },
-      body: JSON.stringify(user)
+      body: JSON.stringify(user),
     })
       .then((res) => {
         if (!res.ok) {
           // Check if the response has JSON content
-          if (res.headers.get('content-type')?.includes('application/json')) {
+          if (res.headers.get("content-type")?.includes("application/json")) {
             return res.json().then((errorData) => {
-              throw new Error(`${errorData.error}`)
-            })
+              throw new Error(`${errorData.error}`);
+            });
           } else {
-            throw new Error(`HTTP error! Status: ${res.status}`)
+            throw new Error(`HTTP error! Status: ${res.status}`);
           }
         }
-        return res.json()
+        return res.json();
       })
       .then((data) => {
-        localStorage.setItem('user', JSON.stringify(data))
+        localStorage.setItem("user", JSON.stringify(data));
 
         // update AuthContext
-        dispatch({ type: 'LOGIN', payload: data })
+        dispatch({ type: "LOGIN", payload: data });
 
         // redirect to home
-        navigate('/')
+        navigate("/");
       })
       .catch((error) => {
-        setErrorMessage(error.message)
-      })
-  }
+        setErrorMessage(error.message);
+      });
+  };
 
   return (
     <>
@@ -94,7 +94,7 @@ function Login () {
         </div>
       </div>
     </>
-  )
+  );
 }
 
-export default Login
+export default Login;
