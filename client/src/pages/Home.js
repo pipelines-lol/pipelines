@@ -117,9 +117,7 @@ function Home() {
 
         <div className="grid md:grid-cols-4 sm:grid-cols-2 grid-cols-1 md:gap-4 sm:gap-2 gap-2 pb-12">
           {profiles.map((profile) => (
-            <div 
-              key={`profile_${profile._id}`}
-            >
+            <div key={`profile_${profile._id}`}>
               <div className="py-5"></div>
               <PipelineCard
                 key={`pipeline_${profile._id}`}

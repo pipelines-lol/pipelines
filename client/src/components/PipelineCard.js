@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { companies } from "../data/companyData";
 
 import { HOMEPAGE, HOST } from "../util/apiRoutes";
-import { ConditionalLink } from "./ConditionalLink"
+import { ConditionalLink } from "./ConditionalLink";
 
 export const PipelineCard = ({ profileId, name, pfp, anonymous, pipeline }) => {
   const [pfpUrl, setPfpUrl] = useState(null);
@@ -45,8 +45,6 @@ export const PipelineCard = ({ profileId, name, pfp, anonymous, pipeline }) => {
     };
 
     fetchInfo();
-
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (
@@ -62,7 +60,7 @@ export const PipelineCard = ({ profileId, name, pfp, anonymous, pipeline }) => {
         <div className="flex flex-row justify-end items-center w-full sm:gap-5 gap-3 ">
           <img
             className="w-12 h-12 rounded-full object-cover"
-            src={anonymous ? "avatar.png" : (pfpUrl || "avatar.png")}
+            src={anonymous ? "avatar.png" : pfpUrl || "avatar.png"}
             alt="avatar"
           />
           <h1 className="text-black font-light text-xl uppercase">
@@ -88,7 +86,7 @@ export const PipelineCard = ({ profileId, name, pfp, anonymous, pipeline }) => {
 export const ExperienceCard = ({ experience }) => {
   function getLogoByName(companyName) {
     const foundCompany = companies.find(
-      (company) => company.name === companyName
+      (company) => company.name === companyName,
     );
     return foundCompany ? foundCompany.logo : null;
   }

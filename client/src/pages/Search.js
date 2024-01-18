@@ -50,30 +50,30 @@ function Search() {
   return (
     <>
       <div className="flex flex-col justify-center items-center w-full h-full min-h-[100vh] bg-white gap-12 pt-15">
-          <div className="flex flex-col justify-center items-center text-center w-full h-[50vh] bg-pink-100 gap-5">
-            <div className="flex flex-col justify-center items-center text-center w-full gap-3">
-              <h1 className="text-pipelines-gray-500 font-bold text-4xl">
-                Find Your <span className="text-pink-700">Pipeline</span>
-              </h1>
-              <p className="text-pipelines-gray-500 font-light text-xl">
-                See where you were. Find where you are. <br /> Search where you can
-                be.
-              </p>
-            </div>
-            <QuerySearchInput handleSearch={handleSearch} />
+        <div className="flex flex-col justify-center items-center text-center w-full h-[50vh] bg-pink-100 gap-5">
+          <div className="flex flex-col justify-center items-center text-center w-full gap-3">
+            <h1 className="text-pipelines-gray-500 font-bold text-4xl">
+              Find Your <span className="text-pink-700">Pipeline</span>
+            </h1>
+            <p className="text-pipelines-gray-500 font-light text-xl">
+              See where you were. Find where you are. <br /> Search where you
+              can be.
+            </p>
           </div>
-          <div className="grid md:grid-cols-4 grid-cols-2 md:gap-4 sm:gap-2 gap-1 pb-12">
-            {profiles.map((profile) => (
-              <PipelineCard
-                key={`pipeline_${profile._id}`}
-                profileId={profile._id}
-                name={profile.firstName + " " + profile.lastName}
-                pfp={profile.pfp}
-                anonymous={profile.anonymous}
-                pipeline={profile.pipeline}
-              />
-            ))}
-          </div>
+          <QuerySearchInput handleSearch={handleSearch} />
+        </div>
+        <div className="grid md:grid-cols-4 grid-cols-2 md:gap-4 sm:gap-2 gap-1 pb-12">
+          {profiles.map((profile) => (
+            <PipelineCard
+              key={`pipeline_${profile._id}`}
+              profileId={profile._id}
+              name={profile.firstName + " " + profile.lastName}
+              pfp={profile.pfp}
+              anonymous={profile.anonymous}
+              pipeline={profile.pipeline}
+            />
+          ))}
+        </div>
       </div>
     </>
   );
