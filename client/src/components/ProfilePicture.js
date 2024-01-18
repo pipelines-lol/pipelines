@@ -118,6 +118,7 @@ export const ProfilePicture = ({ profile, setPfp }) => {
     };
 
     fetchInfo();
+    // eslint-disable-next-line
   }, []);
 
   const src = fetchedPfp || "/avatar.png";

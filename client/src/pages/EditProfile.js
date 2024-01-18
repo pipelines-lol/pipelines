@@ -169,6 +169,7 @@ function EditProfile() {
 
   useEffect(() => {
     fetchProfile();
+    // eslint-disable-next-line
   }, []);
 
   if (loading) {

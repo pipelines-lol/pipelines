@@ -6,6 +6,7 @@ import { ConditionalLink } from "./ConditionalLink";
 
 export const PipelineCard = ({ profileId, name, pfp, anonymous, pipeline }) => {
   const [pfpUrl, setPfpUrl] = useState(null);
+  const [isHover, setIsHover] = useState(0);
 
   const fetchPfp = async () => {
     if (!profileId || profileId === "") return;
@@ -45,6 +46,7 @@ export const PipelineCard = ({ profileId, name, pfp, anonymous, pipeline }) => {
     };
 
     fetchInfo();
+    // eslint-disable-next-line
   }, []);
 
   return (
@@ -57,8 +59,10 @@ export const PipelineCard = ({ profileId, name, pfp, anonymous, pipeline }) => {
         condition={true}
         to={`/user/${profileId}`}
       >
-        <div className="flex flex-row justify-end items-center w-full sm:gap-5 gap-3 ">
+        <div className="flex flex-row justify-end items-center w-full sm:gap-4 md:gap-3 pb-2">
           <img
+            onMouseOver={() => setIsHover(profileId)}
+            onMouseOut={() => setIsHover(0)}
             className="w-12 h-12 rounded-full object-cover"
             src={anonymous ? "avatar.png" : pfpUrl || "avatar.png"}
             alt="avatar"
@@ -67,18 +71,33 @@ export const PipelineCard = ({ profileId, name, pfp, anonymous, pipeline }) => {
             {anonymous ? "Anonymous" : name}
           </h1>
         </div>
+        <div className="flex flex-row gap-3">
+          {!(isHover === profileId) ? (
+            <div
+              className="flex flex-row justify-center items-center gap-3"
+              key={pipeline[pipeline.length - 1]._id}
+            >
+              <ExperienceCard experience={pipeline[pipeline.length - 1]} />
+            </div>
+          ) : (
+            <div className="flex flex-row gap-3">
+              {pipeline.map((experience, i) => (
+                <div
+                  className="flex flex-row justify-center items-center gap-3"
+                  key={experience._id}
+                >
+                  <ExperienceCard experience={experience} />
+                  {i !== pipeline.length - 1 ? (
+                    <div className="w-12 h-2 bg-pipelines-gray-500 rounded-md"></div>
+                  ) : (
+                    <></>
+                  )}
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
       </ConditionalLink>
-
-      <div className="flex flex-row gap-3">
-        {pipeline.length > 0 && (
-          <div
-            className="flex flex-row justify-center items-center gap-3"
-            key={pipeline[pipeline.length - 1]._id}
-          >
-            <ExperienceCard experience={pipeline[pipeline.length - 1]} />
-          </div>
-        )}
-      </div>
     </div>
   );
 };

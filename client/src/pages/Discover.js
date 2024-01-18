@@ -5,7 +5,6 @@ import Loading from "./Loading";
 
 function Discover() {
   const [profiles, setProfiles] = useState([]);
-
   const [loading, setLoading] = useState(false);
 
   const generateProfiles = async () => {

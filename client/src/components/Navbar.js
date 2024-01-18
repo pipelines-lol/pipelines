@@ -202,6 +202,7 @@ const Navbar = () => {
     }
 
     checkForUserInfo();
+    // eslint-disable-next-line
   }, [user, linkedinUserInfo]);
 
   useEffect(() => {
@@ -210,6 +211,7 @@ const Navbar = () => {
     };
 
     fetchInfo();
+    // eslint-disable-next-line
   }, [user]);
 
   return (

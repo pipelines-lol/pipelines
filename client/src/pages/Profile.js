@@ -341,6 +341,7 @@ function Profile() {
     };
 
     fetchInfo();
+    // eslint-disable-next-line
   }, [id]);
 
   const admin = user && (user.profileId === id || user.username === id);
