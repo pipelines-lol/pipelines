@@ -46,8 +46,7 @@ const Navbar = () => {
 
       const user = await response.json();
 
-      
-      localStorage.setItem('user', JSON.stringify(user));
+      localStorage.setItem("user", JSON.stringify(user));
 
       // update AuthContext
       dispatch({ type: "LOGIN", payload: user });
@@ -65,9 +64,8 @@ const Navbar = () => {
   };
 
   const logout = () => {
-
     setUserLinkedinInfo(null);
-    
+
     dispatch({ type: "LOGOUT" });
     localStorage.setItem("user", null);
 
@@ -79,14 +77,15 @@ const Navbar = () => {
       return;
     }
 
-    const { given_name, family_name, locale, picture, vanity_name } = linkedinUserInfo;
+    const { givenName, familyName, locale, picture, vanityName } =
+      linkedinUserInfo;
 
     const profile = {
-      firstName: given_name,
-      lastName: family_name,
+      firstName: givenName,
+      lastName: familyName,
       location: locale.country,
       pfp: picture,
-      linkedin: `https://linkedin.com/in/${vanity_name}`,
+      linkedin: `https://linkedin.com/in/${vanityName}`,
       created: true,
     };
 
@@ -125,7 +124,6 @@ const Navbar = () => {
     }
   };
 
-
   const fetchPfp = async () => {
     if (!user || !user.profileCreated) return;
 
@@ -160,9 +158,9 @@ const Navbar = () => {
   // checking for code after linkedin login
   useEffect(() => {
     async function checkForLinkedinToken() {
-      let windowUrl = window.location.href;
+      const windowUrl = window.location.href;
       if (windowUrl.includes("code=")) {
-        let codeMatch = windowUrl.match(/code=([a-zA-Z0-9_-]+)/);
+        const codeMatch = windowUrl.match(/code=([a-zA-Z0-9_-]+)/);
 
         try {
           const response = await fetch(`${HOST}/api/user/linkedin/userinfo`, {
@@ -190,9 +188,7 @@ const Navbar = () => {
 
   // check if user info is available, if so, log in user
   useEffect(() => {
-
-    async function checkForUserInfo () {
-
+    async function checkForUserInfo() {
       // edge case for old logged in users
       if (!linkedinUserInfo && user) return logout();
 
@@ -206,8 +202,6 @@ const Navbar = () => {
     }
 
     checkForUserInfo();
-
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user, linkedinUserInfo]);
 
   useEffect(() => {
@@ -216,8 +210,6 @@ const Navbar = () => {
     };
 
     fetchInfo();
-
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user]);
 
   return (
@@ -255,7 +247,7 @@ const Navbar = () => {
             <>
               <Link
                 to={linkedinRedirectUrl}
-                className="bg-pipelines-gray-500 px-8 py-2 rounded-lg shadow-md transition-colors duration-300 hover:bg-gray-700 
+                className="bg-pipelines-gray-500 px-8 py-2 rounded-lg shadow-md transition-colors duration-300 hover:bg-gray-700
                                 text-white font-normal uppercase"
               >
                 Login
@@ -269,7 +261,7 @@ const Navbar = () => {
                 <>
                   <Link to={`/user/${user.profileId}`}>
                     <img
-                      src={pfp ? pfp : "/avatar.png"}
+                      src={pfp || "/avatar.png"}
                       className="w-12 h-12 rounded-full object-cover"
                       alt={"user_pfp"}
                     />
@@ -306,7 +298,11 @@ const Navbar = () => {
         </div>
         {/* Mobile Nav */}
         <Link className="md:hidden" to="/">
-          <GalleryHorizontalEnd className="md:hidden" size={36} color="#444444" />
+          <GalleryHorizontalEnd
+            className="md:hidden"
+            size={36}
+            color="#444444"
+          />
         </Link>
         <div
           onClick={() => setNav(!nav)}
@@ -348,7 +344,7 @@ const Navbar = () => {
               <>
                 <Link
                   to={linkedinRedirectUrl}
-                  className="bg-pipelines-gray-500 px-8 py-2 rounded-lg shadow-md transition-colors duration-300 hover:bg-gray-700 
+                  className="bg-pipelines-gray-500 px-8 py-2 rounded-lg shadow-md transition-colors duration-300 hover:bg-gray-700
                                     text-white font-normal uppercase"
                 >
                   Login

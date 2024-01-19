@@ -124,10 +124,10 @@ function EditProfile() {
 
   const handleEditProfile = async () => {
     const profile = {
-      firstName: firstName,
-      lastName: lastName,
-      anonymous: anonymous,
-      pipeline: pipeline,
+      firstName,
+      lastName,
+      anonymous,
+      pipeline,
     };
 
     // make sure no input fields are blank
@@ -136,13 +136,10 @@ function EditProfile() {
       return;
     }
 
-    if(!dateValid || !presentValid) {
-     
+    if (!dateValid || !presentValid) {
       setErrorMessage("Invalid Date input");
       return;
     }
-
-
 
     fetch(`${HOST}/api/profile/${user.profileId}`, {
       method: "PATCH",
@@ -172,7 +169,6 @@ function EditProfile() {
 
   useEffect(() => {
     fetchProfile();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   if (loading) {

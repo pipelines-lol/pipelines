@@ -109,25 +109,37 @@ function Profile() {
   };
 
   const getCurrentExperience = () => {
-    
     function splitDateString(dateString) {
-      const dateParts = dateString.split(' - ');
+      const dateParts = dateString.split(" - ");
       const startDate = parseDateString(dateParts[0]);
       const endDate = parseDateString(dateParts[1]);
-  
+
       return [startDate, endDate];
     }
 
     function parseDateString(dateString) {
-      const months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+      const months = [
+        "January",
+        "February",
+        "March",
+        "April",
+        "May",
+        "June",
+        "July",
+        "August",
+        "September",
+        "October",
+        "November",
+        "December",
+      ];
 
-      const [month, year] = dateString.split(' ');
+      const [month, year] = dateString.split(" ");
       const monthIndex = months.indexOf(month);
       const parsedDate = new Date(year, monthIndex);
 
       return parsedDate;
     }
-    
+
     if (!profile || !profile.pipeline) return;
 
     // compare experience dates to todays date
@@ -136,18 +148,24 @@ function Profile() {
       const [startDate, endDate] = splitDateString(experience.date);
 
       // check if current experience date range overlaps current date
-      if (startDate.getTime() <= currentDate.getTime() && currentDate.getTime() <= endDate.getTime()) {
+      if (
+        startDate.getTime() <= currentDate.getTime() &&
+        currentDate.getTime() <= endDate.getTime()
+      ) {
         return ["Current ", profile.pipeline[index]];
       }
 
       // check if current experience is in the future compared to current date
-      if (startDate.getTime() >= currentDate.getTime() && endDate.getTime() >= currentDate.getTime()) {
+      if (
+        startDate.getTime() >= currentDate.getTime() &&
+        endDate.getTime() >= currentDate.getTime()
+      ) {
         return ["Incoming ", profile.pipeline[index]];
       }
     }
 
     return ["Previous ", profile.pipeline[profile.pipeline.length - 1]];
-  }
+  };
 
   const validateUsername = async (username) => {
     const isValidUsername = async (username) => {
@@ -159,7 +177,7 @@ function Profile() {
 
     const isAvailable = (username) => {
       const filteredProfiles = profiles.filter(
-        (profile) => profile.username.toLowerCase() === username.toLowerCase()
+        (profile) => profile.username.toLowerCase() === username.toLowerCase(),
       );
 
       // check if the one profile there is the current user's
@@ -176,28 +194,20 @@ function Profile() {
     if (username.length === 0) {
       setUsernameErrorMessage("Invalid username.");
       return false;
-    }
-
-    // contains '/'
-    if (username.indexOf("/") !== -1) {
+    } else if (username.indexOf("/") !== -1) {
+      // contains '/'
       setUsernameErrorMessage("Invalid username.");
       return false;
-    }
-
-    // invalid regex
-    else if (!(await isValidUsername(username))) {
+    } else if (!(await isValidUsername(username))) {
+      // invalid regex
       setUsernameErrorMessage("Invalid username.");
       return false;
-    }
-
-    // taken username
-    else if (!isAvailable(username)) {
+    } else if (!isAvailable(username)) {
+      // taken username
       setUsernameErrorMessage("Username already taken.");
       return false;
-    }
-
-    // valid username
-    else {
+    } else {
+      // valid username
       setUsernameErrorMessage("");
       return true;
     }
@@ -267,9 +277,9 @@ function Profile() {
 
   const handleEditProfile = async () => {
     const updatedProfile = {
-      username: username,
+      username,
       linkedin: buildLinkedinUrl(linkedin),
-      location: location,
+      location,
     };
 
     // check all fields are filled out
@@ -331,13 +341,14 @@ function Profile() {
     };
 
     fetchInfo();
-
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [id]);
 
   const admin = user && (user.profileId === id || user.username === id);
 
-  const currentExperienceInfo = (profile && profile.pipeline && profile.pipeline.length > 0) ? (getCurrentExperience()) : (null)
+  const currentExperienceInfo =
+    profile && profile.pipeline && profile.pipeline.length > 0
+      ? getCurrentExperience()
+      : null;
 
   if (loading) {
     return <Loading />;
@@ -353,7 +364,7 @@ function Profile() {
               <ProfilePicture profile={profile} setPfp={setPfp} />
             ) : (
               <img
-                src={pfp ? pfp : "/avatar.png"}
+                src={pfp || "/avatar.png"}
                 className="w-96 h-96 rounded-full object-cover"
                 alt={`${profile._id}_avatar`}
               />
@@ -377,7 +388,7 @@ function Profile() {
                 <h1>{username}</h1>
               </div>
             )}
-            
+
             {/* Linkedin Section */}
             <label className="text-black font-medium">Linkedin</label>
             <Link to={buildLinkedinUrl(linkedin)} target="_blank">
@@ -392,7 +403,9 @@ function Profile() {
               >
                 <h1 className="text-white font-normal uppercase">Save</h1>
               </button>
-            ) : (<></>)}
+            ) : (
+              <></>
+            )}
           </div>
 
           {/* Name + job info */}
@@ -401,14 +414,14 @@ function Profile() {
               {profile.firstName} {profile.lastName}
             </h1>
 
-            {currentExperienceInfo && 
-                <h1 className="md:text-start text-center">
-                  {currentExperienceInfo[0] + currentExperienceInfo[1].title} at{" "}
-                  <span className="font-medium">
-                    {currentExperienceInfo[1].company}
-                  </span>
-                </h1>
-            } 
+            {currentExperienceInfo && (
+              <h1 className="md:text-start text-center">
+                {currentExperienceInfo[0] + currentExperienceInfo[1].title} at{" "}
+                <span className="font-medium">
+                  {currentExperienceInfo[1].company}
+                </span>
+              </h1>
+            )}
 
             <div className="flex flex-row justify-center items-center gap-2">
               <MapPin />
@@ -503,18 +516,16 @@ function Profile() {
 
           {/* Name + job info */}
           <div className="flex flex-col justify-center md:items-start items-center md:w-1/3 w-full h-full gap-3">
-            <h1 className="text-black font-semibold text-2xl">
-              Anonymous
-            </h1>
+            <h1 className="text-black font-semibold text-2xl">Anonymous</h1>
 
-            {currentExperienceInfo && 
-                <h1 className="md:text-start text-center">
-                  {currentExperienceInfo[0] + currentExperienceInfo[1].title} at{" "}
-                  <span className="font-medium">
-                    {currentExperienceInfo[1].company}
-                  </span>
-                </h1>
-            }
+            {currentExperienceInfo && (
+              <h1 className="md:text-start text-center">
+                {currentExperienceInfo[0] + currentExperienceInfo[1].title} at{" "}
+                <span className="font-medium">
+                  {currentExperienceInfo[1].company}
+                </span>
+              </h1>
+            )}
 
             <div className="flex flex-row justify-center items-center gap-2">
               <MapPin />

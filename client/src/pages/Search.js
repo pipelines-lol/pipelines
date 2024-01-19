@@ -73,6 +73,12 @@ function Search() {
               No users on this site for this company :/
             </div>
           )}
+
+          {!searchPerformed && (
+            <div className="col-span-full text-center text-pipelines-gray-500 mt-12 text-3xl font-bold">
+              Search for your dream company
+            </div>
+          )}
           {profiles.map((profile) => (
             <PipelineCard
               key={`pipeline_${profile._id}`}
