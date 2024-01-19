@@ -9,13 +9,12 @@ export const ExperienceForm = ({
     updateExperience,
     removeExperience,
     setIsValid,
-    setIsValidPresent,
 }) => {
     const [company, setCompany] = useState('')
     const [title, setTitle] = useState('')
     const [startDate, setStartDate] = useState('')
     const [endDate, setEndDate] = useState('')
-    const [isPresent, setIsPresent] = useState(false)
+    const [isIndefinite, setIsIndefinite] = useState(false)
 
     // initialize experience if one exists
     useEffect(() => {
@@ -42,21 +41,13 @@ export const ExperienceForm = ({
     }, [experience])
 
     useEffect(() => {
-        const currentDate = new Date()
-
-        if (isPresent && new Date(startDate) > currentDate) {
-            setIsValidPresent(false)
-        } else {
-            setIsValidPresent(true)
-        }
-
         // Validation logic here
         if (endDate < startDate) {
             setIsValid(false)
         } else {
             setIsValid(true)
         }
-    }, [endDate, startDate, isPresent, setIsValid, setIsValidPresent])
+    }, [endDate, startDate, setIsValid])
 
     function flipDateFormat(inputDate) {
         // Parse the input date string
@@ -130,7 +121,9 @@ export const ExperienceForm = ({
             const newExperience = {
                 company,
                 title,
-                date: `${flipDateFormat(value)} - ${isPresent ? 'Present' : flipDateFormat(endDate)}`,
+                date: `${flipDateFormat(value)} - ${
+                    isIndefinite ? 'Indefinite' : flipDateFormat(endDate)
+                }`,
             }
 
             updateExperience(newExperience, index)
@@ -171,13 +164,13 @@ export const ExperienceForm = ({
         updateExperience(newExperience, index)
     }
 
-    const handlePresentCheckboxChange = (e) => {
-        setIsPresent(e.target.checked)
+    const handleIndefiniteCheckboxChange = (e) => {
+        setIsIndefinite(e.target.checked)
 
         const newExperience = {
             company,
             title,
-            date: `${flipDateFormat(startDate)} - ${!isPresent ? 'Present' : flipDateFormat(endDate)}`,
+            date: `${flipDateFormat(startDate)} - ${!isIndefinite ? 'Indefinite' : flipDateFormat(endDate)}`,
         }
 
         updateExperience(newExperience, index)
@@ -231,9 +224,9 @@ export const ExperienceForm = ({
                             }
                         />
 
-                        {!isPresent ? (
+                        {!isIndefinite ? (
                             <input
-                                className="rounded-full bg-gray-100/60 px-4 py-2 text-gray-800 outline-none"
+                                className="rounded-full bg-gray-100 px-4 py-2 text-gray-800 outline-none"
                                 placeholder="September 2020 - September 2021"
                                 value={endDate}
                                 type="month"
@@ -246,13 +239,13 @@ export const ExperienceForm = ({
                             <div></div>
                         )}
                         <div className="flex flex-col md:flex-row">
-                            <label className="text-light ml-2 pr-2 text-pipelines-gray-100">
-                                Present
+                            <label className="text-medium ml-2 pr-2">
+                                Indefinite
                             </label>
                             <input
                                 type="checkbox"
-                                checked={isPresent}
-                                onChange={handlePresentCheckboxChange}
+                                checked={isIndefinite}
+                                onChange={handleIndefiniteCheckboxChange}
                             />
                         </div>
                     </div>
