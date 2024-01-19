@@ -12,7 +12,6 @@ function EditProfile() {
   const [anonymous, setAnonymous] = useState(false);
   const [pipeline, setPipeline] = useState([]);
   const [dateValid, setDateValid] = useState(true);
-  const [presentValid, setPresentValid] = useState(true);
 
   const [loading, setLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
@@ -136,7 +135,7 @@ function EditProfile() {
       return;
     }
 
-    if (!dateValid || !presentValid) {
+    if (!dateValid) {
       setErrorMessage("Invalid Date input");
       return;
     }
@@ -239,7 +238,6 @@ function EditProfile() {
                   updateExperience={updateExperience}
                   removeExperience={removeExperience}
                   setIsValid={setDateValid}
-                  setIsValidPresent={setPresentValid}
                 />
                 <button
                   key={`add_experience_button_${index + 1}`}

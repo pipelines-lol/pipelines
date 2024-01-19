@@ -15,7 +15,7 @@ export const ExperienceForm = ({
   const [title, setTitle] = useState("");
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
-  const [isPresent, setIsPresent] = useState(false);
+  const [isIndefinite, setIsIndefinite] = useState(false);
 
   // initialize experience if one exists
   useEffect(() => {
@@ -42,21 +42,13 @@ export const ExperienceForm = ({
   }, [experience]);
 
   useEffect(() => {
-    const currentDate = new Date();
-
-    if (isPresent && new Date(startDate) > currentDate) {
-      setIsValidPresent(false);
-    } else {
-      setIsValidPresent(true);
-    }
-
     // Validation logic here
     if (endDate < startDate) {
       setIsValid(false);
     } else {
       setIsValid(true);
     }
-  }, [endDate, startDate, isPresent, setIsValid, setIsValidPresent]);
+  }, [endDate, startDate, setIsValid]);
 
   function flipDateFormat(inputDate) {
     // Parse the input date string
@@ -131,7 +123,7 @@ export const ExperienceForm = ({
         company,
         title,
         date: `${flipDateFormat(value)} - ${
-          isPresent ? "Present" : flipDateFormat(endDate)
+          isIndefinite ? "Present" : flipDateFormat(endDate)
         }`,
       };
 
@@ -174,13 +166,13 @@ export const ExperienceForm = ({
   };
 
   const handlePresentCheckboxChange = (e) => {
-    setIsPresent(e.target.checked);
+    setIsIndefinite(e.target.checked);
 
     const newExperience = {
       company,
       title,
       date: `${flipDateFormat(startDate)} - ${
-        !isPresent ? "Present" : flipDateFormat(endDate)
+        !isIndefinite ? "Indefinite" : flipDateFormat(endDate)
       }`,
     };
 
@@ -221,7 +213,7 @@ export const ExperienceForm = ({
               onChange={(e) => handleExperienceChange(e, "startDate")}
             />
 
-            {!isPresent ? (
+            {!isIndefinite ? (
               <input
                 className="px-4 py-2 text-gray-800 bg-gray-100 rounded-full outline-none"
                 placeholder="September 2020 - September 2021"
@@ -234,10 +226,10 @@ export const ExperienceForm = ({
               <div></div>
             )}
             <div className="flex md:flex-row flex-col">
-              <label className="ml-2 text-medium pr-2">Present</label>
+              <label className="ml-2 text-medium pr-2">Indefinite</label>
               <input
                 type="checkbox"
-                checked={isPresent}
+                checked={isIndefinite}
                 onChange={handlePresentCheckboxChange}
               />
             </div>
