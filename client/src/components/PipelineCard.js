@@ -72,7 +72,7 @@ export const PipelineCard = ({ profileId, name, pfp, anonymous, pipeline }) => {
           </h1>
         </div>
         <div className="flex flex-row gap-3">
-          {!(isHover === profileId) ? (
+          {!(pipeline.length > 1 && isHover === profileId) ? (
             <div
               className="flex flex-row justify-center items-center gap-3"
               key={pipeline[pipeline.length - 1]._id}
@@ -80,14 +80,18 @@ export const PipelineCard = ({ profileId, name, pfp, anonymous, pipeline }) => {
               <ExperienceCard experience={pipeline[pipeline.length - 1]} />
             </div>
           ) : (
-            <div className="flex flex-row gap-3">
-              {pipeline.map((experience, i) => (
+            <div className="flex flex-row justify-center items-center absolute z-10">
+              {pipeline.slice(0, 3).map((experience, i) => (
                 <div
-                  className="flex flex-row justify-center items-center gap-3"
+                  className="flex justify-center items-center"
                   key={experience._id}
                 >
-                  <ExperienceCard experience={experience} />
-                  {i !== pipeline.length - 1 ? (
+                  <ExperienceCard
+                    experience={experience}
+                    hover={isHover === profileId}
+                    Id={profileId}
+                  />
+                  {i !== pipeline.slice(0, 3).length - 1 ? (
                     <div className="w-12 h-2 bg-pipelines-gray-500 rounded-md"></div>
                   ) : (
                     <></>
@@ -102,7 +106,7 @@ export const PipelineCard = ({ profileId, name, pfp, anonymous, pipeline }) => {
   );
 };
 
-export const ExperienceCard = ({ experience }) => {
+export const ExperienceCard = ({ experience, hover }) => {
   function getLogoByName(companyName) {
     const foundCompany = companies.find(
       (company) => company.name === companyName,
@@ -117,22 +121,34 @@ export const ExperienceCard = ({ experience }) => {
       className="flex flex-col justify-center items-center gap-3"
       key={experience._id}
     >
-      <img
-        className="w-24 h-24 rounded-md object-contain"
-        src={logo}
-        alt={`${experience.company}_logo`}
-      />
-      <div className="flex flex-col justify-center items-center">
-        <h1 className="text-black font-semibold text-2xl">
-          {experience.company}
-        </h1>
-        <h1 className="text-black font-thin italic text-xl">
-          {experience.title}
-        </h1>
-        <h1 className="text-black opacity-60 font-light text-xl">
-          {experience.date}
-        </h1>
-      </div>
+      {!hover ? (
+        <div className="flex flex-col justify-center items-center gap-3">
+          <img
+            className="w-24 h-24 rounded-md object-contain"
+            src={logo}
+            alt={`${experience.company}_logo`}
+          />
+          <div className="flex flex-col justify-center items-center">
+            <h1 className="text-black font-semibold text-2xl">
+              {experience.company}
+            </h1>
+            <h1 className="text-black font-thin italic text-xl">
+              {experience.title}
+            </h1>
+            <h1 className="text-black opacity-60 font-light text-xl">
+              {experience.date}
+            </h1>
+          </div>
+        </div>
+      ) : (
+        <div className="flex flex-row justify-center gap-3">
+          <img
+            className="w-24 h-24 rounded-md object-contain"
+            src={logo}
+            alt={`${experience.company}_logo`}
+          />
+        </div>
+      )}
     </div>
   );
 };
