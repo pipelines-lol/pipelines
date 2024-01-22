@@ -9,7 +9,6 @@ export const ExperienceForm = ({
   updateExperience,
   removeExperience,
   setIsValid,
-  setIsValidPresent,
 }) => {
   const [company, setCompany] = useState("");
   const [title, setTitle] = useState("");
@@ -199,6 +198,10 @@ export const ExperienceForm = ({
             value={title}
             handleSearch={handleTitleChange}
           />
+        </div>
+
+        <div className="flex flex-col justify-center items-center">
+          <label className="text-medium">Rate your experience</label>
         </div>
 
         <div className="flex flex-col justify-center items-center">
