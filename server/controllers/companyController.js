@@ -50,7 +50,7 @@ const getCompany = async (req, res) => {
 
         return res.status(200).json(company)
     } catch (err) {
-        console.log(err)
+        console.err(err)
         return res.status(400).json({error: "Failed to retrieve company"})
     }
 }
@@ -60,25 +60,74 @@ const updateCompany = async(req, res) => {
     const name = req.params.name
     const {rating, prevCompanies, postCompanies, tenure, Employees} = req.body
 
-    Company.updateOne(
-        { name: name },
-        {
-            $inc: {
-                rating: rating, // Incrementing the rating by 1
-                tenure: tenure, // Incrementing the tenure by 1
-                'prevCompanies.1': 1, // Incrementing the value of prevCompanies key 1 by 1
-                'postCompanies.1': 1, // Incrementing the value of postCompanies key 1 by 1
+    try {
+        const response = await Company.updateOne(
+            { name: name },
+            {
+                $inc: {
+                    rating: rating ? rating : 0, // Incrementing the rating by 1
+                    tenure: tenure ? tenure : 0, // Incrementing the tenure by 1
+                },
+                $push: {
+                    Employees: { $each: Employees || [] }, // Appending the provided Employees list or an empty array if not provided
+                },
             },
-            $push: {
-                Employees: 'employee123', // Replace with the desired employee ID
-            },
-            $setOnInsert: {
-                'prevCompanies.1': 1, // Setting prevCompanies key 1 to 1 if it doesn't exist
-                'postCompanies.1': 1, // Setting postCompanies key 1 to 1 if it doesn't exist
+        )
+        
+        if (!response) {
+            res.status(404).json({error: "company not found"})
+        }
+        
+        //Increment list of previous companies
+        for (const companyName of prevCompanies) {
+            const updateData = {
+                $inc: {},
+            };
+            
+            // Construct the dynamic key within $inc
+            updateData.$inc[`prevCompanies.${companyName}`] = 1;
+        
+            
+            const response = await Company.updateOne(
+                { name: name },
+                updateData
+            );
+    
+            if (!response) {
+                res.status(404).json({ error: `Company not found for ${companyName}` });
+                return;
             }
-        },
-        { upsert: true } // Creates the document if it doesn't exist
-    )
+            
+        }
+
+        //Increment list of postCompanies
+        for (const companyName of postCompanies) {
+            const updateData = {
+                $inc: {},
+            };
+            
+            // Construct the dynamic key within $inc
+            updateData.$inc[`postCompanies.${companyName}`] = 1;
+        
+            
+            const response = await Company.updateOne(
+                { name: name },
+                updateData
+            );
+    
+            if (!response) {
+                res.status(404).json({ error: `Company not found for ${companyName}` });
+                return;
+            }
+            
+        }
+
+        res.status(200).json(response)
+
+    } catch(err) {
+        console.error(err)
+        res.status(500).json({error: 'Not able to update company'})
+    }
 }
 
 const deleteCompany = async(req, res) => {

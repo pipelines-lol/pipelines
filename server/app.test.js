@@ -18,6 +18,24 @@ describe('POST calls', () => {
         
         expect(companies[companies.length-1].name).toBe("TestCompany")
     })
+
+    test('update-company', async () => {
+        const name  = 'TestCompany'
+        const newCompany = { 
+            rating: 5, 
+            tenure: 4, 
+            Employees: ['12345321', '123412341'], 
+            prevCompanies: ['Okta', 'Doordash'], 
+            postCompanies: ['Amazon', 'Google', 'Reddit']
+        }
+
+        const response = await api.put(`/update/${name}`).send(newCompany)
+        expect(response.ok).toBeTruthy()
+        console.log("response: ", response.status)
+
+        data = await response.body
+        console.log("data", data)
+    })
 })
 
 describe('GET calls', () => {
