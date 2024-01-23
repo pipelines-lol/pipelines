@@ -27,6 +27,7 @@ const Suggestions = () => {
             <option value="company">Company</option>
             <option value="website-issues">Bugs/Issues</option>
             <option value="other">Other</option>
+            <option value="enhancements">Enhancements</option>
           </select>
 
           <form
@@ -60,6 +61,16 @@ const Suggestions = () => {
                 name="other"
                 className="mt-7 mb-4 px-4 py-4 text-gray-800 bg-gray-100 rounded-md outline-none w-full resize-none"
                 placeholder="You guys smell"
+                rows="4"
+                required
+              />
+            )}
+            {suggestionType === "enhancements" && (
+              <textarea
+                type="text"
+                name="enhancements"
+                className="mt-7 mb-4 px-4 py-4 text-gray-800 bg-gray-100 rounded-md outline-none w-full resize-none"
+                placeholder="Make this a chrome extension"
                 rows="4"
                 required
               />
