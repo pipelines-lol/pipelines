@@ -4,19 +4,31 @@ const Company = require('./models/companyModel')
 const mongoose = require('mongoose')
 const app = require('./index')
 
+
 const api = request(router)
 
-test('POST call', async () => {
-    //build a new item
-    const newCompany = { name: 'TestCompany' }
-    const response = await api.post('/create').send(newCompany)
-
-    console.log("response: ", response.status)
-
-    const companies = await Company.find({})
+describe('POST calls', () => {
+    test('create-company', async () => {
+        //build a new item
+        const newCompany = { name:'TestCompany' }
+        const response = await api.post('/create').send(newCompany)
     
-    expect(companies[companies.length-1].name).toBe("TestCompany")
+        const companies = await Company.find({})
+        
+        expect(companies[companies.length-1].name).toBe("TestCompany")
+    })
 })
+
+describe('GET calls', () => {
+    test('delete-company', async () => {
+        const name = 'TestCompany';
+        const response = await api.delete(`/delete/${name}`)
+
+        console.log("Delete response", response.status)
+    })
+  
+})
+
 
 afterAll(done => {
     // Closing the DB connection allows Jest to exit successfully.
