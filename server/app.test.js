@@ -32,17 +32,13 @@ describe('Company tests', () => {
     
             const response = await api.put(`/update/${name}`).send(newCompany)
             expect(response.ok).toBeTruthy()
-            console.log("response: ", response.status)
     
-            data = await response.body
-            console.log("data", data)
+            
         })
 
         test('delete-company', async () => {
             const name = 'TestCompany';
             const response = await api.delete(`/delete/${name}`)
-    
-            console.log("Delete response", response.status)
         })
     })
     
@@ -57,9 +53,6 @@ describe('Company tests', () => {
         
             // Parse the JSON in the response
             const jsonData = await response.body;
-        
-            console.log("Get response", response.status);
-            console.log("Response JSON: ", jsonData);
         
             // Now you can assert or perform further checks on the extracted JSON data
             expect(jsonData).toHaveProperty('name');
