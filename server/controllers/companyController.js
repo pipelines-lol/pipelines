@@ -3,25 +3,29 @@ const mongoose = require('mongoose')
 
 const createCompany = async (req, res) => {
     const name = req.body.name
-    console.log("name: ", name)
+
 
     try {
         // Check if the company with the given name already exists
         const existingCompany = await Company.findOne({ name: name })
-        console.log("existing company: ", existingCompany)
 
         if (existingCompany) {
             return res.status(400).json({ error: 'Company with the same name already exists.' })
         }
 
         // Create a new company instance
-        const newCompany = new Company({ name })
-        console.log("New company: ", newCompany)
+        const newCompany = new Company({
+            name: name,
+            rating: 0,
+            prevCompanies: {},
+            postCompanies: {},
+            tenure: 0,
+            Employees: []
+        });
            
 
         // Save the new company to the database
         const savedCompany = await newCompany.save()
-        console.log("Saved Company: ", savedCompany)
 
         res.status(201).json(savedCompany)
     } catch (err) {
@@ -56,7 +60,15 @@ const updateCompany = async(req, res) => {
 }
 
 const deleteCompany = async(req, res) => {
-    //delete company
+    const name = req.params.name
+
+    const company = await Company.findOneAndDelete({ name: name })
+
+    if (!company) {
+        return res.status(404).json({error: 'No such company.'})
+    }
+
+    res.status(200).json(company)
 }
 
 module.exports = {
