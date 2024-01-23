@@ -10,7 +10,7 @@ router.post('/create', bodyParser.json(), createCompany)
 router.get('/get/:name', getCompany)
 
 //Update a specific company
-router.put('/update/:name', updateCompany)
+router.put('/update/:name', bodyParser.json(), updateCompany)
 
 //Delete a specific company
 router.delete('/delete/:name', deleteCompany)
