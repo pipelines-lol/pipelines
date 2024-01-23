@@ -57,6 +57,28 @@ const getCompany = async (req, res) => {
 
 const updateCompany = async(req, res) => {
     //update company on user registration
+    const name = req.params.name
+    const {rating, prevCompanies, postCompanies, tenure, Employees} = req.body
+
+    Company.updateOne(
+        { name: name },
+        {
+            $inc: {
+                rating: rating, // Incrementing the rating by 1
+                tenure: tenure, // Incrementing the tenure by 1
+                'prevCompanies.1': 1, // Incrementing the value of prevCompanies key 1 by 1
+                'postCompanies.1': 1, // Incrementing the value of postCompanies key 1 by 1
+            },
+            $push: {
+                Employees: 'employee123', // Replace with the desired employee ID
+            },
+            $setOnInsert: {
+                'prevCompanies.1': 1, // Setting prevCompanies key 1 to 1 if it doesn't exist
+                'postCompanies.1': 1, // Setting postCompanies key 1 to 1 if it doesn't exist
+            }
+        },
+        { upsert: true } // Creates the document if it doesn't exist
+    )
 }
 
 const deleteCompany = async(req, res) => {
