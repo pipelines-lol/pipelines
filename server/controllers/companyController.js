@@ -65,13 +65,16 @@ const updateCompany = async(req, res) => {
 
     try {
 
-        for (const employee of Employees) {
-            const user = await Profile.findById(employee)
-
-            if (!user) {
-                res.status(404).json({error: 'Employee ID not found'})
+        if (Employees && Employees.length > 0) {
+            for (const employee of Employees) {
+                const user = await Profile.findById(employee)
+    
+                if (!user) {
+                    res.status(404).json({error: 'Employee ID not found'})
+                }
             }
         }
+        
 
         const response = await Company.updateOne(
             { name: name },
@@ -91,48 +94,54 @@ const updateCompany = async(req, res) => {
         }
         
         //Increment list of previous companies
-        for (const companyName of prevCompanies) {
-            const updateData = {
-                $inc: {},
-            };
+        if (prevCompanies && prevCompanies.length > 0) {
+            for (const companyName of prevCompanies) {
+                const updateData = {
+                    $inc: {},
+                };
+                
+                // Construct the dynamic key within $inc
+                updateData.$inc[`prevCompanies.${companyName}`] = 1;
             
-            // Construct the dynamic key within $inc
-            updateData.$inc[`prevCompanies.${companyName}`] = 1;
+                
+                const response = await Company.updateOne(
+                    { name: name },
+                    updateData
+                );
         
-            
-            const response = await Company.updateOne(
-                { name: name },
-                updateData
-            );
-    
-            if (!response) {
-                res.status(404).json({ error: `Company not found for ${companyName}` });
-                return;
+                if (!response) {
+                    res.status(404).json({ error: `Company not found for ${companyName}` });
+                    return;
+                }
+                
             }
-            
         }
+        
 
         //Increment list of postCompanies
-        for (const companyName of postCompanies) {
-            const updateData = {
-                $inc: {},
-            };
+        if (postCompanies && postCompanies.lenth > 0) {
+            for (const companyName of postCompanies) {
+                const updateData = {
+                    $inc: {},
+                };
+                
+                // Construct the dynamic key within $inc
+                updateData.$inc[`postCompanies.${companyName}`] = 1;
             
-            // Construct the dynamic key within $inc
-            updateData.$inc[`postCompanies.${companyName}`] = 1;
+                
+                const response = await Company.updateOne(
+                    { name: name },
+                    updateData
+                );
         
-            
-            const response = await Company.updateOne(
-                { name: name },
-                updateData
-            );
-    
-            if (!response) {
-                res.status(404).json({ error: `Company not found for ${companyName}` });
-                return;
+                if (!response) {
+                    res.status(404).json({ error: `Company not found for ${companyName}` });
+                    return;
+                }
+                
             }
-            
         }
+        
 
         res.status(200).json(response)
 
