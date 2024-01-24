@@ -18,7 +18,7 @@ This project is a web application that provides functionality to manage pipeline
 
 6. **Get Profiles**: Retrieve a list of user profiles and their LinkedIn companies & potential experience from pipelines.lol.
 
-7. **Delete Profiles**: Remove user profiles and their LinkedIn profiles from the pipeilnes.lol.
+7. **Delete Profiles**: Remove user profiles and their LinkedIn profiles from the pipelines.lol webpage.
 
 8. **Update Profiles**: Modify existing user profiles.
 
