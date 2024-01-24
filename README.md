@@ -8,19 +8,19 @@ This project is a web application that provides functionality to manage pipeline
 
 1. **Get Pipelines**: Retrieve a list of pipelines.
 
-2. **Get Pipelines By Company**: Fetch pipelines associated with a specific company.
+2. **Get Pipelines By Company**: Fetch pipelines & users associated with a specific company.
 
 3. **Get Random Pipelines**: Get a random set of pipelines.
 
-4. **Remove Experience on LinkedIn**: Remove existing experience entries on LinkedIn profiles.
+4. **Remove Experience on LinkedIn**: Remove existing experience entries on pipelines' LinkedIn profiles.
 
-5. **Add LinkedIn Experience**: Add new experience entries to LinkedIn profiles.
+5. **Add LinkedIn Experience**: Add new experience entries to pipelines' Linkedin profiles.
 
-6. **Get Profiles**: Retrieve a list of LinkedIn profiles.
+6. **Get Profiles**: Retrieve a list of user profiles and their LinkedIn companies & potential experience from pipelines.lol.
 
-7. **Delete Profiles**: Remove LinkedIn profiles from the system.
+7. **Delete Profiles**: Remove user profiles and their LinkedIn profiles from the pipeilnes.lol.
 
-8. **Update Profiles**: Modify existing LinkedIn profiles.
+8. **Update Profiles**: Modify existing user profiles.
 
 ## Technologies Used
 
@@ -30,13 +30,15 @@ This project is a web application that provides functionality to manage pipeline
 
 - **React**: A JavaScript library for building user interfaces, used for the frontend development.
 
+- **Node.js**: A JavaScript runtime for server-side JavaScript execution.
+
 ## Installation
 
 1. Clone the repository:
 
    ```bash
-   git clone https://github.com/your-username/linkedin-pipeline-profile-management.git
-   cd linkedin-pipeline-profile-management
+   git clone https://github.com/pipelines-lol/pipelines.git
+   cd pipelines-lol
 2. Install dependencies:
 
    ```bash
