@@ -1,7 +1,12 @@
-import { X } from 'lucide-react'
 import { useEffect, useState } from 'react'
 import { ExperienceQuerySearchInput } from './ExperienceQuerySearchInput'
 import { TitleQuerySearchInput } from './TitleQuerySearchInput'
+import { X } from 'lucide-react'
+import BigSmiley from '../static/ratings/BigSmiley.jpg'
+import smiley from '../static/ratings/smiley.png'
+import neutral from '../static/ratings/neutral.png'
+import frown from '../static/ratings/frown.png'
+import demon from '../static/ratings/demon.jpeg'
 
 export const ExperienceForm = ({
     experience,
@@ -15,6 +20,37 @@ export const ExperienceForm = ({
     const [startDate, setStartDate] = useState('')
     const [endDate, setEndDate] = useState('')
     const [isIndefinite, setIsIndefinite] = useState(false)
+    const [rating, setRating] = useState(0)
+    const [selectedOption, setSelectedOption] = useState(1)
+    const [ratingBox, setRatingBox] = useState(false)
+
+    const options = [
+        {
+            id: 1000,
+            value: 20,
+            img: demon,
+        },
+        {
+            id: 2000,
+            value: 40,
+            img: frown,
+        },
+        {
+            id: 3000,
+            value: 60,
+            img: neutral,
+        },
+        {
+            id: 4000,
+            value: 80,
+            img: smiley,
+        },
+        {
+            id: 5000,
+            value: 100,
+            img: BigSmiley,
+        },
+    ]
 
     // initialize experience if one exists
     useEffect(() => {
@@ -152,6 +188,17 @@ export const ExperienceForm = ({
         updateExperience(newExperience, index)
     }
 
+    const handleRatingClick = (id, value) => {
+        setRating(value)
+        setSelectedOption(id)
+        console.log(rating)
+    }
+
+    const handleRatingBox = () => {
+        setRating(0)
+        setRatingBox(!ratingBox)
+    }
+
     const handleTitleChange = async (value) => {
         setTitle(value)
 
@@ -207,6 +254,44 @@ export const ExperienceForm = ({
                         handleSearch={handleTitleChange}
                     />
                 </div>
+                <div className="flex flex-col items-center justify-center">
+                    <label className="text-medium text-white">
+                        Rate your experience
+                    </label>
+                    {!ratingBox ? (
+                        <div className="flex space-x-4 bg-gray-200">
+                            {options.map(({ id, value, img }) => (
+                                <button
+                                    key={id}
+                                    onClick={() => handleRatingClick(id, value)}
+                                    className={`border px-4 py-2 ${
+                                        selectedOption === id
+                                            ? 'bg-blue-500 text-white'
+                                            : 'bg-gray-200 text-black'
+                                    } cursor-pointer transition duration-300 ease-in-out hover:bg-blue-500 hover:text-white`}
+                                >
+                                    <img
+                                        className="h-[30px] w-[30px]"
+                                        src={img}
+                                        alt="rating"
+                                    />
+                                </button>
+                            ))}
+                        </div>
+                    ) : (
+                        <div></div>
+                    )}
+                    <div className="flex flex-col md:flex-row">
+                        <label className="text-medium ml-2 pr-2 text-white">
+                            N/A
+                        </label>
+                        <input
+                            type="checkbox"
+                            checked={ratingBox}
+                            onChange={() => handleRatingBox()}
+                        />
+                    </div>
+                </div>
 
                 <div className="flex flex-col items-center justify-center gap-3">
                     <label className="text-light text-pipelines-gray-100">
@@ -238,8 +323,8 @@ export const ExperienceForm = ({
                         ) : (
                             <div></div>
                         )}
-                        <div className="flex flex-col md:flex-row">
-                            <label className="text-medium ml-2 pr-2">
+                        <div className="flex flex-row md:flex-col">
+                            <label className="medium ml-2 pr-2 text-white">
                                 Indefinite
                             </label>
                             <input
