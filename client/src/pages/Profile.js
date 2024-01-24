@@ -8,7 +8,7 @@ import Loading from "./Loading";
 
 import { ExperienceCard } from "../components/PipelineCard";
 
-import { MapPin } from "lucide-react";
+import { GraduationCap, MapPin } from "lucide-react";
 import { ProfilePicture } from "../components/ProfilePicture";
 
 function Profile() {
@@ -358,54 +358,72 @@ function Profile() {
     <>
       {profile && !profile.anonymous ? (
         <div className="flex md:flex-row flex-col justify-center items-center w-full min-h-[90vh] h-full p-16 gap-10">
-          {/* Profile picture + few fields */}
-          <div className="flex flex-col justify-center items-center bg-white md:w-1/3 min-w-96 w-full h-full p-10 gap-5 shadow-md">
-            {admin ? (
-              <ProfilePicture profile={profile} setPfp={setPfp} />
-            ) : (
-              <img
-                src={pfp || "/avatar.png"}
-                className="w-96 h-96 rounded-full object-cover"
-                alt={`${profile._id}_avatar`}
-              />
-            )}
+          <div className="flex flex-col justify-center items-center md:w-1/3 min-w-96 w-full h-full p-10 gap-5">
+            {/* Profile picture + few fields */}
+            <div className="flex flex-col justify-center items-center bg-white w-full h-full p-10 gap-5 shadow-md">
+              <h1 className="text-pipelines-gray-500 text-xl font-light uppercase">
+                Profile
+              </h1>
 
-            {admin ? (
-              <div className="flex flex-col justify-center items-center gap-3">
-                <label>Username</label>
-                <input
-                  className="p-3 bg-gray-100 rounded-full"
-                  value={username}
-                  onChange={handleUsernameChange}
+              {admin ? (
+                <ProfilePicture profile={profile} setPfp={setPfp} />
+              ) : (
+                <img
+                  src={pfp || "/avatar.png"}
+                  className="w-48 h-48 rounded-full object-cover"
+                  alt={`${profile._id}_avatar`}
                 />
-                {usernameErrorMessage && (
-                  <h1 className="text-red-400">{usernameErrorMessage}</h1>
-                )}
-              </div>
-            ) : (
-              <div className="flex flex-col justify-center items-center gap-3">
-                <label className="text-black font-medium">Username</label>
-                <h1>{username}</h1>
-              </div>
-            )}
+              )}
 
-            {/* Linkedin Section */}
-            <label className="text-black font-medium">Linkedin</label>
-            <Link to={buildLinkedinUrl(linkedin)} target="_blank">
-              <h1 className="hover:underline">{linkedin}</h1>
-            </Link>
+              {admin ? (
+                <div className="flex flex-col justify-center items-center gap-3">
+                  <label>Username</label>
+                  <input
+                    className="p-3 bg-gray-100 rounded-full"
+                    value={username}
+                    onChange={handleUsernameChange}
+                  />
+                  {usernameErrorMessage && (
+                    <h1 className="text-red-400">{usernameErrorMessage}</h1>
+                  )}
+                </div>
+              ) : (
+                <div className="flex flex-col justify-center items-center gap-3">
+                  <label className="text-black font-medium">Username</label>
+                  <h1>{username}</h1>
+                </div>
+              )}
 
-            {/* Save Button */}
-            {admin && saveable && !hasError ? (
-              <button
-                className={"bg-black px-12 py-1 rounded-full"}
-                onClick={handleEditProfile}
-              >
-                <h1 className="text-white font-normal uppercase">Save</h1>
-              </button>
-            ) : (
-              <></>
-            )}
+              {/* Linkedin Section */}
+              <label className="text-black font-medium">Linkedin</label>
+              <Link to={buildLinkedinUrl(linkedin)} target="_blank">
+                <h1 className="hover:underline">{linkedin}</h1>
+              </Link>
+
+              {/* Save Button */}
+              {admin && saveable && !hasError ? (
+                <button
+                  className={"bg-black px-12 py-1 rounded-full"}
+                  onClick={handleEditProfile}
+                >
+                  <h1 className="text-white font-normal uppercase">Save</h1>
+                </button>
+              ) : (
+                <></>
+              )}
+            </div>
+
+            {/* Education */}
+            <div className="flex flex-col justify-center items-center bg-white w-full h-full p-10 gap-5 shadow-md">
+              <h1 className="text-pipelines-gray-500 text-xl font-light uppercase">
+                Education
+              </h1>
+
+              <div className="flex flex-row justify-center items-center w-full gap-5">
+                <GraduationCap />
+                <h1>{profile.school}</h1>
+              </div>
+            </div>
           </div>
 
           {/* Name + job info */}
@@ -438,7 +456,11 @@ function Profile() {
           </div>
 
           {/* Pipeline */}
-          <div className="flex flex-col justify-center items-center md:w-1/3 w-full h-full bg-white p-10 gap-3 pt-20">
+          <div className="flex flex-col justify-center items-center md:w-1/3 w-full h-full bg-white p-10 gap-3">
+            <h1 className="text-pipelines-gray-500 text-xl font-light uppercase pb-3">
+              Experience
+            </h1>
+
             {profile.pipeline &&
               profile.pipeline.map((experience, i) => (
                 <div

@@ -5,10 +5,14 @@ import { ExperienceForm } from "../components/ExperienceForm";
 import { HOST } from "../util/apiRoutes";
 import Loading from "./Loading";
 import { PlusCircle } from "lucide-react";
+import { SchoolQuerySearch } from "../components/SchoolQuerySearch";
 
 function EditProfile() {
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
+
+  const [school, setSchool] = useState("");
+
   const [anonymous, setAnonymous] = useState(false);
   const [pipeline, setPipeline] = useState([]);
   const [dateValid, setDateValid] = useState(true);
@@ -47,6 +51,7 @@ function EditProfile() {
       .then((data) => {
         setFirstName(data.firstName);
         setLastName(data.lastName);
+        setSchool(data.school);
         setAnonymous(data.anonymous);
         setPipeline(data.pipeline);
 
@@ -116,6 +121,9 @@ function EditProfile() {
     // check none of the singular fields are blank
     if (firstName === "" || lastName === "") return false;
 
+    // check the education isnt blank
+    if (school === "") return false;
+
     // check none of the fields in the pipeline are blank
     if (!checkPipelineForEmptyFields(pipeline)) return false;
 
@@ -126,6 +134,7 @@ function EditProfile() {
     const profile = {
       firstName,
       lastName,
+      school,
       anonymous,
       pipeline,
     };
@@ -203,6 +212,11 @@ function EditProfile() {
                   onChange={(e) => setLastName(e.target.value)}
                 />
               </div>
+            </div>
+
+            <div className="flex flex-col gap-1">
+              <label className="text-medium">Education</label>
+              <SchoolQuerySearch value={school} handleSearch={setSchool} />
             </div>
 
             <label className="relative inline-flex items-center cursor-pointer">

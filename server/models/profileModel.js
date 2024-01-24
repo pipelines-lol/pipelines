@@ -19,6 +19,7 @@ const profileSchema = new Schema({
     position: String,
     location: String,
     anonymous: Boolean,
+    school: String,
     pipeline: [Experience],
     created: Boolean
 }, { timestamps: true })

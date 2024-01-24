@@ -124,7 +124,7 @@ export const ProfilePicture = ({ profile, setPfp }) => {
 
   return (
     <>
-      <div className="relative w-96 h-96 rounded-full overflow-hidden">
+      <div className="relative w-48 h-48 rounded-full overflow-hidden">
         <img
           src={!profile.anonymous ? src : "/avatar.png"}
           className="w-full h-full object-cover rounded-full transition-transform transform hover:scale-105"
