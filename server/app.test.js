@@ -25,11 +25,12 @@ describe('Company tests', () => {
             const newCompany = { 
                 rating: 5, 
                 tenure: 4, 
-                Employees: ['12345321', '123412341'], 
+                Employees: ['65b11b2eaaad5843ed6c90be', '65b11b2eaaad5843ed6c90be', '65b11b2eaaad5843ed6c90be', '65b11bd1aaad5843ed6c90bf'], 
                 prevCompanies: ['Okta', 'Doordash'], 
                 postCompanies: ['Amazon', 'Google', 'Reddit']
             }
-    
+            
+
             const response = await api.put(`/update/${name}`).send(newCompany)
             expect(response.ok).toBeTruthy()
     
@@ -60,6 +61,12 @@ describe('Company tests', () => {
             // Add more assertions based on your JSON structure
         });
       
+    })
+})
+
+describe('User tests', () => {
+    test('create-profile', async () => {
+        c
     })
 })
 

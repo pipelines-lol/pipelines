@@ -1,5 +1,8 @@
 const Company = require('../models/companyModel')
+const Profile = require('../models/profileModel')
+const router = require('../routes/profiles')
 const mongoose = require('mongoose')
+
 
 const createCompany = async (req, res) => {
     const name = req.body.name
@@ -61,6 +64,15 @@ const updateCompany = async(req, res) => {
     const {rating, prevCompanies, postCompanies, tenure, Employees} = req.body
 
     try {
+
+        for (const employee of Employees) {
+            const user = await Profile.findById(employee)
+
+            if (!user) {
+                res.status(404).json({error: 'Employee ID not found'})
+            }
+        }
+
         const response = await Company.updateOne(
             { name: name },
             {
@@ -68,14 +80,14 @@ const updateCompany = async(req, res) => {
                     rating: rating ? rating : 0, // Incrementing the rating by 1
                     tenure: tenure ? tenure : 0, // Incrementing the tenure by 1
                 },
-                $push: {
+                $addToSet: {
                     Employees: { $each: Employees || [] }, // Appending the provided Employees list or an empty array if not provided
                 },
             },
         )
         
         if (!response) {
-            res.status(404).json({error: "company not found"})
+            res.status(404).json({error: 'company not found'})
         }
         
         //Increment list of previous companies
