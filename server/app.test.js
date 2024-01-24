@@ -24,10 +24,6 @@ describe('Company tests', () => {
             const name  = 'TestCompany'
             const newCompany = { 
                 rating: 5, 
-                tenure: 4, 
-                Employees: ['65b11b2eaaad5843ed6c90be', '65b11b2eaaad5843ed6c90be', '65b11b2eaaad5843ed6c90be', '65b11bd1aaad5843ed6c90bf'], 
-                prevCompanies: ['Okta', 'Doordash'], 
-                postCompanies: ['Amazon', 'Google', 'Reddit']
             }
             
 
