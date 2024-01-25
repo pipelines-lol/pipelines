@@ -9,7 +9,8 @@ const Experience = new mongoose.Schema({
     date: String
 });
 
-const profileSchema = new Schema({
+const profileSchema = new Schema(
+  {
     userId: String,
     firstName: String,
     lastName: String,
@@ -19,9 +20,12 @@ const profileSchema = new Schema({
     position: String,
     location: String,
     anonymous: Boolean,
+    school: String,
     pipeline: [Experience],
-    created: Boolean
-}, { timestamps: true })
+    created: Boolean,
+  },
+  { timestamps: true }
+);
 profileSchema.plugin(random);
 
 // static methods
