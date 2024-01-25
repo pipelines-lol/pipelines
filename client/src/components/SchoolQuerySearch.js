@@ -19,14 +19,7 @@ export const SchoolQuerySearch = ({ value, handleSearch }) => {
 
   // initialize school if one exists
   useEffect(() => {
-    // reset query before checking if theres a previous value
-    setQuery("");
-
-    // check if there was a previous value
-    // if there was, set query to it
-    if (value) {
-      setQuery(value);
-    }
+    value ? setQuery(value) : setQuery("");
   }, [value]);
 
   const fetchSchools = async (query) => {
@@ -65,9 +58,6 @@ export const SchoolQuerySearch = ({ value, handleSearch }) => {
         }
         return unique;
       }, []);
-
-      console.log("data:", data);
-      console.log("query:", query);
 
       setResults(uniqueResults);
     } catch (error) {
@@ -136,11 +126,6 @@ export const SchoolQuerySearch = ({ value, handleSearch }) => {
                 key={`${school.name}_result`}
                 className="flex flex-row justify-center items-center px-5 py-2 hover:bg-gray-100"
               >
-                {/* <img
-                  className="w-10 h-10 rounded-lg object-contain"
-                  src={}
-                  alt={`school_`}
-                /> */}
                 <button
                   key={`school_button_${school.name}`} // Add a unique key for each button
                   className="w-full h-16 p-5 text-start"

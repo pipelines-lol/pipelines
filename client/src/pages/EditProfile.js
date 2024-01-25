@@ -28,38 +28,39 @@ function EditProfile() {
   const fetchProfile = async () => {
     setLoading(true);
 
-    fetch(`${HOST}/api/profile/${user.profileId}`, {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json", // Specify the content type as JSON
-      },
-    })
-      .then((res) => {
-        if (!res.ok) {
-          // Check if the response has JSON content
-          if (res.headers.get("content-type")?.includes("application/json")) {
-            return res.json().then((errorData) => {
-              throw new Error(`${errorData.error}`);
-            });
-          } else {
-            throw new Error(`HTTP error! Status: ${res.status}`);
-          }
-        }
-
-        return res.json();
-      })
-      .then((data) => {
-        setFirstName(data.firstName);
-        setLastName(data.lastName);
-        setSchool(data.school);
-        setAnonymous(data.anonymous);
-        setPipeline(data.pipeline);
-
-        setLoading(false);
-      })
-      .catch((error) => {
-        console.error(error.message);
+    try {
+      const res = await fetch(`${HOST}/api/profile/${user.profileId}`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json", // Specify the content type as JSON
+        },
       });
+
+      if (!res.ok) {
+        // Check if the response has JSON content
+        if (res.headers.get("content-type")?.includes("application/json")) {
+          const errorData = await res.json();
+          throw new Error(`${errorData.error}`);
+        } else {
+          throw new Error(`HTTP error! Status: ${res.status}`);
+        }
+      }
+
+      const data = await res.json();
+      updateUIState(data);
+    } catch (error) {
+      console.error(error.message);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const updateUIState = (data) => {
+    setFirstName(data.firstName);
+    setLastName(data.lastName);
+    setSchool(data.school);
+    setAnonymous(data.anonymous);
+    setPipeline(data.pipeline);
   };
 
   const addExperience = async (index) => {
