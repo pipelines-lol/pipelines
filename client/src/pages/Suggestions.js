@@ -29,7 +29,6 @@ const Suggestions = () => {
                         Find a bug? Want to suggest a company? <br /> Let us
                         know!
                     </p>
-
                     <div className="flex w-full flex-col gap-3 px-4">
                         <select
                             value={suggestionType}
@@ -61,7 +60,6 @@ const Suggestions = () => {
                                     required
                                 />
                             )}
-
                             {suggestionType === 'website-issues' && (
                                 <textarea
                                     type="text"
@@ -82,7 +80,6 @@ const Suggestions = () => {
                                     required
                                 />
                             )}
-
                             <div className="mx-auto flex w-1/3 flex-col whitespace-nowrap pt-2 hover:cursor-pointer">
                                 <a
                                     onClick={() =>
