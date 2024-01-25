@@ -250,7 +250,7 @@ export const ExperienceForm = ({
         <div className="flex flex-col justify-center items-center">
           <label className="text-medium">Rate your experience</label>
           {!ratingBox ? (
-            <div className="flex space-x-4 bg-gray-200">
+            <div className="flex bg-gray-200">
               {options.map(({ id, value, img }) => (
                 <button
                   key={id}
