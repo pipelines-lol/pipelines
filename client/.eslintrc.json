@@ -12,13 +12,11 @@
         "ecmaVersion": "latest",
         "sourceType": "module"
     },
-    "plugins": [
-        "react"
-    ],
+    "plugins": ["react"],
     "rules": {
         "react/react-in-jsx-scope": "off",
         "react/jsx-uses-react": "off",
-        "react/prop-types" : 0,
+        "react/prop-types": 0,
         "no-prototype-builtins": "off",
         "prettier/prettier": [
             "error",
@@ -26,5 +24,10 @@
                 "endOfLine": "auto"
             }
         ]
+    },
+    "settings": {
+        "react": {
+            "version": "detect"
+        }
     }
 }
