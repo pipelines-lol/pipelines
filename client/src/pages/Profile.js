@@ -347,7 +347,7 @@ function Profile() {
 
         setSaveable(false)
     }
-    
+
     useEffect(() => {
         const fetchInfo = async () => {
             await fetchProfile()
@@ -373,7 +373,7 @@ function Profile() {
             {profile && !profile.anonymous ? (
                 <div className="flex h-full min-h-[90vh] w-full flex-col items-center justify-center gap-10 p-16 md:flex-row">
                     {/* Profile picture + few fields */}
-                    <div className="flex h-full w-full min-w-96 flex-col items-center justify-center gap-5 bg-white p-10 shadow-md md:w-1/3">
+                    <div className="min-w-96 flex h-full w-full flex-col items-center justify-center gap-5 bg-white p-10 shadow-md md:w-1/3">
                         {admin ? (
                             <ProfilePicture profile={profile} setPfp={setPfp} />
                         ) : (
@@ -428,14 +428,14 @@ function Profile() {
                         ) : (
                             <></>
                         )}
-                        
+
                         {/* Education */}
-                        <div className="flex flex-col justify-center items-center bg-white w-full h-full p-10 gap-5 shadow-md">
-                            <h1 className="text-pipelines-gray-500 text-xl font-light uppercase">
+                        <div className="flex h-full w-full flex-col items-center justify-center gap-5 bg-white p-10 shadow-md">
+                            <h1 className="text-xl font-light uppercase text-pipelines-gray-500">
                                 Education
                             </h1>
 
-                            <div className="flex flex-row justify-center items-center w-full gap-5">
+                            <div className="flex w-full flex-row items-center justify-center gap-5">
                                 <GraduationCap />
                                 <h1>{profile.school}</h1>
                             </div>
@@ -494,7 +494,7 @@ function Profile() {
             ) : (
                 <div className="flex h-full min-h-[90vh] w-full flex-col items-center justify-center gap-10 p-16 md:flex-row">
                     {/* Profile picture + few fields */}
-                    <div className="flex h-full w-full min-w-96 flex-col items-center justify-center gap-5 bg-white p-10 shadow-md md:w-1/3">
+                    <div className="min-w-96 flex h-full w-full flex-col items-center justify-center gap-5 bg-white p-10 shadow-md md:w-1/3">
                         {admin ? (
                             <ProfilePicture profile={profile} setPfp={setPfp} />
                         ) : (
