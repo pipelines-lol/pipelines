@@ -10,7 +10,6 @@ function Search() {
 
     const [loading, setLoading] = useState(false)
 
-
     const handleSearch = async (query) => {
         // loading state to load query
         setLoading(true)
@@ -47,7 +46,7 @@ function Search() {
                 console.error(error.message)
             })
     }
-    
+
     if (loading) {
         return <Loading />
     }
