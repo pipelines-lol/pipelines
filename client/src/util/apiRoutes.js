@@ -12,4 +12,4 @@ const HOMEPAGE =
           ? 'https://pipelines.lol'
           : (console.error('Unknown mode:', process.env.MODE), null)
 
-export { HOST, HOMEPAGE }
+export { HOMEPAGE, HOST }

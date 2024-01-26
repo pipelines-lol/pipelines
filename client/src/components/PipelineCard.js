@@ -1,33 +1,86 @@
+import { useEffect, useState } from 'react'
 import { companies } from '../data/companyData'
+
+import { HOMEPAGE, HOST } from '../util/apiRoutes'
 import { ConditionalLink } from './ConditionalLink'
 
-export const PipelineCard = ({ profileId, name, anonymous, pipeline }) => {
-    const avatarUrl = 'https://i.pravatar.cc/300'
-    const profileLink = `/user/${profileId}`
-    const displayName = anonymous ? 'Anonymous' : name
-    const lastExperience = pipeline?.[pipeline?.length - 1]
+export const PipelineCard = ({ profileId, name, pfp, anonymous, pipeline }) => {
+    const [pfpUrl, setPfpUrl] = useState(null)
+
+    const fetchPfp = async () => {
+        if (!profileId || profileId === '') return
+        if (!pfp || pfp === '') return
+
+        try {
+            const response = await fetch(`${HOST}/api/pfp/${profileId}`, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+            })
+
+            if (!response.ok) {
+                // Check if the response has JSON content
+                if (
+                    response.headers
+                        .get('content-type')
+                        ?.includes('application/json')
+                ) {
+                    const errorData = await response.json()
+                    throw new Error(`${errorData.error}`)
+                } else {
+                    throw new Error(`HTTP error! Status: ${response.status}`)
+                }
+            }
+
+            const data = await response.json()
+            setPfpUrl(data.pfp)
+        } catch (error) {
+            console.error(error.message)
+            setPfpUrl(null)
+        }
+    }
+
+    useEffect(() => {
+        const fetchInfo = async () => {
+            await fetchPfp()
+        }
+
+        fetchInfo()
+    }, [])
+
     return (
-        <div className="flex flex-col items-center justify-center gap-3 p-5">
+        <div
+            className="flex flex-col items-center justify-center gap-3 p-5"
+            key={pipeline._id}
+        >
             <ConditionalLink
                 className="w-2/3"
                 condition={true}
-                to={profileLink}
+                to={`/user/${profileId}`}
             >
                 <div className="flex w-full flex-row items-center justify-end gap-3 sm:gap-5 ">
                     <img
                         className="h-12 w-12 rounded-full object-cover"
-                        src={avatarUrl}
+                        src={anonymous ? 'avatar.png' : pfpUrl || 'avatar.png'}
                         alt="avatar"
                     />
-                    <h1 className="text-xl font-light uppercase text-pipelines-gray-100">
-                        {displayName}
+                    <h1 className="mx-auto whitespace-nowrap text-xl font-light uppercase text-pipelines-gray-100">
+                        {anonymous ? 'Anonymous' : name}
                     </h1>
                 </div>
             </ConditionalLink>
 
-            <div className="flex flex-col items-center justify-center gap-3">
-                {lastExperience && (
-                    <ExperienceCard experience={lastExperience} />
+            <div className="flex flex-row gap-3">
+                {pipeline.length > 0 && (
+                    <div
+                        className="flex flex-row items-center justify-center gap-3"
+                        key={pipeline[pipeline.length - 1]._id}
+                    >
+                        <ExperienceCard
+                            experience={pipeline[pipeline.length - 1]}
+                        />
+                    </div>
                 )}
             </div>
         </div>
@@ -35,14 +88,24 @@ export const PipelineCard = ({ profileId, name, anonymous, pipeline }) => {
 }
 
 export const ExperienceCard = ({ experience }) => {
-    const randomCompany =
-        companies[Math.floor(Math.random() * companies?.length)]
-    const logoUrl = `https://pipelines.lol/logos/${randomCompany.logo}`
+    function getLogoByName(companyName) {
+        const foundCompany = companies.find(
+            (company) => company.name === companyName
+        )
+        return foundCompany ? foundCompany.logo : null
+    }
+
+    const logo = `${HOMEPAGE}/logos/${getLogoByName(experience.company)}`
+
     return (
-        <div className="flex flex-col items-center justify-center gap-3 p-5">
+        <div
+            className="flex flex-col items-center justify-center gap-3"
+            key={experience._id}
+        >
             <img
                 className="h-24 w-24 rounded-md object-contain"
-                src={logoUrl}
+                src={logo}
+                alt={`${experience.company}_logo`}
             />
             <div className="flex flex-col items-center justify-center">
                 <h1 className="text-2xl font-semibold text-pipelines-gray-100">
