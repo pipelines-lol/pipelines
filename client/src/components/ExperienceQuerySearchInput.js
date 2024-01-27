@@ -59,7 +59,7 @@ export const ExperienceQuerySearchInput = ({ value, handleSearch }) => {
                     placeholder="i.e. Google"
                 />
                 <div
-                    className={`z-30 max-h-44 w-full translate-y-1 overflow-y-scroll bg-gray-200 shadow-md ${hasResults ? 'absolute top-full' : ''}`}
+                    className={`z-30 max-h-44 w-full translate-y-1 overflow-y-scroll bg-gray-800 shadow-md ${hasResults ? 'absolute top-full' : ''}`}
                 >
                     {hasResults &&
                         results.map((company) => (
