@@ -1,33 +1,42 @@
 import { useState } from 'react'
 import { companies } from '../data/companyData'
+import { useCallback } from 'react'
 
 export const QuerySearchInput = ({ handleSearch }) => {
     const [query, setQuery] = useState('')
     const [results, setResults] = useState([])
     const hasResults = results.length > 0
 
-    const handleInputChange = (event) => {
-        const inputValue = event.target.value
-        setQuery(inputValue)
+    const handleInputChange = useCallback(
+        (event) => {
+            const inputValue = event.target.value
+            setQuery(inputValue)
 
-        // make sure theres an input before querying
-        if (inputValue.length > 0) {
-            const filteredCompanies = companies.filter((company) =>
-                company.name.toLowerCase().startsWith(inputValue.toLowerCase())
-            )
-            setResults(filteredCompanies)
-        } else {
+            // make sure there's an input before querying
+            if (inputValue.length > 0) {
+                const filteredCompanies = companies.filter((company) =>
+                    company.name
+                        .toLowerCase()
+                        .startsWith(inputValue.toLowerCase())
+                )
+                setResults(filteredCompanies)
+            } else {
+                setResults([])
+            }
+        },
+        [companies]
+    )
+
+    const handleCompanyButtonClick = useCallback(
+        async (company) => {
+            // reset text input
+            setQuery('')
             setResults([])
-        }
-    }
 
-    const handleCompanyButtonClick = async (company) => {
-        // reset text input
-        setQuery('')
-        setResults([])
-
-        await handleSearch(company.name)
-    }
+            await handleSearch(company.name)
+        },
+        [setQuery, setResults, handleSearch]
+    )
 
     return (
         <>

@@ -4,6 +4,7 @@ import { PipelineCard } from '../components/PipelineCard'
 import { QuerySearchInput } from '../components/QuerySearchInput'
 import { HOST } from '../util/apiRoutes'
 import Loading from './Loading'
+import { useCallback } from 'react'
 
 function Search() {
     const [profiles, setProfiles] = useState([])
@@ -12,43 +13,48 @@ function Search() {
 
     const [searchPerformed, setSearchPerformed] = useState(false)
 
-    const handleSearch = async (query) => {
-        // loading state to load query
-        setLoading(true)
-        setSearchPerformed(true)
+    const handleSearch = useCallback(
+        async (query) => {
+            // loading state to load query
+            setLoading(true)
+            setSearchPerformed(true)
 
-        fetch(`${HOST}/api/pipeline/search/${query}`, {
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json', // Specify the content type as JSON
-            },
-        })
-            .then((res) => {
-                if (!res.ok) {
-                    // Check if the response has JSON content
+            try {
+                const response = await fetch(
+                    `${HOST}/api/pipeline/search/${query}`,
+                    {
+                        method: 'GET',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                    }
+                )
+
+                if (!response.ok) {
                     if (
-                        res.headers
+                        response.headers
                             .get('content-type')
                             ?.includes('application/json')
                     ) {
-                        return res.json().then((errorData) => {
-                            throw new Error(`${errorData.error}`)
-                        })
+                        const errorData = await response.json()
+                        throw new Error(`${errorData.error}`)
                     } else {
-                        throw new Error(`HTTP error! Status: ${res.status}`)
+                        throw new Error(
+                            `HTTP error! Status: ${response.status}`
+                        )
                     }
                 }
-                return res.json()
-            })
-            .then((data) => {
+
+                const data = await response.json()
                 setProfiles([...data])
                 setLoading(false)
-            })
-            .catch((error) => {
+            } catch (error) {
                 console.error(error.message)
                 setLoading(false)
-            })
-    }
+            }
+        },
+        [setLoading, setSearchPerformed, setProfiles]
+    )
 
     if (loading) {
         return <Loading />
