@@ -13,7 +13,6 @@ function EditProfile() {
     const [anonymous, setAnonymous] = useState(false)
     const [pipeline, setPipeline] = useState([])
     const [dateValid, setDateValid] = useState(true)
-    const [presentValid, setPresentValid] = useState(true)
 
     const [loading, setLoading] = useState(false)
     const [errorMessage, setErrorMessage] = useState('')
@@ -152,7 +151,7 @@ function EditProfile() {
             return
         }
 
-        if (!dateValid || !presentValid) {
+        if (!dateValid) {
             setErrorMessage('Invalid Date input')
             return
         }
@@ -199,7 +198,7 @@ function EditProfile() {
         <>
             <div className="flex h-auto min-h-full w-full items-center justify-center pt-24">
                 <div
-                    className=" flex w-full flex-col items-center justify-center gap-5 bg-pipeline-blue-200/20 text-center"
+                    className="flex w-full flex-col items-center justify-center gap-5 bg-pipeline-blue-200/20 text-center"
                     style={{
                         backgroundImage: 'url("hero.png")',
                         backgroundSize: 'cover',
@@ -297,7 +296,6 @@ function EditProfile() {
                                     updateExperience={updateExperience}
                                     removeExperience={removeExperience}
                                     setIsValid={setDateValid}
-                                    setIsValidPresent={setPresentValid}
                                 />
                                 <button
                                     key={`add_experience_button_${index + 1}`}

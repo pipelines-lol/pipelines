@@ -60,9 +60,11 @@ const getLinkedinInfoWithCode = async (req, res) => {
     try {
         const code = req.headers.auth_code
         if (!code) throw new Error('No code provided')
+        console.log("Code gotten succesfully");
 
         // This request gets access_token
         let accessTokenResponse = await axios.get(`https://www.linkedin.com/oauth/v2/accessToken?grant_type=authorization_code&code=${code}&client_id=${CLIENT_ID}&client_secret=${CLIENT_SECRET}&redirect_uri=${REDIRECT_URI}`)
+
 
         // This request gets user info from access_token (given in the headers of the request)
         let userInfoResponse = await axios.get('https://api.linkedin.com/v2/userinfo', {
@@ -83,7 +85,7 @@ const getLinkedinInfoWithCode = async (req, res) => {
 
         // Attach the "vanityName" value to the userInfoResponse object as "vanity_name"
         userInfoResponse.data.vanity_name = vanity_name;
-
+        console.log("user info ", userInfoResponse.data)
         return res.status(200).json(userInfoResponse.data)
 
     } catch (error) {

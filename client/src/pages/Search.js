@@ -4,48 +4,57 @@ import { PipelineCard } from '../components/PipelineCard'
 import { QuerySearchInput } from '../components/QuerySearchInput'
 import { HOST } from '../util/apiRoutes'
 import Loading from './Loading'
+import { useCallback } from 'react'
 
 function Search() {
     const [profiles, setProfiles] = useState([])
 
     const [loading, setLoading] = useState(false)
 
-    const handleSearch = async (query) => {
-        // loading state to load query
-        setLoading(true)
+    const [searchPerformed, setSearchPerformed] = useState(false)
 
-        fetch(`${HOST}/api/pipeline/search/${query}`, {
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json', // Specify the content type as JSON
-            },
-        })
-            .then((res) => {
-                if (!res.ok) {
-                    // Check if the response has JSON content
+    const handleSearch = useCallback(
+        async (query) => {
+            // loading state to load query
+            setLoading(true)
+            setSearchPerformed(true)
+
+            try {
+                const response = await fetch(
+                    `${HOST}/api/pipeline/search/${query}`,
+                    {
+                        method: 'GET',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                    }
+                )
+
+                if (!response.ok) {
                     if (
-                        res.headers
+                        response.headers
                             .get('content-type')
                             ?.includes('application/json')
                     ) {
-                        return res.json().then((errorData) => {
-                            throw new Error(`${errorData.error}`)
-                        })
+                        const errorData = await response.json()
+                        throw new Error(`${errorData.error}`)
                     } else {
-                        throw new Error(`HTTP error! Status: ${res.status}`)
+                        throw new Error(
+                            `HTTP error! Status: ${response.status}`
+                        )
                     }
                 }
-                return res.json()
-            })
-            .then((data) => {
-                setProfiles([...data])
 
+                const data = await response.json()
+                setProfiles([...data])
                 setLoading(false)
-            })
-            .catch((error) => {
+            } catch (error) {
                 console.error(error.message)
-            })
-    }
+                setLoading(false)
+            }
+        },
+        [setLoading, setSearchPerformed, setProfiles]
+    )
 
     if (loading) {
         return <Loading />
@@ -81,6 +90,11 @@ function Search() {
                     <QuerySearchInput handleSearch={handleSearch} />
                 </div>
                 <div className="grid grid-cols-2 gap-1 pb-12 sm:gap-2 md:grid-cols-4 md:gap-4">
+                    {searchPerformed && profiles.length === 0 && !loading && (
+                        <div className="col-span-full mt-9 text-center text-3xl font-bold text-pipelines-gray-500">
+                            No users on this site for this company :/
+                        </div>
+                    )}
                     {profiles.map((profile) => (
                         <PipelineCard
                             key={`pipeline_${profile._id}`}

@@ -371,24 +371,24 @@ function Profile() {
     return (
         <>
             {profile && !profile.anonymous ? (
-                <div className="flex h-full min-h-[90vh] w-full flex-col items-center justify-center gap-10 p-16 md:flex-row">
+                <div className="flex h-full min-h-[90vh] w-full flex-col items-center justify-center gap-10 bg-pipelines-gray-100/10 p-16 md:flex-row">
                     {/* Profile picture + few fields */}
-                    <div className="flex h-full w-full min-w-96 flex-col items-center justify-center gap-5 bg-white p-10 shadow-md md:w-1/3">
+                    <div className="flex h-full w-full min-w-96 flex-col items-center justify-center gap-5 shadow-md md:w-1/3">
                         {admin ? (
                             <ProfilePicture profile={profile} setPfp={setPfp} />
                         ) : (
                             <img
                                 src={pfp || '/avatar.png'}
-                                className="h-96 w-96 rounded-full object-cover"
+                                className="h-48 w-48 rounded-full object-cover"
                                 alt={`${profile._id}_avatar`}
                             />
                         )}
 
                         {admin ? (
                             <div className="flex flex-col items-center justify-center gap-3">
-                                <label>Username</label>
+                                <label className="text-white">Username</label>
                                 <input
-                                    className="rounded-full bg-gray-100 p-3"
+                                    className="rounded-full bg-pipelines-gray-100/10 p-3"
                                     value={username}
                                     onChange={handleUsernameChange}
                                 />
@@ -400,25 +400,29 @@ function Profile() {
                             </div>
                         ) : (
                             <div className="flex flex-col items-center justify-center gap-3">
-                                <label className="font-medium text-black">
+                                <label className="font-medium text-white">
                                     Username
                                 </label>
-                                <h1>{username}</h1>
+                                <h1 className="text-white">{username}</h1>
                             </div>
                         )}
 
                         {/* Linkedin Section */}
-                        <label className="font-medium text-black">
+                        <label className="font-medium text-white">
                             Linkedin
                         </label>
                         <Link to={buildLinkedinUrl(linkedin)} target="_blank">
-                            <h1 className="hover:underline">{linkedin}</h1>
+                            <h1 className="text-white hover:underline">
+                                {linkedin}
+                            </h1>
                         </Link>
 
                         {/* Save Button */}
                         {admin && saveable && !hasError ? (
                             <button
-                                className={'rounded-full bg-black px-12 py-1'}
+                                className={
+                                    'rounded-full bg-black px-12 py-1 text-white'
+                                }
                                 onClick={handleEditProfile}
                             >
                                 <h1 className="font-normal uppercase text-white">
@@ -444,12 +448,12 @@ function Profile() {
 
                     {/* Name + job info */}
                     <div className="flex h-full w-full flex-col items-center justify-center gap-3 md:w-1/3 md:items-start">
-                        <h1 className="text-2xl font-semibold text-black">
+                        <h1 className="text-2xl font-semibold text-white">
                             {profile.firstName} {profile.lastName}
                         </h1>
 
                         {currentExperienceInfo && (
-                            <h1 className="text-center md:text-start">
+                            <h1 className="text-center text-white md:text-start">
                                 {currentExperienceInfo[0] +
                                     currentExperienceInfo[1].title}{' '}
                                 at{' '}
@@ -463,18 +467,20 @@ function Profile() {
                             <MapPin />
                             {admin ? (
                                 <input
-                                    className="rounded-full bg-white p-3"
+                                    className="rounded-full bg-pipelines-gray-100/10 p-3 text-white"
                                     value={location}
                                     onChange={handleLocationChange}
                                 />
                             ) : (
-                                <h1 className="italic">{location}</h1>
+                                <h1 className="italic text-white">
+                                    {location}
+                                </h1>
                             )}
                         </div>
                     </div>
 
                     {/* Pipeline */}
-                    <div className="flex h-full w-full flex-col items-center justify-center gap-3 bg-white p-10 pt-20 md:w-1/3">
+                    <div className="flex h-full w-full flex-col items-center justify-center gap-3 p-10 pt-20 md:w-1/3">
                         {profile.pipeline &&
                             profile.pipeline.map((experience, i) => (
                                 <div
@@ -492,7 +498,7 @@ function Profile() {
                     </div>
                 </div>
             ) : (
-                <div className="flex h-full min-h-[90vh] w-full flex-col items-center justify-center gap-10 p-16 md:flex-row">
+                <div className="bg-pipeline-blue-100/20 flex h-full min-h-[90vh] w-full flex-col items-center justify-center gap-10 p-16 md:flex-row">
                     {/* Profile picture + few fields */}
                     <div className="flex h-full w-full min-w-96 flex-col items-center justify-center gap-5 bg-white p-10 shadow-md md:w-1/3">
                         {admin ? (
@@ -509,7 +515,7 @@ function Profile() {
                             <div className="flex flex-col items-center justify-center gap-3">
                                 <label>Username</label>
                                 <input
-                                    className="rounded-full bg-gray-100 p-3"
+                                    className="rounded-full bg-gray-100 p-3 text-white"
                                     value={username}
                                     onChange={handleUsernameChange}
                                 />

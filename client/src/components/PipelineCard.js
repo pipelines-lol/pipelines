@@ -51,7 +51,7 @@ export const PipelineCard = ({ profileId, name, pfp, anonymous, pipeline }) => {
 
     return (
         <div
-            className="flex flex-col items-center justify-center gap-3 p-5"
+            className="flex flex-col items-center justify-center gap-3"
             key={pipeline._id}
         >
             <ConditionalLink
@@ -59,7 +59,7 @@ export const PipelineCard = ({ profileId, name, pfp, anonymous, pipeline }) => {
                 condition={true}
                 to={`/user/${profileId}`}
             >
-                <div className="flex w-full flex-row items-center justify-end gap-3 sm:gap-5 ">
+                <div className="mx-auto flex w-4/6 flex-row items-center justify-center gap-4 px-4">
                     <img
                         className="h-12 w-12 rounded-full object-cover"
                         src={anonymous ? 'avatar.png' : pfpUrl || 'avatar.png'}
@@ -102,11 +102,14 @@ export const ExperienceCard = ({ experience }) => {
             className="flex flex-col items-center justify-center gap-3"
             key={experience._id}
         >
-            <img
-                className="h-24 w-24 rounded-md object-contain"
-                src={logo}
-                alt={`${experience.company}_logo`}
-            />
+            <div className="inline-block rounded-md  p-2 backdrop-blur-2xl backdrop-filter">
+                <img
+                    className="h-24 w-24 rounded-md object-contain"
+                    src={logo}
+                    alt={`${experience.company}_logo`}
+                />
+                <div className="animate-blob absolute left-2 top-5 h-24 w-24 rounded-full bg-pipelines-gray-100/20 opacity-70 mix-blend-multiply blur-xl filter" />
+            </div>
             <div className="flex flex-col items-center justify-center">
                 <h1 className="text-2xl font-semibold text-pipelines-gray-100">
                     {experience.company}
