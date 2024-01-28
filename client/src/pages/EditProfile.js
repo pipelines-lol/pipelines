@@ -189,7 +189,7 @@ function EditProfile() {
         <>
             <div className="flex h-auto min-h-full w-full items-center justify-center pt-24">
                 <div
-                    className=" flex w-full flex-col items-center justify-center gap-5 bg-pipeline-blue-200/20 text-center"
+                    className="flex w-full flex-col items-center justify-center gap-5 bg-pipeline-blue-200/20 text-center"
                     style={{
                         backgroundImage: 'url("hero.png")',
                         backgroundSize: 'cover',
