@@ -107,12 +107,15 @@ export const SchoolQuerySearch = ({ value, handleSearch }) => {
     return (
         <>
             <form
-                className={`flex w-full flex-col items-center justify-center ${hasResults ? 'relative' : ''}`}
+                className={`flex w-full flex-col items-center justify-center gap-6 ${hasResults ? 'relative' : ''}`}
                 onSubmit={(e) => e.preventDefault()} // Prevent form submission
             >
+                <label className="text-light text-pipelines-gray-100">
+                    Education
+                </label>
                 <input
                     className={
-                        'z-20 w-full rounded-full bg-gray-100 px-4 py-2 text-gray-800 outline-none'
+                        'z-20 w-full rounded-full border-2 border-transparent bg-pipeline-blue-200/20 px-4 py-2 text-pipelines-gray-100 outline-none focus:bg-pipeline-blue-200/40 focus:ring-1 focus:ring-blue-300/40'
                     }
                     type="text"
                     value={query}
@@ -120,7 +123,7 @@ export const SchoolQuerySearch = ({ value, handleSearch }) => {
                     placeholder="Harvard University"
                 />
                 <div
-                    className={`z-10 max-h-36 w-full -translate-y-4 overflow-y-scroll bg-white shadow-md ${hasResults ? 'absolute top-full' : ''}`}
+                    className={`z-10 max-h-36 w-full overflow-y-scroll bg-white shadow-md ${hasResults ? 'absolute top-full mt-2 rounded-lg' : 'hidden'}`}
                 >
                     {hasResults &&
                         results.map((school) => (
