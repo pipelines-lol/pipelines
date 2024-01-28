@@ -1,7 +1,21 @@
 import { useNavigate } from 'react-router-dom'
+import { HOMEPAGE } from '../../util/apiRoutes'
+import { CLIENT_ID, SCOPE } from '../../util/linkedinKeys'
+import { useAuthContext } from '../../hooks/useAuthContext'
 
 export default function CTA() {
     const navigate = useNavigate()
+    const { user } = useAuthContext()
+    const linkedinRedirectUrl = `https://linkedin.com/oauth/v2/authorization?client_id=${CLIENT_ID}&response_type=code&scope=${SCOPE}&redirect_uri=${HOMEPAGE}`
+
+    const handleNavigation = () => {
+        if (user) {
+            navigate('/edit')
+        } else {
+            window.location.href = linkedinRedirectUrl
+        }
+    }
+
     return (
         <>
             <section
@@ -31,7 +45,7 @@ export default function CTA() {
 
                     <a
                         role="button"
-                        onClick={() => navigate('/login')}
+                        onClick={() => handleNavigation()}
                         className="group relative mt-12 inline-flex scale-125 items-center justify-center overflow-hidden rounded-full border-2 border-pipeline-blue-200/50 p-4 px-6 font-medium text-pipeline-blue-200 shadow-md transition duration-300 ease-out"
                     >
                         <span className="ease absolute inset-0 flex h-full w-full -translate-x-full items-center justify-center bg-pipeline-blue-200 text-white duration-300 group-hover:translate-x-0">
