@@ -54,7 +54,18 @@ function Discover() {
     return (
         <div className="flex min-h-screen w-full flex-col items-center justify-center pt-20 text-center">
             <div className="flex w-full flex-col items-center justify-center pt-16">
-                <div className="flex w-full flex-col items-center justify-center gap-5 bg-pipeline-blue-200/20 text-center">
+                <div
+                    className="flex w-full flex-col items-center justify-center gap-5  text-center"
+                    style={{
+                        backgroundImage: 'url("hero.png")',
+                        backgroundSize: 'cover',
+                        backgroundPosition: 'center',
+                        backgroundRepeat: 'no-repeat',
+                        height: '50dvh',
+                        borderBottom: '1px solid rgba(2, 101, 172, 0.2)',
+                        borderTop: '1px solid rgba(2, 101, 172, 0.3)',
+                    }}
+                >
                     <h1 className="mx-16 mt-16 text-4xl font-light text-pipelines-gray-100 md:mx-20 md:w-4/6 md:text-5xl">
                         Discover The Pipelines of Engineers
                         <div className="mt-4 whitespace-nowrap font-semibold text-pipeline-blue-200 underline underline-offset-8">
@@ -76,7 +87,7 @@ function Discover() {
                         </svg>
                     </div>
                 </div>
-                <div className="grid min-h-96 grid-cols-1 overflow-y-scroll bg-pipelines-gray-100/10 pb-12 pt-20 sm:grid-cols-2 sm:gap-2 md:grid-cols-4 md:gap-4">
+                <div className="grid min-h-96 w-full grid-cols-1 overflow-y-scroll border-b-[0.5px] border-t-[0.5px] border-pipeline-blue-200 bg-pipelines-gray-100/10 bg-opacity-95  pb-12 sm:grid-cols-2 sm:gap-2 md:grid-cols-3 md:gap-4 lg:grid-cols-4">
                     {profiles.map((profile) => (
                         <div key={`profile_${profile._id}`}>
                             <div className="p-5"></div>

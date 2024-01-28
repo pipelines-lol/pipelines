@@ -54,7 +54,7 @@ export const QuerySearchInput = ({ handleSearch }) => {
                     placeholder="Search companies..."
                 />
                 <div
-                    className={`z-10 max-h-96 w-1/2 -translate-y-2 overflow-y-scroll bg-pipeline-blue-200/10 shadow-md ${hasResults ? 'absolute top-full' : ''}`}
+                    className={`z-10 max-h-96 w-1/2 overflow-y-scroll rounded-lg bg-pipeline-blue-200/10 shadow-md ${hasResults ? 'absolute top-full' : ''}`}
                 >
                     {hasResults &&
                         results.map((company) => (
