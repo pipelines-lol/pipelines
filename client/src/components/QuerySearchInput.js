@@ -1,6 +1,5 @@
-import { useState } from 'react'
+import { useState, useCallback } from 'react'
 import { companies } from '../data/companyData'
-import { useCallback } from 'react'
 
 export const QuerySearchInput = ({ handleSearch }) => {
     const [query, setQuery] = useState('')

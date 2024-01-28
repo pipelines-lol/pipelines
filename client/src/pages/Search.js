@@ -1,10 +1,9 @@
-import { useState } from 'react'
+import { useState, useCallback } from 'react'
 
 import { PipelineCard } from '../components/PipelineCard'
 import { QuerySearchInput } from '../components/QuerySearchInput'
 import { HOST } from '../util/apiRoutes'
 import Loading from './Loading'
-import { useCallback } from 'react'
 
 function Search() {
     const [profiles, setProfiles] = useState([])

@@ -191,7 +191,7 @@ export const ExperienceForm = ({
     const handleRatingClick = (id, value) => {
         setRating(value)
         setSelectedOption(id)
-        console.log(rating) //placehodler for the value
+        console.log(rating) // placehodler for the value
     }
 
     const handleRatingBox = () => {
