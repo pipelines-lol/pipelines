@@ -85,22 +85,27 @@ const getPipelinesByUniversity = async (req, res) => {
 };
 
 // GET multiple profiles by company
-//TODO: Fix
 const getMultiplePipelinesByCompany = async (req, res) => {
   // SoftMatch Example: Person A works at AAPL, BB and Person B works at BB
   // Searching for [AAPL,BB] w/ SoftMatch==true returns {A,B}, and SoftMatch==false {A}
   const { companies, isSoftMatch } = req.query; // An array of company names and a boolean flag
   try {
     let query = {};
-    const companiesArray = companies.split(",");
-    console.log(companiesArray);
+    const companiesArray = companies
+      .split(",")
+      .map((company) => company.trim().toLowerCase());
 
-    if (isSoftMatch === "true") {
-      query = { "pipeline.company": { $in: companiesArray } }; // Matches any pipeline that includes any company in the array
-    } else {
-      query = { "pipeline.company": { $all: companiesArray } }; // Matches any pipeline that includes all companies in the array
+    if (!companiesArray || companiesArray.length === 0) {
+      return res.status(400).json({ error: "No company names provided." });
     }
-    console.log(query);
+
+    const companyDocs = await Company.find({ name: { $in: companiesArray } });
+    const companyIdArray = companyDocs.map((companyDoc) => companyDoc._id);
+    if (isSoftMatch === "true") {
+      query = { "pipeline.company": { $in: companyIdArray } }; // Matches any pipeline that includes any company in the array
+    } else {
+      query = { "pipeline.company": { $all: companyIdArray } }; // Matches any pipeline that includes all companies in the array
+    }
     const profiles = await Profile.find(query);
 
     if (profiles.length === 0) {
