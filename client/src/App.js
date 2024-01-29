@@ -21,6 +21,7 @@ import Company from './pages/Company'
 // Context
 import { useAuthContext } from './hooks/useAuthContext'
 import Company from './pages/Company'
+import { error404 } from './components/Error404'
 
 // Navbar Component
 function AppNavbar() {
