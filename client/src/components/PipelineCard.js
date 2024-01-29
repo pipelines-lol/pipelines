@@ -86,6 +86,7 @@ export const PipelineCard = ({ profileId, name, pfp, anonymous, pipeline }) => {
         </div>
     )
 }
+import { useNavigate } from 'react-router-dom'
 
 export const ExperienceCard = ({ experience }) => {
     const current = new Date(experience.startDate) > new Date()
@@ -122,6 +123,8 @@ export const ExperienceCard = ({ experience }) => {
             .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
             .join(' ')
     }
+
+    const navigate = useNavigate()
 
     return (
         <div

@@ -18,6 +18,7 @@ import Suggestions from './pages/Suggestions'
 
 // Context
 import { useAuthContext } from './hooks/useAuthContext'
+import Company from './pages/Company'
 
 // Navbar Component
 function AppNavbar() {
@@ -42,6 +43,7 @@ function AppRoutes({ user }) {
             element: user && user.profileCreated && <EditProfile />,
         },
         { path: '/user/:id', element: <Profile /> },
+        { path: '/company/:id', element: <Company /> },
         { path: '/Suggestions', element: <Suggestions /> },
     ]
 

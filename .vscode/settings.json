@@ -1,5 +1,6 @@
 {
-    "prettier.insertPragma": false,
-    "prettier.bracketSameLine": false,
-    "editor.codeActionsOnSave": ["source.formatDocument", "source.fixAll.eslint"],
+  "prettier.insertPragma": false,
+  "prettier.bracketSameLine": false,
+  "editor.codeActionsOnSave": ["source.fixAll.eslint"],
+  "editor.formatOnSave": true
 }
