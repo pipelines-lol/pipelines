@@ -29,10 +29,7 @@
     "validator": "^13.11.0"
   },
   "devDependencies": {
-<<<<<<< HEAD
-=======
     "nodemon": "^3.0.3",
->>>>>>> main
     "jest": "^29.7.0",
     "supertest": "^6.3.4"
   }

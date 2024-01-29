@@ -16,18 +16,12 @@ const profileSchema = new Schema(
     location: String,
     anonymous: Boolean,
     school: String,
-<<<<<<< HEAD
     pipeline: [ExperienceSchema],
     offers: [OfferSchema],
     created: Boolean,
   },
   { timestamps: true }
 );
-=======
-    pipeline: [Experience],
-    created: Boolean
-}, { timestamps: true })
->>>>>>> main
 profileSchema.plugin(random);
 
 // static methods
