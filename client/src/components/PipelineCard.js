@@ -105,7 +105,12 @@ export const ExperienceCard = ({ experience }) => {
             className="flex flex-col items-center justify-center gap-3"
             key={experience._id}
         >
-            <div className="inline-block rounded-md  p-2 backdrop-blur-2xl backdrop-filter">
+            <div
+                className="inline-block rounded-md p-2 backdrop-blur-2xl backdrop-filter transition duration-500 hover:scale-125 hover:cursor-pointer"
+                onClick={() => {
+                    navigate(`/company/${experience.company.toLowerCase()}`)
+                }}
+            >
                 <img
                     className="h-24 w-24 rounded-md object-contain"
                     src={logo}
