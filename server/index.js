@@ -14,7 +14,7 @@ const mongodbIdRoutes = require("./routes/mongodbId");
 const pfpRoutes = require("./routes/pfps");
 const imageModerationRoutes = require("./routes/imageModeration");
 
-dotenv.config();git 
+dotenv.config(); 
 
 const app = express();
 const PORT = process.env.PORT || 4000;

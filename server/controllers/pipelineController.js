@@ -1,4 +1,5 @@
 const Profile = require("../models/profileModel");
+const Company = require("../models/companyModel");
 const mongoose = require("mongoose");
 
 // GET a single profile
@@ -20,19 +21,22 @@ const getPipeline = async (req, res) => {
 
 //  GET profiles (by experience name with optional title filter)
 const getPipelinesByCompany = async (req, res) => {
-  const { company } = req.params;
-  const { title, school, employment } = req.query; // Use query parameters to specify job title, school, and employment type
-  console.log(company, title, school, employment)
-  const query = { "pipeline.company": company };
-  console.log(query)
+  const { company } = req.params; // company = company name
+  const { title, school, employment } = req.query;
+  const companyDocument = await Company.findOne({ name: company });
+
+  if (!companyDocument) {
+    return res.status(404).json({ error: "Company not found." });
+  }
+  const query = { "pipeline.company": companyDocument._id }; // query by company id, no longer by company name
+
+  // apply filters
   if (title) {
     query["pipeline.title"] = title;
   }
-
   if (school) {
     query["school"] = school;
   }
-
   if (employment) {
     if (employment === "intern") {
       query["pipeline.title"] = { $regex: /intern/i }; // Match titles containing "intern"
@@ -43,13 +47,14 @@ const getPipelinesByCompany = async (req, res) => {
 
   try {
     const profiles = await Profile.find(query);
-
+    console.log(profiles);
     if (profiles.length === 0) {
       return res.status(404).json({ error: "No profiles found." });
     }
 
     res.status(200).json(profiles);
   } catch (error) {
+    console.error(error);
     res.status(500).json({ error: "Internal server error" });
   }
 };
@@ -79,6 +84,7 @@ const getPipelinesByUniversity = async (req, res) => {
 };
 
 // GET multiple profiles by company
+//TODO: Fix
 const getMultiplePipelinesByCompany = async (req, res) => {
   // SoftMatch Example: Person A works at AAPL, BB and Person B works at BB
   // Searching for [AAPL,BB] w/ SoftMatch==true returns {A,B}, and SoftMatch==false {A}
@@ -150,17 +156,22 @@ const removeExperience = async (req, res) => {
   res.status(200).json(profile);
 };
 
-// ADD an experience
+// ADD an experience to Pipeline
 const addExperience = async (req, res) => {
   const { id } = req.params;
   const { index, company, title, date } = req.body;
+
+  const companyDoc = await Company.findOne({ name: company });
+  if (!companyDoc) {
+    return res.status(404).json({ error: "Company not found." });
+  }
+  const companyId = companyDoc._id;
 
   if (!mongoose.Types.ObjectId.isValid(id)) {
     return res.status(404).json({ error: "No such Profile." });
   }
 
   const profile = await Profile.findOne({ _id: id });
-
   if (!profile) {
     return res.status(404).json({ error: "No such Profile." });
   }
@@ -168,7 +179,7 @@ const addExperience = async (req, res) => {
   // create new pipeline + experience
   const newPipeline = [...profile.pipeline];
   const experience = {
-    company: company,
+    company: companyId,
     title: title,
     date: date,
   };
@@ -188,7 +199,7 @@ const addExperience = async (req, res) => {
     }
   );
 
-  res.status(200).json(profile);
+  res.status(200).json({ message: "Success" });
 };
 
 module.exports = {
