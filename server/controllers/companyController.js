@@ -5,8 +5,8 @@ const mongoose = require('mongoose')
 
 
 const createCompany = async (req, res) => {
-    const name = req.body.name
-
+    const name = req.body.name.toLowerCase();
+    
 
     try {
         // Check if the company with the given name already exists
@@ -43,7 +43,8 @@ const getCompany = async (req, res) => {
 
     try {
         // Find the company by name in the database
-        const company = await Company.findOne({ 'name': name })
+        const lowercaseCompanyName = name.toLowerCase();
+        const company = await Company.findOne({ 'name': lowercaseCompanyName })
 
 
          // Check if the company exists
@@ -62,6 +63,7 @@ const updateCompany = async(req, res) => {
     //update company on user registration
     const name = req.params.name
     const {rating, prevCompanies, postCompanies, tenure, Employees} = req.body
+    const lowercaseCompanyName = name.toLowerCase();
 
     try {
 
@@ -77,7 +79,7 @@ const updateCompany = async(req, res) => {
         
 
         const response = await Company.updateOne(
-            { name: name },
+            { name: lowercaseCompanyName },
             {
                 $inc: {
                     rating: rating ? rating : 0, // Incrementing the rating by 1
@@ -105,7 +107,7 @@ const updateCompany = async(req, res) => {
             
                 
                 const response = await Company.updateOne(
-                    { name: name },
+                    { name: lowercaseCompanyName },
                     updateData
                 );
         
@@ -130,7 +132,7 @@ const updateCompany = async(req, res) => {
             
                 
                 const response = await Company.updateOne(
-                    { name: name },
+                    { name: lowercaseCompanyName },
                     updateData
                 );
         
@@ -153,8 +155,8 @@ const updateCompany = async(req, res) => {
 
 const deleteCompany = async(req, res) => {
     const name = req.params.name
-
-    const company = await Company.findOneAndDelete({ name: name })
+    const lowercaseCompanyName = name.toLowerCase();
+    const company = await Company.findOneAndDelete({ name: lowercaseCompanyName })
 
     if (!company) {
         return res.status(404).json({error: 'No such company.'})
