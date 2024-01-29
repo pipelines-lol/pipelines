@@ -20,6 +20,7 @@ import Company from './pages/Company'
 
 // Context
 import { useAuthContext } from './hooks/useAuthContext'
+import Company from './pages/Company'
 
 // Navbar Component
 function AppNavbar() {

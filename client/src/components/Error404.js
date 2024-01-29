@@ -1,9 +1,13 @@
 import { useNavigate } from 'react-router-dom'
+<<<<<<< HEAD
 import { HOMEPAGE } from '../util/apiRoutes'
+=======
+>>>>>>> 69d53a5 (company page)
 
 export const error404 = (error_text) => {
     const navigate = useNavigate()
     return (
+<<<<<<< HEAD
         <div
             className="flex h-lvh flex-row items-start justify-center gap-16 px-4 py-48 md:gap-28 md:px-44 md:py-20 lg:px-48 lg:py-64"
             style={{
@@ -12,6 +16,9 @@ export const error404 = (error_text) => {
                 backgroundPosition: 'center',
             }}
         >
+=======
+        <div className="flex h-lvh flex-row items-start justify-center gap-16 px-4 py-48 md:gap-28 md:px-44 md:py-20 lg:px-48 lg:py-64">
+>>>>>>> 69d53a5 (company page)
             <div>
                 <img src="https://i.ibb.co/ck1SGFJ/Group.png" />
             </div>
@@ -29,7 +36,11 @@ export const error404 = (error_text) => {
                             where you need to go.
                         </p>
                         <button
+<<<<<<< HEAD
                             className="btn btn-primary sm:btn-sm md:btn-md lg:btn-lg"
+=======
+                            className="btn btn-success sm:btn-sm md:btn-md lg:btn-lg"
+>>>>>>> 69d53a5 (company page)
                             onClick={() => {
                                 navigate('/')
                             }}
