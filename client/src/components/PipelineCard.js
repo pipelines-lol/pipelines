@@ -86,6 +86,7 @@ export const PipelineCard = ({ profileId, name, pfp, anonymous, pipeline }) => {
         </div>
     )
 }
+import { useNavigate } from 'react-router-dom'
 
 export const ExperienceCard = ({ experience }) => {
     function getLogoByName(companyName) {
@@ -97,15 +98,20 @@ export const ExperienceCard = ({ experience }) => {
 
     const logo = `${HOMEPAGE}/logos/${getLogoByName(experience.company)}`
 
+    const navigate = useNavigate()
+
     return (
         <div
             className="flex flex-col items-center justify-center gap-3"
             key={experience._id}
         >
             <img
-                className="h-24 w-24 rounded-md object-contain"
+                className="flex h-24 w-24 items-center justify-center rounded-md object-contain transition duration-500 hover:scale-125 hover:cursor-pointer hover:bg-indigo-300"
                 src={logo}
                 alt={`${experience.company}_logo`}
+                onClick={() => {
+                    navigate(`/company/${experience.company.toLowerCase()}`)
+                }}
             />
             <div className="flex flex-col items-center justify-center">
                 <h1 className="text-2xl font-semibold text-pipelines-gray-100">
