@@ -22,9 +22,9 @@ const getPipeline = async (req, res) => {
 const getPipelinesByCompany = async (req, res) => {
   const { company } = req.params;
   const { title, school, employment } = req.query; // Use query parameters to specify job title, school, and employment type
-
+  console.log(company, title, school, employment)
   const query = { "pipeline.company": company };
-
+  console.log(query)
   if (title) {
     query["pipeline.title"] = title;
   }
