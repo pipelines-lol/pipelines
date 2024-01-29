@@ -1,5 +1,6 @@
 const Profile = require("../models/profileModel");
 const Company = require("../models/companyModel");
+const ExperienceSchema = require("../models/jobModel").ExperienceSchema;
 const mongoose = require("mongoose");
 
 // GET a single profile
@@ -159,18 +160,21 @@ const removeExperience = async (req, res) => {
 // ADD an experience to Pipeline
 const addExperience = async (req, res) => {
   const { id } = req.params;
-  const { index, company, title, date } = req.body;
+  const { index, company, title, startDate, endDate } = req.body;
 
+  // Validate and retrieve company ID
   const companyDoc = await Company.findOne({ name: company });
   if (!companyDoc) {
     return res.status(404).json({ error: "Company not found." });
   }
   const companyId = companyDoc._id;
 
+  // Validate profile ID
   if (!mongoose.Types.ObjectId.isValid(id)) {
     return res.status(404).json({ error: "No such Profile." });
   }
 
+  // Find the profile by ID
   const profile = await Profile.findOne({ _id: id });
   if (!profile) {
     return res.status(404).json({ error: "No such Profile." });
@@ -178,17 +182,18 @@ const addExperience = async (req, res) => {
 
   // create new pipeline + experience
   const newPipeline = [...profile.pipeline];
-  const experience = {
+  const newExperience = {
     company: companyId,
     title: title,
-    date: date,
+    startDate: startDate,
+    endDate: endDate,
   };
 
   // if no index, push to end of pipeline; else insert at index
   if (!index) {
-    newPipeline.push(experience);
+    newPipeline.push(newExperience);
   } else {
-    newPipeline.splice(index, 0, experience);
+    newPipeline.splice(index, 0, newExperience);
   }
 
   // update pipeline in db
