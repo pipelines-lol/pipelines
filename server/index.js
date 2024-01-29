@@ -12,6 +12,7 @@ const pipelineRoutes = require("./routes/pipelines");
 const mongodbIdRoutes = require("./routes/mongodbId");
 const pfpRoutes = require("./routes/pfps");
 const imageModerationRoutes = require("./routes/imageModeration");
+const companyRoutes = require("./routes/companies");
 
 dotenv.config();
 
@@ -58,11 +59,12 @@ app.get("/", (req, res) => {
 // routes
 app.use("/api/user", authRoutes);
 app.use("/api/profile", profileRoutes);
+app.use("/api/company", companyRoutes);
 app.use("/api/pipeline", pipelineRoutes);
 app.use("/api/mongodbId", mongodbIdRoutes);
 app.use("/api/pfp", pfpRoutes);
 app.use("/api/imageModeration", imageModerationRoutes);
 
-const server = app.listen(PORT, () => console.log("Server is running."))
+const server = app.listen(PORT, () => console.log("Server is running."));
 
-module.exports = {app, server}
+module.exports = { app, server };
