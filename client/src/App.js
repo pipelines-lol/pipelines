@@ -19,6 +19,7 @@ import Suggestions from './pages/Suggestions'
 // Context
 import { useAuthContext } from './hooks/useAuthContext'
 import Company from './pages/Company'
+import { error404 } from './components/Error404'
 
 // Navbar Component
 function AppNavbar() {
@@ -45,6 +46,10 @@ function AppRoutes({ user }) {
         { path: '/user/:id', element: <Profile /> },
         { path: '/company/:id', element: <Company /> },
         { path: '/Suggestions', element: <Suggestions /> },
+        {
+            path: '/*',
+            element: error404("We couldn't find the page you are looking for."),
+        },
     ]
 
     return (
