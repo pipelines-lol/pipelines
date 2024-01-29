@@ -8,13 +8,13 @@ const bodyParser = require("body-parser");
 // route imports
 const authRoutes = require("./routes/auth");
 const profileRoutes = require("./routes/profiles");
+const companyRoutes = require("./routes/companies");
 const pipelineRoutes = require("./routes/pipelines");
 const mongodbIdRoutes = require("./routes/mongodbId");
 const pfpRoutes = require("./routes/pfps");
 const imageModerationRoutes = require("./routes/imageModeration");
-const companyRoutes = require("./routes/companies");
 
-dotenv.config();
+dotenv.config();git 
 
 const app = express();
 const PORT = process.env.PORT || 4000;
