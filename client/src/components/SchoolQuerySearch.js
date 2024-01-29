@@ -115,7 +115,7 @@ export const SchoolQuerySearch = ({ value, handleSearch }) => {
                 </label>
                 <input
                     className={
-                        'z-20 w-full rounded-full border-2 border-transparent bg-pipeline-blue-200/20 px-4 py-2 text-pipelines-gray-100 outline-none focus:bg-pipeline-blue-200/40 focus:ring-1 focus:ring-blue-300/40'
+                        'z-30 w-full rounded-full border-2 border-transparent bg-pipeline-blue-200/20 px-4 py-2 text-pipelines-gray-100 outline-none focus:bg-pipeline-blue-200/40 focus:ring-1 focus:ring-blue-300/40'
                     }
                     type="text"
                     value={query}
@@ -123,13 +123,13 @@ export const SchoolQuerySearch = ({ value, handleSearch }) => {
                     placeholder="Harvard University"
                 />
                 <div
-                    className={`z-10 max-h-36 w-full overflow-y-scroll bg-white shadow-md ${hasResults ? 'absolute top-full mt-2 rounded-lg' : 'hidden'}`}
+                    className={`z-20 max-h-36 w-full overflow-y-scroll bg-white shadow-md ${hasResults ? 'absolute top-full mt-2 rounded-lg' : 'hidden'}`}
                 >
                     {hasResults &&
                         results.map((school) => (
                             <div
                                 key={`${school.name}_result`}
-                                className="flex flex-row items-center justify-center px-5 py-2 hover:bg-gray-100"
+                                className="flex flex-row items-center justify-center bg-white px-5 py-2 hover:bg-pipeline-blue-200/10"
                             >
                                 <button
                                     key={`school_button_${school.name}`} // Add a unique key for each button

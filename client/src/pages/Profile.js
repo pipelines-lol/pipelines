@@ -373,7 +373,7 @@ function Profile() {
             {profile && !profile.anonymous ? (
                 <div className="flex h-full min-h-[90vh] w-full flex-col items-center justify-center gap-10 bg-pipelines-gray-100/10 p-16 md:flex-row">
                     {/* Profile picture + few fields */}
-                    <div className="min-w-96 flex h-full w-full flex-col items-center justify-center gap-5 shadow-md md:w-1/3">
+                    <div className="flex h-full w-full min-w-96 flex-col items-center justify-center gap-5 shadow-md md:w-1/3">
                         {admin ? (
                             <ProfilePicture profile={profile} setPfp={setPfp} />
                         ) : (
@@ -388,7 +388,7 @@ function Profile() {
                             <div className="flex flex-col items-center justify-center gap-3">
                                 <label className="text-white">Username</label>
                                 <input
-                                    className="rounded-full bg-pipelines-gray-100/10 p-3"
+                                    className="rounded-full bg-pipelines-gray-100/10 p-3 text-white"
                                     value={username}
                                     onChange={handleUsernameChange}
                                 />
@@ -496,7 +496,7 @@ function Profile() {
             ) : (
                 <div className="bg-pipeline-blue-100/20 flex h-full min-h-[90vh] w-full flex-col items-center justify-center gap-10 p-16 md:flex-row">
                     {/* Profile picture + few fields */}
-                    <div className="min-w-96 flex h-full w-full flex-col items-center justify-center gap-5 bg-white p-10 shadow-md md:w-1/3">
+                    <div className="flex h-full w-full min-w-96 flex-col items-center justify-center gap-5 bg-white p-10 shadow-md md:w-1/3">
                         {admin ? (
                             <ProfilePicture profile={profile} setPfp={setPfp} />
                         ) : (
