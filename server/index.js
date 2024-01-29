@@ -63,4 +63,6 @@ app.use("/api/mongodbId", mongodbIdRoutes);
 app.use("/api/pfp", pfpRoutes);
 app.use("/api/imageModeration", imageModerationRoutes);
 
-app.listen(PORT, () => console.log("Server is running."));
+const server = app.listen(PORT, () => console.log("Server is running."))
+
+module.exports = {app, server}

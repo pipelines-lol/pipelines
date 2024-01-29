@@ -5,7 +5,8 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node index.js"
+    "start": "node index.js",
+    "dev": "nodemon index.js"
   },
   "author": "",
   "license": "ISC",
@@ -28,6 +29,10 @@
     "validator": "^13.11.0"
   },
   "devDependencies": {
+<<<<<<< HEAD
+=======
+    "nodemon": "^3.0.3",
+>>>>>>> main
     "jest": "^29.7.0",
     "supertest": "^6.3.4"
   }
