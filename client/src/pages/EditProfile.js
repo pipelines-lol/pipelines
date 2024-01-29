@@ -3,6 +3,7 @@ import { PlusCircle } from 'lucide-react'
 import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { ExperienceForm } from '../components/ExperienceForm'
+import { SchoolQuerySearch } from '../components/SchoolQuerySearch'
 import { useAuthContext } from '../hooks/useAuthContext'
 import { HOST } from '../util/apiRoutes'
 import Loading from './Loading'
@@ -16,6 +17,8 @@ function EditProfile() {
     const [loading, setLoading] = useState(false)
     const [errorMessage, setErrorMessage] = useState('')
 
+    const [school, setSchool] = useState('')
+
     const navigate = useNavigate()
     const [animationRef] = useAutoAnimate()
     const { user } = useAuthContext()
@@ -23,41 +26,43 @@ function EditProfile() {
     const fetchProfile = async () => {
         setLoading(true)
 
-        fetch(`${HOST}/api/profile/${user.profileId}`, {
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json', // Specify the content type as JSON
-            },
-        })
-            .then((res) => {
-                if (!res.ok) {
-                    // Check if the response has JSON content
-                    if (
-                        res.headers
-                            .get('content-type')
-                            ?.includes('application/json')
-                    ) {
-                        return res.json().then((errorData) => {
-                            throw new Error(`${errorData.error}`)
-                        })
-                    } else {
-                        throw new Error(`HTTP error! Status: ${res.status}`)
-                    }
+        try {
+            const res = await fetch(`${HOST}/api/profile/${user.profileId}`, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json', // Specify the content type as JSON
+                },
+            })
+
+            if (!res.ok) {
+                // Check if the response has JSON content
+                if (
+                    res.headers
+                        .get('content-type')
+                        ?.includes('application/json')
+                ) {
+                    const errorData = await res.json()
+                    throw new Error(`${errorData.error}`)
+                } else {
+                    throw new Error(`HTTP error! Status: ${res.status}`)
                 }
+            }
 
-                return res.json()
-            })
-            .then((data) => {
-                setFirstName(data.firstName)
-                setLastName(data.lastName)
-                setAnonymous(data.anonymous)
-                setPipeline(data.pipeline)
+            const data = await res.json()
+            updateUIState(data)
+        } catch (error) {
+            console.error(error.message)
+        } finally {
+            setLoading(false)
+        }
+    }
 
-                setLoading(false)
-            })
-            .catch((error) => {
-                console.error(error.message)
-            })
+    const updateUIState = (data) => {
+        setFirstName(data.firstName)
+        setLastName(data.lastName)
+        setSchool(data.school)
+        setAnonymous(data.anonymous)
+        setPipeline(data.pipeline)
     }
 
     const addExperience = async (index) => {
@@ -122,6 +127,9 @@ function EditProfile() {
         // check none of the singular fields are blank
         if (firstName === '' || lastName === '') return false
 
+        // check the education isnt blank
+        if (school === '') return false
+
         // check none of the fields in the pipeline are blank
         if (!checkPipelineForEmptyFields(pipeline)) return false
 
@@ -132,6 +140,7 @@ function EditProfile() {
         const profile = {
             firstName,
             lastName,
+            school,
             anonymous,
             pipeline,
         }
@@ -239,6 +248,15 @@ function EditProfile() {
                                     }
                                 />
                             </div>
+                        </div>
+
+                        {/* TODO: fix styling */}
+                        <div className="flex flex-col gap-1">
+                            <label className="text-medium">Education</label>
+                            <SchoolQuerySearch
+                                value={school}
+                                handleSearch={setSchool}
+                            />
                         </div>
 
                         <label className="relative inline-flex items-center">

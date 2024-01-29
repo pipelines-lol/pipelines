@@ -8,7 +8,7 @@ import Loading from './Loading'
 
 import { ExperienceCard } from '../components/PipelineCard'
 
-import { MapPin } from 'lucide-react'
+import { GraduationCap, MapPin } from 'lucide-react'
 import { ProfilePicture } from '../components/ProfilePicture'
 
 function Profile() {
@@ -388,7 +388,7 @@ function Profile() {
                             <div className="flex flex-col items-center justify-center gap-3">
                                 <label className="text-white">Username</label>
                                 <input
-                                    className="rounded-full bg-pipelines-gray-100/10 p-3"
+                                    className="rounded-full bg-pipelines-gray-100/10 p-3 text-white"
                                     value={username}
                                     onChange={handleUsernameChange}
                                 />
@@ -432,6 +432,14 @@ function Profile() {
                         ) : (
                             <></>
                         )}
+
+                        {/* Education */}
+                        <div className="flex h-full w-full flex-col items-center justify-center gap-5 p-10">
+                            <div className="flex w-full flex-row items-center justify-center gap-5">
+                                <GraduationCap color="white" />
+                                <h1 className="text-white">{profile.school}</h1>
+                            </div>
+                        </div>
                     </div>
 
                     {/* Name + job info */}

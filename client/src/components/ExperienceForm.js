@@ -191,7 +191,7 @@ export const ExperienceForm = ({
     const handleRatingClick = (id, value) => {
         setRating(value)
         setSelectedOption(id)
-        console.log(rating) //placehodler for the value
+        console.log(rating) // placehodler for the value
     }
 
     const handleRatingBox = () => {
@@ -225,7 +225,7 @@ export const ExperienceForm = ({
 
     return (
         <>
-            <div className="flex h-auto w-auto flex-col items-center justify-center gap-4 overflow-y-hidden rounded-lg bg-white bg-opacity-20 p-10 shadow-lg backdrop-blur-xl backdrop-filter">
+            <div className="relative z-0 flex h-auto w-auto flex-col items-center justify-center gap-4 overflow-y-hidden rounded-lg bg-white bg-opacity-20 p-10 shadow-lg backdrop-blur-xl backdrop-filter">
                 <button
                     className="self-start"
                     onClick={() => removeExperience(index)}
