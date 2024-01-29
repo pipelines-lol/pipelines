@@ -209,8 +209,18 @@ const addExperience = async (req, res) => {
     }
   );
 
-  res.status(200).json({ message: "Success" });
+  const successMessage = `Successfully added "${title}" at "${company}" experience from "${formatDate(startDate)}" to "${formatDate(endDate)}" to ${profile.firstName} ${profile.lastName}`;
+  res.status(200).json({ message: successMessage });
 };
+
+// Function to format date in "M/D/YY" format
+function formatDate(dateString) {
+  const date = new Date(dateString);
+  const month = date.getMonth() + 1; // Months are 0-based
+  const day = date.getDate();
+  const year = date.getFullYear().toString().slice(-2); // Get the last two digits of the year
+  return `${month}/${day}/${year}`;
+}
 
 module.exports = {
   getPipeline,
