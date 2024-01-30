@@ -147,9 +147,17 @@ const removeExperience = async (req, res) => {
   // create new pipeline
   const newPipeline = [...profile.pipeline];
 
-  // remove the experience at index
-  newPipeline.splice(index, 0);
-
+   // Capture the removed experience before splicing
+  const removedExperience = newPipeline.splice(index, 1)[0];
+  const company = await Company.findOne({ _id: removedExperience.company });
+  if (company) {
+    const employeeIndex = company.employees.indexOf(id);
+    if (employeeIndex !== -1) {
+      company.employees.splice(employeeIndex, 1);
+      await company.save();
+    }
+  }
+  
   // update pipeline in db
   await Profile.findOneAndUpdate(
     { _id: id },
@@ -158,7 +166,7 @@ const removeExperience = async (req, res) => {
     }
   );
 
-  res.status(200).json(profile);
+  res.status(200).json(removedExperience);
 };
 
 // ADD an experience to Pipeline
@@ -182,6 +190,26 @@ const addExperience = async (req, res) => {
   const profile = await Profile.findOne({ _id: id });
   if (!profile) {
     return res.status(404).json({ error: "No such Profile." });
+  }
+
+  // Checks + prevents duplicate experiences
+  const existingExperienceIndex = profile.pipeline.findIndex((experience) => {
+    return (
+      companyId.toString() === experience.company.toString() &&
+      title == experience.title &&
+      new Date(startDate).toString() ===
+        new Date(experience.startDate).toString() &&
+      new Date(endDate).toString() === new Date(experience.endDate).toString()
+    );
+  });
+  if (existingExperienceIndex !== -1) {
+    return res.status(400).json({ error: "Experience already exists." });
+  }
+
+  // If the employee is not already in the company's employee list, add them
+  if (!companyDoc.employees.includes(id)) {
+    companyDoc.employees.push(id);
+    await companyDoc.save();
   }
 
   // create new pipeline + experience
