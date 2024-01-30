@@ -131,36 +131,59 @@ const getRandomPipelines = async (req, res) => {
 
 // REMOVE an experience from a pipeline
 const removeExperience = async (req, res) => {
-  const { id } = req.params;
-  const { index } = req.body;
+  const { employeeId } = req.params;
+  const { index, clear } = req.body;
 
-  if (!mongoose.Types.ObjectId.isValid(id)) {
+  if (!mongoose.Types.ObjectId.isValid(employeeId)) {
     return res.status(404).json({ error: "No such Profile." });
   }
 
-  const profile = await Profile.findOne({ _id: id });
+  const profile = await Profile.findOne({ _id: employeeId });
 
   if (!profile) {
     return res.status(404).json({ error: "No such Profile." });
   }
 
-  // create new pipeline
+  // Create a copy of the current pipeline
   const newPipeline = [...profile.pipeline];
+  let removedExperience; // Declare without 'const'
 
-   // Capture the removed experience before splicing
-  const removedExperience = newPipeline.splice(index, 1)[0];
-  const company = await Company.findOne({ _id: removedExperience.company });
-  if (company) {
-    const employeeIndex = company.employees.indexOf(id);
-    if (employeeIndex !== -1) {
-      company.employees.splice(employeeIndex, 1);
-      await company.save();
+  if (clear === true) {
+    removedExperience = [...newPipeline]; // Assign without redeclaring
+    newPipeline.length = 0; // Clear all experiences for the profile
+    // Clear the associations in related companies (assuming employees array)
+    const relatedCompanies = await Company.find({ employees: employeeId });
+    for (const company of relatedCompanies) {
+      const employeeIndex = company.employees.indexOf(employeeId);
+      if (employeeIndex !== -1) {
+        company.employees.splice(employeeIndex, 1);
+        await company.save();
+      }
     }
+  } else if (index !== undefined) {
+    // Remove a specific experience based on the provided index
+    if (index >= 0 && index < newPipeline.length) {
+      removedExperience = newPipeline.splice(index, 1)[0];
+      const company = await Company.findOne({
+        _id: removedExperience.companyId,
+      });
+      if (company) {
+        // remove employee from company's employee array
+        const employeeIndex = company.employees.indexOf(employeeId);
+        if (employeeIndex !== -1) {
+          company.employees.splice(employeeIndex, 1);
+          await company.save();
+        }
+      }
+    } else {
+      return res.status(400).json({ error: "Invalid index provided." });
+    }
+  } else {
+    return res.status(400).json({ error: "Invalid request." });
   }
-  
-  // update pipeline in db
+  // Update the profile's pipeline in the database
   await Profile.findOneAndUpdate(
-    { _id: id },
+    { _id: employeeId },
     {
       pipeline: newPipeline,
     }
@@ -171,75 +194,90 @@ const removeExperience = async (req, res) => {
 
 // ADD an experience to Pipeline
 const addExperience = async (req, res) => {
-  const { id } = req.params;
+  const { employeeId } = req.params;
   const { index, company, title, startDate, endDate } = req.body;
 
-  // Validate and retrieve company ID
-  const companyDoc = await Company.findOne({ name: company });
-  if (!companyDoc) {
-    return res.status(404).json({ error: "Company not found." });
-  }
-  const companyId = companyDoc._id;
-
-  // Validate profile ID
-  if (!mongoose.Types.ObjectId.isValid(id)) {
-    return res.status(404).json({ error: "No such Profile." });
-  }
-
-  // Find the profile by ID
-  const profile = await Profile.findOne({ _id: id });
-  if (!profile) {
-    return res.status(404).json({ error: "No such Profile." });
-  }
-
-  // Checks + prevents duplicate experiences
-  const existingExperienceIndex = profile.pipeline.findIndex((experience) => {
-    return (
-      companyId.toString() === experience.company.toString() &&
-      title == experience.title &&
-      new Date(startDate).toString() ===
-        new Date(experience.startDate).toString() &&
-      new Date(endDate).toString() === new Date(experience.endDate).toString()
-    );
-  });
-  if (existingExperienceIndex !== -1) {
-    return res.status(400).json({ error: "Experience already exists." });
-  }
-
-  // If the employee is not already in the company's employee list, add them
-  if (!companyDoc.employees.includes(id)) {
-    companyDoc.employees.push(id);
-    await companyDoc.save();
-  }
-
-  // create new pipeline + experience
-  const newPipeline = [...profile.pipeline];
-  const newExperience = {
-    company: companyId,
-    title: title,
-    startDate: startDate,
-    endDate: endDate,
-  };
-
-  // if no index, push to end of pipeline; else insert at index
-  if (!index) {
-    newPipeline.push(newExperience);
-  } else {
-    newPipeline.splice(index, 0, newExperience);
-  }
-
-  // update pipeline in db
-  await Profile.findOneAndUpdate(
-    { _id: id },
-    {
-      pipeline: newPipeline,
+  try {
+    // Validate profile ID
+    if (!mongoose.Types.ObjectId.isValid(employeeId)) {
+      throw new Error("No such Profile.");
     }
-  );
 
-  const successMessage = `Successfully added "${title}" at "${company}" experience from "${formatDate(
-    startDate
-  )}" to "${formatDate(endDate)}" to ${profile.firstName} ${profile.lastName}`;
-  res.status(200).json({ message: successMessage });
+    // Find the profile by ID
+    const profile = await Profile.findOne({ _id: employeeId });
+    if (!profile) {
+      throw new Error("No such Profile.");
+    }
+
+    let companyDoc = await Company.findOne({ name: company }); // Get Company Id
+    if (companyDoc) {
+      // Company already exists, check for duplicates
+      const companyId = companyDoc._id;
+
+      const isDuplicateExperience = profile.pipeline.some((experience) => {
+        // Check for duplicate experiences
+        return (
+          companyId.toString() === experience.companyId.toString() &&
+          title === experience.title &&
+          new Date(startDate).toString() ===
+            new Date(experience.startDate).toString() &&
+          new Date(endDate).toString() ===
+            new Date(experience.endDate).toString()
+        );
+      });
+      if (isDuplicateExperience) {
+        throw new Error("Experience already exists.");
+      }
+
+      // If the employee is not already in the company's employee list, add them
+      if (!companyDoc.employees.includes(employeeId)) {
+        companyDoc.employees.push(employeeId);
+        await companyDoc.save();
+      }
+    } else {
+      // Create new company
+      const newCompany = new Company({ name: company });
+      companyDoc = await newCompany.save();
+      companyDoc.employees.push(employeeId);
+      await companyDoc.save();
+    }
+
+    const companyId = companyDoc._id;
+    // Create new pipeline + experience
+    const newPipeline = [...profile.pipeline];
+    const newExperience = {
+      companyId: companyId,
+      companyName: company,
+      title: title,
+      startDate: startDate,
+      endDate: endDate,
+    };
+
+    // If no index, push to end of pipeline; else insert at index
+    if (!index) {
+      newPipeline.push(newExperience);
+    } else {
+      newPipeline.splice(index, 0, newExperience);
+    }
+
+    // Update pipeline in db
+    await Profile.findOneAndUpdate(
+      { _id: employeeId },
+      {
+        pipeline: newPipeline,
+      }
+    );
+
+    const successMessage = `Successfully added "${title}" at "${company}" experience from "${formatDate(
+      startDate
+    )}" to "${formatDate(endDate)}" to ${profile.firstName} ${
+      profile.lastName
+    }`;
+    res.status(200).json({ message: successMessage });
+  } catch (error) {
+    // Handle errors centrally
+    res.status(400).json({ error: error.message });
+  }
 };
 
 // Function to format date in "M/D/YY" format

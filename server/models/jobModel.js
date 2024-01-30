@@ -4,7 +4,8 @@ const Schema = mongoose.Schema;
 
 //jobModel.js
 const BaseJobSchema = new Schema({
-  company: { type: Schema.Types.ObjectId, ref: "Company" }, // Reference to CompanySchema
+  companyId: { type: Schema.Types.ObjectId, ref: "Company" }, // Reference to CompanySchema
+  companyName: String,
   title: String,
   startDate: Date,
   endDate: Date,
