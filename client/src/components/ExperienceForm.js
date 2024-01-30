@@ -178,7 +178,6 @@ export const ExperienceForm = ({
 
     const handleCompanyChange = async (value) => {
         setCompany(value)
-
         const newExperience = {
             company: value,
             title,

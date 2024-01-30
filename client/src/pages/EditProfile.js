@@ -49,6 +49,7 @@ function EditProfile() {
             }
 
             const data = await res.json()
+            console.log('data: ', data)
             updateUIState(data)
         } catch (error) {
             console.error(error.message)
@@ -57,11 +58,40 @@ function EditProfile() {
         }
     }
 
-    const updateUIState = (data) => {
+    const updateUIState = async (data) => {
+        console.log('data pipeline: ', data.pipeline)
         setFirstName(data.firstName)
         setLastName(data.lastName)
         setSchool(data.school)
         setAnonymous(data.anonymous)
+        for (const pipeline of data.pipeline) {
+            const response = await fetch(
+                `${HOST}/api/company/get/${pipeline.company}`,
+                {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json', // Specify the content type as JSON
+                    },
+                }
+            )
+            if (!response.ok) {
+                // Check if the response has JSON content
+                if (
+                    response.headers
+                        .get('content-type')
+                        ?.includes('application/json')
+                ) {
+                    const errorData = await response.json()
+                    throw new Error(`${errorData.error}`)
+                } else {
+                    throw new Error(`HTTP error! Status: ${response.status}`)
+                }
+            } else {
+                const data = await response.json()
+                pipeline.company =
+                    data.name.charAt(0).toUpperCase() + data.name.slice(1)
+            }
+        }
         setPipeline(data.pipeline)
     }
 

@@ -7,7 +7,7 @@ const bodyParser = require('body-parser')
 router.post('/create', bodyParser.json(), createCompany)
 
 //get a specific company
-router.get('/get/:name', getCompany)
+router.get('/get/:id', getCompany)
 
 //Update a specific company
 router.put('/update/:name', bodyParser.json(), updateCompany)

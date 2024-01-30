@@ -39,13 +39,12 @@ const createCompany = async (req, res) => {
 }
 
 const getCompany = async (req, res) => {
-    const { name } = req.params
+    const { id } = req.params
+    console.log("ID: ", id)
 
     try {
         // Find the company by name in the database
-        const lowercaseCompanyName = name.toLowerCase();
-        const company = await Company.findOne({ 'name': lowercaseCompanyName })
-
+        const company = await Company.findOne({ '_id': id })
 
          // Check if the company exists
         if (!company) {
@@ -54,7 +53,7 @@ const getCompany = async (req, res) => {
 
         return res.status(200).json(company)
     } catch (err) {
-        console.err(err)
+        console.log(err)
         return res.status(400).json({error: "Failed to retrieve company"})
     }
 }

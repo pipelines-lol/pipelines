@@ -34,7 +34,41 @@ function Discover() {
                 }
                 return res.json()
             })
-            .then((data) => {
+            .then(async (data) => {
+                console.log('Data: ', data)
+                for (const profile of data) {
+                    console.log('profile: ', profile)
+                    for (const pipeline of profile.pipeline) {
+                        const response = await fetch(
+                            `${HOST}/api/company/get/${pipeline.company}`,
+                            {
+                                method: 'GET',
+                                headers: {
+                                    'Content-Type': 'application/json', // Specify the content type as JSON
+                                },
+                            }
+                        )
+                        if (!response.ok) {
+                            pipeline.company = 'NULL'
+                            // Check if the response has JSON content
+                            if (
+                                response.headers
+                                    .get('content-type')
+                                    ?.includes('application/json')
+                            ) {
+                                const errorData = await response.json()
+                                console.log(errorData.error)
+                            } else {
+                                console.log(response.status)
+                            }
+                        } else {
+                            const data = await response.json()
+                            pipeline.company =
+                                data.name.charAt(0).toUpperCase() +
+                                data.name.slice(1)
+                        }
+                    }
+                }
                 setProfiles([...data])
                 setLoading(false)
             })
