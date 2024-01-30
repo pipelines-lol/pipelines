@@ -1,6 +1,5 @@
 const Profile = require("../models/profileModel");
 const Company = require("../models/companyModel");
-const ExperienceSchema = require("../models/jobModel").ExperienceSchema;
 const mongoose = require("mongoose");
 
 // GET a single profile
@@ -209,7 +208,9 @@ const addExperience = async (req, res) => {
     }
   );
 
-  const successMessage = `Successfully added "${title}" at "${company}" experience from "${formatDate(startDate)}" to "${formatDate(endDate)}" to ${profile.firstName} ${profile.lastName}`;
+  const successMessage = `Successfully added "${title}" at "${company}" experience from "${formatDate(
+    startDate
+  )}" to "${formatDate(endDate)}" to ${profile.firstName} ${profile.lastName}`;
   res.status(200).json({ message: successMessage });
 };
 
