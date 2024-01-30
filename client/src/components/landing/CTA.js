@@ -39,7 +39,7 @@ export default function CTA() {
 
                     <img
                         className="h-[35vh] w-full -translate-x-4 object-contain"
-                        src={'Hero.webp'}
+                        src={'Hero2.svg'}
                         alt={'Hero'}
                     />
 

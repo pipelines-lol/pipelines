@@ -80,7 +80,7 @@ export default function About() {
                 <div className="flex h-full w-full items-center justify-center">
                     <img
                         className="h-[50vh] w-full object-contain"
-                        src={'Hero.webp'}
+                        src={'Hero.svg'}
                         alt={'Hero'}
                     />
                 </div>
