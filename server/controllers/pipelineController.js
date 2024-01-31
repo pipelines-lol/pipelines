@@ -22,14 +22,14 @@ const getPipeline = async (req, res) => {
 //  GET profiles (by experience name with optional title filter)
 const getPipelinesByCompany = async (req, res) => {
   const { company } = req.params; // company = company name
-  const { title, school, employment } = req.query;
+  const { title, school, exp_level, currently_working } = req.body;
   const companyDocument = await Company.findOne({ name: company });
 
   if (!companyDocument) {
     return res.status(404).json({ error: "Company not found." });
   }
-  const query = { "pipeline.company": companyDocument._id }; // query by company id, no longer by company name
-
+  const query = { "pipeline.companyId": companyDocument._id }; // query by company id, no longer by company name
+  console.log(company, title, school, exp_level, currently_working);
   // apply filters
   if (title) {
     query["pipeline.title"] = title;
@@ -37,17 +37,20 @@ const getPipelinesByCompany = async (req, res) => {
   if (school) {
     query["school"] = school;
   }
-  if (employment) {
-    if (employment === "intern") {
+  if (exp_level) {
+    if (exp_level === "intern") {
       query["pipeline.title"] = { $regex: /intern/i }; // Match titles containing "intern"
-    } else if (employment === "fulltime") {
+    } else if (exp_level === "fulltime") {
       query["pipeline.title"] = { $not: { $regex: /intern/i } };
     }
   }
 
+  if (currently_working === true) {
+    query["pipeline.endDate"] = null;
+  }
+
   try {
     const profiles = await Profile.find(query);
-    console.log(profiles);
     if (profiles.length === 0) {
       return res.status(404).json({ error: "No profiles found." });
     }
@@ -84,9 +87,11 @@ const getPipelinesByUniversity = async (req, res) => {
 };
 
 // GET multiple profiles by company
+/** 
+SoftMatch Example: Person A works at AAPL, BB and Person B works at BB
+Searching for [AAPL,BB] w/ SoftMatch==true returns {A,B}, and SoftMatch==false {A}
+ */
 const getMultiplePipelinesByCompany = async (req, res) => {
-  // SoftMatch Example: Person A works at AAPL, BB and Person B works at BB
-  // Searching for [AAPL,BB] w/ SoftMatch==true returns {A,B}, and SoftMatch==false {A}
   const { companies, isSoftMatch } = req.query; // An array of company names and a boolean flag
   try {
     let query = {};
@@ -101,9 +106,9 @@ const getMultiplePipelinesByCompany = async (req, res) => {
     const companyDocs = await Company.find({ name: { $in: companiesArray } });
     const companyIdArray = companyDocs.map((companyDoc) => companyDoc._id);
     if (isSoftMatch === "true") {
-      query = { "pipeline.company": { $in: companyIdArray } }; // Matches any pipeline that includes any company in the array
+      query = { "pipeline.companyId": { $in: companyIdArray } }; // Matches any pipeline that includes any company in the array
     } else {
-      query = { "pipeline.company": { $all: companyIdArray } }; // Matches any pipeline that includes all companies in the array
+      query = { "pipeline.companyId": { $all: companyIdArray } }; // Matches any pipeline that includes all companies in the array
     }
     const profiles = await Profile.find(query);
 
@@ -195,7 +200,7 @@ const removeExperience = async (req, res) => {
 // ADD an experience to Pipeline
 const addExperience = async (req, res) => {
   const { employeeId } = req.params;
-  const { index, company, title, startDate, endDate } = req.body;
+  const { index, companyName, title, startDate, endDate } = req.body;
 
   try {
     // Validate profile ID
@@ -209,7 +214,9 @@ const addExperience = async (req, res) => {
       throw new Error("No such Profile.");
     }
 
-    let companyDoc = await Company.findOne({ name: company }); // Get Company Id
+    const lowercaseCompanyName = companyName.toLowerCase();
+
+    let companyDoc = await Company.findOne({ name: lowercaseCompanyName }); // Get Company Id
     if (companyDoc) {
       // Company already exists, check for duplicates
       const companyId = companyDoc._id;
@@ -236,7 +243,7 @@ const addExperience = async (req, res) => {
       }
     } else {
       // Create new company
-      const newCompany = new Company({ name: company });
+      const newCompany = new Company({ name: lowercaseCompanyName });
       companyDoc = await newCompany.save();
       companyDoc.employees.push(employeeId);
       await companyDoc.save();
@@ -247,7 +254,7 @@ const addExperience = async (req, res) => {
     const newPipeline = [...profile.pipeline];
     const newExperience = {
       companyId: companyId,
-      companyName: company,
+      companyName: lowercaseCompanyName,
       title: title,
       startDate: startDate,
       endDate: endDate,
@@ -268,7 +275,7 @@ const addExperience = async (req, res) => {
       }
     );
 
-    const successMessage = `Successfully added "${title}" at "${company}" experience from "${formatDate(
+    const successMessage = `Successfully added "${title}" at "${companyName}" experience from "${formatDate(
       startDate
     )}" to "${formatDate(endDate)}" to ${profile.firstName} ${
       profile.lastName
