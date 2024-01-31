@@ -23,6 +23,7 @@ export const ExperienceForm = ({
     const [rating, setRating] = useState(0)
     const [selectedOption, setSelectedOption] = useState(1)
     const [ratingBox, setRatingBox] = useState(false)
+    const [first, setFirst] = useState(true)
 
     const options = [
         {
@@ -55,24 +56,33 @@ export const ExperienceForm = ({
     // initialize experience if one exists
     useEffect(() => {
         if (experience) {
-            setCompany(experience.company)
+            setCompany(experience.companyName)
             setTitle(experience.title)
 
             let start, end
 
             // Check if date property exists and is not empty
-            if (experience.date && experience.date !== '') {
-                ;[start, end] = experience.date.split('-')
+            if (
+                experience.startDate &&
+                experience.startDate !== '' &&
+                experience.endDate &&
+                experience.endDate !== ''
+            ) {
+                const startDateInISOFormat = experience.startDate
+                const startDate = new Date(startDateInISOFormat)
 
-                start = start.trim()
-                end = end.trim()
+                start = `${startDate.getFullYear()}-${String(startDate.getMonth() + 1).padStart(2, '0')}`
+
+                const endDateInISOFormat = experience.endDate
+                const endDate = new Date(endDateInISOFormat)
+
+                end = `${endDate.getFullYear()}-${String(endDate.getMonth() + 1).padStart(2, '0')}`
             } else {
                 // Set default values if date is empty or undefined
                 ;[start, end] = ['', '']
             }
-
-            setStartDate(convertDateFormat(start))
-            setEndDate(convertDateFormat(end))
+            setStartDate(start)
+            setEndDate(end)
         }
     }, [experience])
 
@@ -86,33 +96,17 @@ export const ExperienceForm = ({
     }, [endDate, startDate, setIsValid])
 
     function flipDateFormat(inputDate) {
-        // Parse the input date string
         const [year, month] = inputDate.split('-')
 
-        // Convert the month from numeric to textual representation
-        const monthNames = [
-            'January',
-            'February',
-            'March',
-            'April',
-            'May',
-            'June',
-            'July',
-            'August',
-            'September',
-            'October',
-            'November',
-            'December',
-        ]
-        const monthText = monthNames[parseInt(month, 10) - 1]
+        // Creating a Date object with the given year and month
+        const date = new Date(`${year}-${month}-02T00:00:00.000Z`)
+        // Convert the Date object to an ISO string
+        const isoDateString = date.toISOString()
 
-        // Combine the month and year into the desired format
-        const outputDate = `${monthText} ${year}`
-
-        return outputDate
+        return isoDateString
     }
 
-    function convertDateFormat(inputDate) {
+    /*function convertDateFormat(inputDate) {
         // edge case: blank date
         if (inputDate === '') {
             return ''
@@ -145,21 +139,23 @@ export const ExperienceForm = ({
         // Combine the month and year into the desired format
         const outputDate = `${year}-${paddedMonth}`
 
+        console.log(outputDate)
         return outputDate
-    }
+    }*/
 
     const handleExperienceChange = (e, field) => {
+        setFirst(true)
         const value = e.target.value
 
         if (field === 'startDate') {
             setStartDate(value)
 
             const newExperience = {
-                company,
-                title,
-                date: `${flipDateFormat(value)} - ${
-                    isIndefinite ? 'Indefinite' : flipDateFormat(endDate)
-                }`,
+                company: company,
+                companyId: '',
+                title: title,
+                endDate: flipDateFormat(endDate),
+                startDate: flipDateFormat(value),
             }
 
             updateExperience(newExperience, index)
@@ -167,9 +163,11 @@ export const ExperienceForm = ({
             setEndDate(value)
 
             const newExperience = {
-                company,
-                title,
-                date: `${flipDateFormat(startDate)} - ${flipDateFormat(value)}`,
+                companyName: company,
+                companyId: '',
+                title: title,
+                endDate: flipDateFormat(value),
+                startDate: flipDateFormat(startDate),
             }
 
             updateExperience(newExperience, index)
@@ -180,9 +178,11 @@ export const ExperienceForm = ({
         setCompany(value)
 
         const newExperience = {
-            company: value,
-            title,
-            date: `${flipDateFormat(value)} - ${flipDateFormat(endDate)}`,
+            companyName: value,
+            companyId: '',
+            title: title,
+            endDate: flipDateFormat(endDate),
+            startDate: flipDateFormat(startDate),
         }
 
         updateExperience(newExperience, index)
@@ -203,9 +203,10 @@ export const ExperienceForm = ({
         setTitle(value)
 
         const newExperience = {
-            company,
+            companyName: company,
             title: value,
-            date: `${flipDateFormat(startDate)} - ${flipDateFormat(endDate)}`,
+            startDate: flipDateFormat(startDate),
+            endDate: flipDateFormat(endDate),
         }
 
         updateExperience(newExperience, index)
@@ -213,14 +214,7 @@ export const ExperienceForm = ({
 
     const handleIndefiniteCheckboxChange = (e) => {
         setIsIndefinite(e.target.checked)
-
-        const newExperience = {
-            company,
-            title,
-            date: `${flipDateFormat(startDate)} - ${!isIndefinite ? 'Indefinite' : flipDateFormat(endDate)}`,
-        }
-
-        updateExperience(newExperience, index)
+        setFirst(false)
     }
 
     return (
@@ -313,7 +307,7 @@ export const ExperienceForm = ({
                             <input
                                 className="rounded-full bg-gray-100 px-4 py-2 text-gray-800 outline-none"
                                 placeholder="September 2020 - September 2021"
-                                value={endDate}
+                                value={first ? endDate : ''}
                                 type="month"
                                 pattern="\d{4}-\d{2}"
                                 onChange={(e) =>
