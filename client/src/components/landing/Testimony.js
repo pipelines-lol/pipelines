@@ -57,7 +57,7 @@ export default function Testimonies() {
                                     school, I could still land a job at the big
                                     names in tech.
                                 </p>
-                                <cite className="mt-4 block font-semibold not-italic text-pipeline-blue-200">
+                                <cite className="mt-4 block font-normal not-italic text-pipeline-blue-200">
                                     Delilah Janis, Incoming Product Manager
                                     Intern at Square
                                 </cite>
@@ -83,7 +83,7 @@ export default function Testimonies() {
                                     taken to get to their dream job. It&#39;s
                                     really inspiring.
                                 </p>
-                                <cite className="mt-4 block font-semibold not-italic text-pipeline-blue-200">
+                                <cite className="mt-4 block font-normal not-italic text-pipeline-blue-200">
                                     Tavarius Fleming, Incoming Product
                                     Engineering Intern at Jane Street
                                 </cite>
@@ -109,7 +109,7 @@ export default function Testimonies() {
                                     useful to see what others have done without
                                     having to connect with them on LinkedIn.
                                 </p>
-                                <cite className="mt-4 block font-semibold not-italic text-pipeline-blue-200">
+                                <cite className="mt-4 block font-normal not-italic text-pipeline-blue-200">
                                     Amanda Smith, Staff Software Engineer at
                                     Robinhood
                                 </cite>
