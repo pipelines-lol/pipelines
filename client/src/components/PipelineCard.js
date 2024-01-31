@@ -114,8 +114,18 @@ export const ExperienceCard = ({ experience }) => {
     function capitalize(str) { // shoutout bobdagoat
         if (typeof str !== 'string' || str.trim() === '') { // bad input
             return str; 
-          }
+        }
 
+        const formattedCompany = companies.find(
+            (company) => company.name.toLowerCase() === str.toLowerCase()
+        );
+        
+         
+        if (formattedCompany) {  
+            console.log("found", formattedCompany.name)
+            return formattedCompany.name;
+        }  
+        
         return str
           .split(' ')
           .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
