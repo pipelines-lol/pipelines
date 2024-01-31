@@ -37,7 +37,7 @@ export default function NonMobileNavbar({
                     <div className="flex flex-row items-center justify-center gap-4">
                         <img
                             src={'pipelines.png'}
-                            className={`w-12 h-12 pr-2 transition-colors duration-300 ${hovering2 ? 'animate-pulse text-pipeline-blue-200' : 'text-white'}`}
+                            className={`h-12 w-12 pr-2 transition-colors duration-300 ${hovering2 ? 'animate-pulse text-pipeline-blue-200' : 'text-white'}`}
                         />
 
                         <h1

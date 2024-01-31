@@ -51,7 +51,7 @@ export default function MobileNavigationBar({
                         <div className="flex flex-row items-center justify-center gap-4 md:hidden">
                             <img
                                 src={'pipelines.png'}
-                                className="w-12 h-12 pr-2"
+                                className="h-12 w-12 pr-2"
                             />
 
                             <h1 className="text-2xl font-bold text-white">
