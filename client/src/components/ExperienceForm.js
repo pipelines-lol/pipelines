@@ -7,6 +7,7 @@ import smiley from '../static/ratings/smiley.png'
 import neutral from '../static/ratings/neutral.png'
 import frown from '../static/ratings/frown.png'
 import demon from '../static/ratings/demon.jpeg'
+import { HOST } from '../util/apiRoutes'
 
 export const ExperienceForm = ({
     experience,
@@ -23,6 +24,7 @@ export const ExperienceForm = ({
     const [rating, setRating] = useState(0)
     const [selectedOption, setSelectedOption] = useState(1)
     const [ratingBox, setRatingBox] = useState(false)
+    const [companyId, setCompanyId] = useState('')
     const [first, setFirst] = useState(true)
 
     const options = [
@@ -58,6 +60,7 @@ export const ExperienceForm = ({
         if (experience) {
             setCompany(experience.companyName)
             setTitle(experience.title)
+            setCompanyId(experience.companyId)
 
             let start, end
 
@@ -68,13 +71,11 @@ export const ExperienceForm = ({
                 experience.endDate &&
                 experience.endDate !== ''
             ) {
-                const startDateInISOFormat = experience.startDate
-                const startDate = new Date(startDateInISOFormat)
+                const startDate = new Date(experience.startDate)
 
                 start = `${startDate.getFullYear()}-${String(startDate.getMonth() + 1).padStart(2, '0')}`
 
-                const endDateInISOFormat = experience.endDate
-                const endDate = new Date(endDateInISOFormat)
+                const endDate = new Date(experience.endDate)
 
                 end = `${endDate.getFullYear()}-${String(endDate.getMonth() + 1).padStart(2, '0')}`
             } else {
@@ -106,53 +107,15 @@ export const ExperienceForm = ({
         return isoDateString
     }
 
-    /*function convertDateFormat(inputDate) {
-        // edge case: blank date
-        if (inputDate === '') {
-            return ''
-        }
-
-        // Split the input date string into month and year
-        const [month, year] = inputDate.split(' ')
-
-        // Convert the month from textual to numeric representation
-        const monthNames = [
-            'January',
-            'February',
-            'March',
-            'April',
-            'May',
-            'June',
-            'July',
-            'August',
-            'September',
-            'October',
-            'November',
-            'December',
-        ]
-        const monthNumeric = monthNames.indexOf(month) + 1
-
-        // Pad the month with a leading zero if needed
-        const paddedMonth =
-            monthNumeric < 10 ? `0${monthNumeric}` : `${monthNumeric}`
-
-        // Combine the month and year into the desired format
-        const outputDate = `${year}-${paddedMonth}`
-
-        console.log(outputDate)
-        return outputDate
-    }*/
-
     const handleExperienceChange = (e, field) => {
         setFirst(true)
         const value = e.target.value
 
         if (field === 'startDate') {
             setStartDate(value)
-
             const newExperience = {
-                company: company,
-                companyId: '',
+                companyName: company,
+                companyId: companyId,
                 title: title,
                 endDate: flipDateFormat(endDate),
                 startDate: flipDateFormat(value),
@@ -164,7 +127,7 @@ export const ExperienceForm = ({
 
             const newExperience = {
                 companyName: company,
-                companyId: '',
+                companyId: companyId,
                 title: title,
                 endDate: flipDateFormat(value),
                 startDate: flipDateFormat(startDate),
@@ -177,9 +140,18 @@ export const ExperienceForm = ({
     const handleCompanyChange = async (value) => {
         setCompany(value)
 
+        const response = await fetch(`${HOST}/api/company/get/${value}`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json', // Specify the content type as JSON
+            },
+        })
+        const data = await response.json()
+        setCompanyId(data._id)
+
         const newExperience = {
             companyName: value,
-            companyId: '',
+            companyId: data._id,
             title: title,
             endDate: flipDateFormat(endDate),
             startDate: flipDateFormat(startDate),
@@ -204,6 +176,7 @@ export const ExperienceForm = ({
 
         const newExperience = {
             companyName: company,
+            companyId: companyId,
             title: value,
             startDate: flipDateFormat(startDate),
             endDate: flipDateFormat(endDate),

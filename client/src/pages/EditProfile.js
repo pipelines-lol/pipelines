@@ -67,9 +67,10 @@ function EditProfile() {
 
     const addExperience = async (index) => {
         const placeholder = {
-            company: '',
+            companyName: '',
             title: '',
-            date: '',
+            startDate: '',
+            endDate: '',
         }
         const newPipeline = [...pipeline]
 
@@ -105,8 +106,10 @@ function EditProfile() {
                     if (experience.hasOwnProperty(key)) {
                         // validate date
                         if (
-                            key === 'date' &&
-                            !isValidDateFormat(experience[key])
+                            (key === 'startDate' &&
+                                !isValidDateFormat(experience[key])) ||
+                            (key === 'endDate' &&
+                                !isValidDateFormat(experience[key]))
                         ) {
                             return false
                         }
@@ -155,7 +158,7 @@ function EditProfile() {
             setErrorMessage('Invalid Date input')
             return
         }
-
+        console.log('pipeline: ', profile.pipeline)
         fetch(`${HOST}/api/profile/${user.profileId}`, {
             method: 'PATCH',
             headers: {
