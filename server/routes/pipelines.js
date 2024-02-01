@@ -7,12 +7,16 @@ const {
   getRandomPipelines,
   removeExperience,
   addExperience,
+  getProfiles,
 } = require("../controllers/pipelineController");
 
 const router = express.Router();
 
 // GET a single pipeline (by id)
 router.get("/get/:employeeId", getPipeline);
+
+// GET profile (for search), with filters
+router.get("/search/", getProfiles);
 
 // GET pipelines (by company name)
 router.get("/search/company/:company", getPipelinesByCompany);

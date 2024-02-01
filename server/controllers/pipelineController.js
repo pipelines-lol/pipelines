@@ -19,6 +19,59 @@ const getPipeline = async (req, res) => {
   res.status(200).json(profile.pipeline);
 };
 
+const getProfiles = async (req, res) => {
+  const INTERN = "intern";
+  const FULLTIME = "fulltime";
+
+  try {
+    const filters = req.body;
+    const query = Profile.find();
+    if (filters.company) {
+      query.where("pipeline.companyName").equals(filters.company.toLowerCase());
+    }
+    if (filters.title) {
+      query.where("pipeline.title").equals(filters.title);
+    }
+    if (filters.school) {
+      query.where("school").equals(filters.school);
+    }
+    if (filters.exp_level) {
+      if (filters.exp_level === INTERN) {
+        query.where("pipeline.title").regex(/INTERN/i);
+      } else if (filters.exp_level === "FULLTIME") {
+        query
+          .where("pipeline.title")
+          .not()
+          .regex(/INTERN/i);
+      }
+    }
+
+    if (filters.currently_working === "true")  {
+      query.where("pipeline.isCurrentlyWorking").equals(true); // pipeline: isCurrentlyWorking (boolean)
+    }
+
+    if (filters.startDate) {
+      query.where("pipeline.startDate").gte(filters.startDate);
+    }
+
+    if (filters.endDate) {
+      query.where("pipeline.endDate").lte(filters.endDate);
+    }
+    const profiles = await query.exec();
+    if (profiles.length === 0) {
+      return res.status(404).json({ message: 'No profiles found' });
+    }
+    profiles.forEach((profile) => {
+      const endDate = profile.pipeline.endDate;
+      console.log(`Profile ID: ${profile._id}, End Date: ${endDate}`, typeof(endDate));
+    });
+    res.json(profiles);
+  } catch (error) {
+    console.log(error)
+    res.status(500).json({ error: "Internal server error" });
+  }
+};
+
 //  GET profiles (by experience name with optional title filter)
 const getPipelinesByCompany = async (req, res) => {
   const { company } = req.params; // company = company name
@@ -29,8 +82,7 @@ const getPipelinesByCompany = async (req, res) => {
     return res.status(404).json({ error: "Company not found." });
   }
   const query = { "pipeline.companyId": companyDocument._id }; // query by company id, no longer by company name
-  console.log(company, title, school, exp_level, currently_working);
-  // apply filters
+
   if (title) {
     query["pipeline.title"] = title;
   }
@@ -298,6 +350,7 @@ function formatDate(dateString) {
 
 module.exports = {
   getPipeline,
+  getProfiles,
   getPipelinesByUniversity,
   getPipelinesByCompany,
   getMultiplePipelinesByCompany,
