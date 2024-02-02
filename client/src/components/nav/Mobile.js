@@ -1,4 +1,3 @@
-import { GalleryHorizontalEnd } from 'lucide-react'
 import { NavLink, useNavigate } from 'react-router-dom'
 import CTAButton from '../landing/CTAButton'
 
@@ -50,10 +49,9 @@ export default function MobileNavigationBar({
                 <div>
                     <NavLink to="/">
                         <div className="flex flex-row items-center justify-center gap-4 md:hidden">
-                            <GalleryHorizontalEnd
-                                size={36}
-                                color="#ffff"
-                                className="pr-2"
+                            <img
+                                src={'pipelines.png'}
+                                className="h-12 w-12 pr-2"
                             />
 
                             <h1 className="text-2xl font-bold text-white">

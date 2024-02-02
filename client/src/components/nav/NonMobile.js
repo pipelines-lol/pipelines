@@ -1,4 +1,3 @@
-import { GalleryHorizontalEnd } from 'lucide-react'
 import React from 'react'
 import { NavLink } from 'react-router-dom'
 
@@ -36,9 +35,9 @@ export default function NonMobileNavbar({
             <div className="mx-12 hidden h-full flex-row items-center justify-center text-center md:flex">
                 <NavLink to="/">
                     <div className="flex flex-row items-center justify-center gap-4">
-                        <GalleryHorizontalEnd
-                            size={36}
-                            className={`pr-2 transition-colors duration-300 ${hovering2 ? 'animate-pulse text-pipeline-blue-200' : 'text-white'}`}
+                        <img
+                            src={'pipelines.png'}
+                            className={`h-12 w-12 pr-2 transition-colors duration-300 ${hovering2 ? 'animate-pulse text-pipeline-blue-200' : 'text-white'}`}
                         />
 
                         <h1
