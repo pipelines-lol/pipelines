@@ -200,7 +200,15 @@ const removeExperience = async (req, res) => {
 // ADD an experience to Pipeline
 const addExperience = async (req, res) => {
   const { employeeId } = req.params;
-  const { index, companyName, title, startDate, endDate } = req.body;
+  const {
+    index,
+    companyName,
+    title,
+    startDate,
+    endDate,
+    isIndefinite,
+    rating,
+  } = req.body;
 
   try {
     // Validate profile ID
@@ -258,6 +266,8 @@ const addExperience = async (req, res) => {
       title: title,
       startDate: startDate,
       endDate: endDate,
+      isIndefinite: isIndefinite,
+      rating: rating,
     };
 
     // If no index, push to end of pipeline; else insert at index

@@ -8,7 +8,8 @@ const BaseJobSchema = new Schema({
   title: String,
   startDate: Date,
   endDate: Date,
-  totalCompensation: String,
+  isIndefinite: Boolean,
+  rating: Number,
 });
 
 const ExperienceSchema = new Schema(BaseJobSchema);

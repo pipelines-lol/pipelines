@@ -12,7 +12,7 @@ function EditProfile() {
     const [lastName, setLastName] = useState('')
     const [anonymous, setAnonymous] = useState(false)
     const [pipeline, setPipeline] = useState([])
-    const [dateValid, setDateValid] = useState(true)
+    const [dateValidity, setDateValidity] = useState([])
 
     const [loading, setLoading] = useState(false)
     const [errorMessage, setErrorMessage] = useState('')
@@ -71,12 +71,15 @@ function EditProfile() {
             title: '',
             startDate: '',
             endDate: '',
+            isIndefinite: '',
+            rating: 0,
         }
         const newPipeline = [...pipeline]
 
         newPipeline.splice(index, 0, placeholder)
 
         setPipeline(newPipeline)
+        addDate(true, index + 1)
     }
 
     const updateExperience = async (experience, index) => {
@@ -89,15 +92,39 @@ function EditProfile() {
 
     const removeExperience = async (index) => {
         const newPipeline = [...pipeline]
+        const removeDate = [...dateValidity]
 
+        removeDate.splice(index, 1)
         newPipeline.splice(index, 1)
 
+        setDateValidity(removeDate)
         setPipeline(newPipeline)
+    }
+
+    const addDate = (bool, index) => {
+        const newDate = [...dateValidity]
+
+        newDate.splice(index, 0, bool)
+        setDateValidity(newDate)
+    }
+
+    const updateDate = (bool, index) => {
+        const newDate = [...dateValidity]
+
+        newDate.splice(index, 1, bool)
+        setDateValidity(newDate)
     }
 
     const validateSubmission = () => {
         function isValidDateFormat(date) {
             return !date.includes('undefined')
+        }
+
+        function isValidDate(arr) {
+            for (const valid of arr) {
+                if (!valid) return false
+            }
+            return true
         }
 
         function checkPipelineForEmptyFields(pipeline) {
@@ -117,6 +144,7 @@ function EditProfile() {
                         // empty field
                         if (
                             typeof experience[key] === 'string' &&
+                            key !== 'isIndefinite' &&
                             experience[key].trim() === ''
                         ) {
                             return false
@@ -134,7 +162,11 @@ function EditProfile() {
         if (school === '') return false
 
         // check none of the fields in the pipeline are blank
-        if (!checkPipelineForEmptyFields(pipeline)) return false
+        if (
+            !checkPipelineForEmptyFields(pipeline) ||
+            !isValidDate(dateValidity)
+        )
+            return false
 
         return true
     }
@@ -154,11 +186,6 @@ function EditProfile() {
             return
         }
 
-        if (!dateValid) {
-            setErrorMessage('Invalid Date input')
-            return
-        }
-        console.log('pipeline: ', profile.pipeline)
         fetch(`${HOST}/api/profile/${user.profileId}`, {
             method: 'PATCH',
             headers: {
@@ -183,7 +210,7 @@ function EditProfile() {
                 }
             })
             .catch((error) => {
-                console.error(error.message)
+                console.err(error.message)
             })
 
         navigate('/')
@@ -298,7 +325,7 @@ function EditProfile() {
                                     index={index}
                                     updateExperience={updateExperience}
                                     removeExperience={removeExperience}
-                                    setIsValid={setDateValid}
+                                    updateDate={updateDate}
                                 />
                                 <button
                                     key={`add_experience_button_${index + 1}`}

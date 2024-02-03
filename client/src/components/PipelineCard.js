@@ -88,18 +88,17 @@ export const PipelineCard = ({ profileId, name, pfp, anonymous, pipeline }) => {
 }
 
 export const ExperienceCard = ({ experience }) => {
-    const formatDateToMMYY = (dateString) => { // Converts 2023-01-01T00:00:00.000Z to January 2023
-        const date = new Date(dateString);
-      
-        if (!(date instanceof Date) || isNaN(date.getTime())) {
-          return "Invalid Date";
-        }
-      
-        const options = { year: 'numeric', month: 'long' };
-        return date.toLocaleDateString(undefined, options);
-      };
-      
+    const formatDateToMMYY = (dateString) => {
+        // Converts 2023-01-01T00:00:00.000Z to January 2023
+        const date = new Date(dateString)
 
+        if (!(date instanceof Date) || isNaN(date.getTime())) {
+            return 'Invalid Date'
+        }
+
+        const options = { year: 'numeric', month: 'long' }
+        return date.toLocaleDateString(undefined, options)
+    }
 
     function getLogoByName(companyName) {
         companyName = capitalize(companyName)
@@ -111,27 +110,27 @@ export const ExperienceCard = ({ experience }) => {
 
     const logo = `${HOMEPAGE}/logos/${getLogoByName(experience.companyName)}`
 
-    function capitalize(str) { // shoutout bobdagoat
-        if (typeof str !== 'string' || str.trim() === '') { // bad input
-            return str; 
+    function capitalize(str) {
+        // shoutout bobdagoat
+        if (typeof str !== 'string' || str.trim() === '') {
+            // bad input
+            return str
         }
 
         const formattedCompany = companies.find(
             (company) => company.name.toLowerCase() === str.toLowerCase()
-        );
-        
-         
-        if (formattedCompany) {  
-            console.log("found", formattedCompany.name)
-            return formattedCompany.name;
-        }  
-        
-        return str
-          .split(' ')
-          .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
-          .join(' ');
-      }
+        )
 
+        if (formattedCompany) {
+            console.log('found', formattedCompany.name)
+            return formattedCompany.name
+        }
+
+        return str
+            .split(' ')
+            .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+            .join(' ')
+    }
 
     return (
         <div
@@ -144,7 +143,7 @@ export const ExperienceCard = ({ experience }) => {
                     src={logo}
                     alt={`${capitalize(experience.companyName)}_logo`}
                 />
-                <div className="animate-blob absolute left-2 top-5 h-24 w-24 rounded-full bg-pipelines-gray-100/20 opacity-70 mix-blend-multiply blur-xl filter" />
+                <div className="absolute left-2 top-5 h-24 w-24 animate-blob rounded-full bg-pipelines-gray-100/20 opacity-70 mix-blend-multiply blur-xl filter" />
             </div>
             <div className="flex flex-col items-center justify-center">
                 <h1 className="text-2xl font-semibold text-pipelines-gray-100">
@@ -154,7 +153,10 @@ export const ExperienceCard = ({ experience }) => {
                     {experience.title}
                 </h1>
                 <h1 className="text-xl font-light text-pipelines-gray-100 opacity-60">
-                    {formatDateToMMYY(experience.startDate)} - {formatDateToMMYY(experience.endDate)}
+                    {formatDateToMMYY(experience.startDate)} -{' '}
+                    {!experience.isIndefinite
+                        ? formatDateToMMYY(experience.endDate)
+                        : 'Indefinite'}
                 </h1>
             </div>
         </div>
