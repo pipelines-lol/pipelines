@@ -207,6 +207,8 @@ export const ExperienceForm = ({
             rating: rating,
         }
 
+        updateDate(true, index)
+
         updateExperience(newExperience, index)
     }
 

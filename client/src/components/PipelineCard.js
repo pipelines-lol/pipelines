@@ -88,6 +88,7 @@ export const PipelineCard = ({ profileId, name, pfp, anonymous, pipeline }) => {
 }
 
 export const ExperienceCard = ({ experience }) => {
+    const current = new Date(experience.startDate) > new Date()
     const formatDateToMMYY = (dateString) => {
         // Converts 2023-01-01T00:00:00.000Z to January 2023
         const date = new Date(dateString)
@@ -156,7 +157,9 @@ export const ExperienceCard = ({ experience }) => {
                     {formatDateToMMYY(experience.startDate)} -{' '}
                     {!experience.isIndefinite
                         ? formatDateToMMYY(experience.endDate)
-                        : 'Indefinite'}
+                        : !current
+                          ? 'Present'
+                          : 'Indefinite'}
                 </h1>
             </div>
         </div>

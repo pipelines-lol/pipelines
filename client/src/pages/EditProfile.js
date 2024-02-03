@@ -111,6 +111,7 @@ function EditProfile() {
 
     const updateDate = (bool, index) => {
         const newDate = [...dateValidity]
+        console.log('newDate: ', newDate)
         newDate.splice(index, 1, bool)
         setDateValidity(newDate)
     }
