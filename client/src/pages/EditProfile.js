@@ -63,6 +63,7 @@ function EditProfile() {
         setSchool(data.school)
         setAnonymous(data.anonymous)
         setPipeline(data.pipeline)
+        initializeDate(data.pipeline.length)
     }
 
     const addExperience = async (index) => {
@@ -110,8 +111,12 @@ function EditProfile() {
 
     const updateDate = (bool, index) => {
         const newDate = [...dateValidity]
-
         newDate.splice(index, 1, bool)
+        setDateValidity(newDate)
+    }
+
+    const initializeDate = (len) => {
+        const newDate = Array(len).fill(true)
         setDateValidity(newDate)
     }
 
