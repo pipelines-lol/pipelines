@@ -1,6 +1,7 @@
 const mongoose = require("mongoose");
 const random = require("mongoose-simple-random");
-const { ExperienceSchema, OfferSchema } = require("./jobModel");
+const Experience = require("./experienceModel"); // Import the Experience model
+const Offer = require("./offerModel"); // Import the Offer model
 
 const Schema = mongoose.Schema;
 
@@ -16,8 +17,8 @@ const profileSchema = new Schema(
     location: String,
     anonymous: Boolean,
     school: String,
-    pipeline: [ExperienceSchema],
-    offers: [OfferSchema],
+    pipeline: [Experience.schema],
+    offers: [Offer.schema],
     created: Boolean,
   },
   { timestamps: true }

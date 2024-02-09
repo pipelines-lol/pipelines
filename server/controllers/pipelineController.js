@@ -46,7 +46,7 @@ const getProfiles = async (req, res) => {
       }
     }
 
-    if (filters.currently_working === "true")  {
+    if (filters.currently_working === "true") {
       query.where("pipeline.isCurrentlyWorking").equals(true); // pipeline: isCurrentlyWorking (boolean)
     }
 
@@ -59,15 +59,18 @@ const getProfiles = async (req, res) => {
     }
     const profiles = await query.exec();
     if (profiles.length === 0) {
-      return res.status(404).json({ message: 'No profiles found' });
+      return res.status(404).json({ message: "No profiles found" });
     }
     profiles.forEach((profile) => {
       const endDate = profile.pipeline.endDate;
-      console.log(`Profile ID: ${profile._id}, End Date: ${endDate}`, typeof(endDate));
+      console.log(
+        `Profile ID: ${profile._id}, End Date: ${endDate}`,
+        typeof endDate
+      );
     });
     res.json(profiles);
   } catch (error) {
-    console.log(error)
+    console.log(error);
     res.status(500).json({ error: "Internal server error" });
   }
 };
