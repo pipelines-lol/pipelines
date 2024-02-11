@@ -7,12 +7,15 @@ import { SchoolQuerySearch } from '../components/SchoolQuerySearch'
 import { useAuthContext } from '../hooks/useAuthContext'
 import { HOST } from '../util/apiRoutes'
 import Loading from './Loading'
+
 function EditProfile() {
     const [firstName, setFirstName] = useState('')
     const [lastName, setLastName] = useState('')
     const [anonymous, setAnonymous] = useState(false)
     const [pipeline, setPipeline] = useState([])
     const [dateValidity, setDateValidity] = useState([])
+    const [origCompanies, setOrigCompanies] = useState([])
+    const [origRating, setOrigRating] = useState([])
 
     const [loading, setLoading] = useState(false)
     const [errorMessage, setErrorMessage] = useState('')
@@ -64,6 +67,10 @@ function EditProfile() {
         setAnonymous(data.anonymous)
         setPipeline(data.pipeline)
         initializeDate(data.pipeline.length)
+        const temp = data.pipeline.map((item) => item.companyName)
+        setOrigCompanies(temp)
+        const tempRating = data.pipeline.map((item) => item.rating)
+        setOrigRating(tempRating)
     }
 
     const addExperience = async (index) => {
@@ -72,7 +79,7 @@ function EditProfile() {
             title: '',
             startDate: '',
             endDate: '',
-            isIndefinite: '',
+            isIndefinite: false,
             rating: 0,
         }
         const newPipeline = [...pipeline]
@@ -184,6 +191,106 @@ function EditProfile() {
             school,
             anonymous,
             pipeline,
+        }
+
+        for (let i = 0; i < pipeline.length; i++) {
+            if (pipeline[i].copmanyName in origCompanies) {
+                const company = pipeline[i]
+                console.log('Company Name: ', company.companyName)
+                const prevCompanies = pipeline
+                    .slice(0, i)
+                    .map((item) => item.companyName)
+                    .filter((company) => !origCompanies.includes(company))
+                const postCompanies = pipeline
+                    .slice(i + 1)
+                    .map((item) => item.companyName)
+                    .filter((company) => !origCompanies.includes(company))
+
+                console.log('post companies: ', postCompanies)
+                console.log('pre copmanies: ', prevCompanies)
+                let companyJson = {}
+
+                if (company.rating === 0) {
+                    companyJson = {
+                        rating: company.rating - origRating[i],
+                        prevCompanies,
+                        postCompanies,
+                        Employees: [user.profileId],
+                    }
+                } else {
+                    companyJson = {
+                        rating: company.rating - origRating[i],
+                        prevCompanies,
+                        postCompanies,
+                        Employees: [user.profileId],
+                        ratedEmployees: [user.profileId],
+                    }
+                }
+
+                const response = await fetch(
+                    `${HOST}/api/company/update/${company.companyName}`,
+                    {
+                        method: 'PATCH',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify(companyJson), // Assuming you have data to update
+                    }
+                )
+
+                if (!response.ok) {
+                    console.log(response.status)
+                }
+
+                console.log(response.status)
+            } else {
+                const company = pipeline[i]
+                console.log('Company Name: ', company.companyName)
+                const prevCompanies = pipeline
+                    .slice(0, i)
+                    .map((item) => item.companyName)
+                const postCompanies = pipeline
+                    .slice(i + 1)
+                    .map((item) => item.companyName)
+
+                console.log('post companies: ', postCompanies)
+                console.log('pre copmanies: ', prevCompanies)
+                let companyJson = {}
+
+                if (company.rating === 0) {
+                    companyJson = {
+                        rating: company.rating,
+                        prevCompanies,
+                        postCompanies,
+                        Employees: [user.profileId],
+                    }
+                } else {
+                    companyJson = {
+                        rating: company.rating,
+                        prevCompanies,
+                        postCompanies,
+                        Employees: [user.profileId],
+                        ratedEmployees: [user.profileId],
+                    }
+                }
+
+                const response = await fetch(
+                    `${HOST}/api/company/update/${company.companyName}`,
+                    {
+                        method: 'PATCH',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify(companyJson), // Assuming you have data to update
+                    }
+                )
+
+                if (!response.ok) {
+                    console.log(response.status)
+                }
+
+                console.log(response.status)
+            }
         }
 
         // make sure no input fields are blank
