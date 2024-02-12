@@ -194,7 +194,7 @@ function EditProfile() {
         }
 
         for (let i = 0; i < pipeline.length; i++) {
-            if (pipeline[i].copmanyName in origCompanies) {
+            if (origCompanies.includes(pipeline[i].companyName)) {
                 const company = pipeline[i]
                 console.log('Company Name: ', company.companyName)
                 const prevCompanies = pipeline

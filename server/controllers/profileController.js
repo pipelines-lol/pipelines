@@ -51,7 +51,6 @@ const updateProfile = async (req, res) => {
     return res.status(404).json({ error: "No such Profile." });
   }
 
-  console.log("profile: ", req.body);
   try {
     const profile = await Profile.findOneAndUpdate({ _id: id }, req.body, {
       new: true,
