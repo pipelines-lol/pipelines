@@ -16,6 +16,7 @@ function EditProfile() {
     const [dateValidity, setDateValidity] = useState([])
     const [origCompanies, setOrigCompanies] = useState([])
     const [origRating, setOrigRating] = useState([])
+    const [companies, setCompanies] = useState([])
 
     const [loading, setLoading] = useState(false)
     const [errorMessage, setErrorMessage] = useState('')
@@ -96,6 +97,86 @@ function EditProfile() {
         newPipeline.splice(index, 1, experience)
 
         setPipeline(newPipeline)
+    }
+
+    const generateCompanies = (pipeline) => {
+        for (let i = 0; i < pipeline.length; i++) {
+            if (origCompanies.includes(pipeline[i].companyName)) {
+                const company = pipeline[i]
+                console.log('Company Name: ', company.companyName)
+                const prevCompanies = pipeline
+                    .slice(0, i)
+                    .map((item) => item.companyName)
+                    .filter((company) => !origCompanies.includes(company))
+                const postCompanies = pipeline
+                    .slice(i + 1)
+                    .map((item) => item.companyName)
+                    .filter((company) => !origCompanies.includes(company))
+
+                let companyJson = {}
+
+                if (company.rating === 0) {
+                    companyJson = {
+                        name: company.companyName,
+                        rating: company.rating - origRating[i],
+                        prevCompanies,
+                        postCompanies,
+                        Employees: [user.profileId],
+                    }
+                } else {
+                    companyJson = {
+                        name: company.companyName,
+                        rating: company.rating - origRating[i],
+                        prevCompanies,
+                        postCompanies,
+                        Employees: [user.profileId],
+                        ratedEmployees: [user.profileId],
+                    }
+                }
+
+                let temp = companies
+                temp = companies.push(companyJson)
+                setCompanies(temp)
+                console.log('Temp: ', temp)
+            } else {
+                const company = pipeline[i]
+                console.log('Company Name: ', company.companyName)
+                const prevCompanies = pipeline
+                    .slice(0, i)
+                    .map((item) => item.companyName)
+                const postCompanies = pipeline
+                    .slice(i + 1)
+                    .map((item) => item.companyName)
+
+                console.log('post companies: ', postCompanies)
+                console.log('pre copmanies: ', prevCompanies)
+                let companyJson = {}
+
+                if (company.rating === 0) {
+                    companyJson = {
+                        name: company.companyName,
+                        rating: company.rating,
+                        prevCompanies,
+                        postCompanies,
+                        Employees: [user.profileId],
+                    }
+                } else {
+                    companyJson = {
+                        name: company.companyName,
+                        rating: company.rating,
+                        prevCompanies,
+                        postCompanies,
+                        Employees: [user.profileId],
+                        ratedEmployees: [user.profileId],
+                    }
+                }
+
+                let temp = companies
+                temp = companies.push(companyJson)
+                setCompanies(temp)
+                console.log('Temp: ', temp)
+            }
+        }
     }
 
     const removeExperience = async (index) => {
@@ -193,111 +274,30 @@ function EditProfile() {
             pipeline,
         }
 
-        for (let i = 0; i < pipeline.length; i++) {
-            if (origCompanies.includes(pipeline[i].companyName)) {
-                const company = pipeline[i]
-                console.log('Company Name: ', company.companyName)
-                const prevCompanies = pipeline
-                    .slice(0, i)
-                    .map((item) => item.companyName)
-                    .filter((company) => !origCompanies.includes(company))
-                const postCompanies = pipeline
-                    .slice(i + 1)
-                    .map((item) => item.companyName)
-                    .filter((company) => !origCompanies.includes(company))
-
-                console.log('post companies: ', postCompanies)
-                console.log('pre copmanies: ', prevCompanies)
-                let companyJson = {}
-
-                if (company.rating === 0) {
-                    companyJson = {
-                        rating: company.rating - origRating[i],
-                        prevCompanies,
-                        postCompanies,
-                        Employees: [user.profileId],
-                    }
-                } else {
-                    companyJson = {
-                        rating: company.rating - origRating[i],
-                        prevCompanies,
-                        postCompanies,
-                        Employees: [user.profileId],
-                        ratedEmployees: [user.profileId],
-                    }
-                }
-
-                const response = await fetch(
-                    `${HOST}/api/company/update/${company.companyName}`,
-                    {
-                        method: 'PATCH',
-                        headers: {
-                            'Content-Type': 'application/json',
-                        },
-                        body: JSON.stringify(companyJson), // Assuming you have data to update
-                    }
-                )
-
-                if (!response.ok) {
-                    console.log(response.status)
-                }
-
-                console.log(response.status)
-            } else {
-                const company = pipeline[i]
-                console.log('Company Name: ', company.companyName)
-                const prevCompanies = pipeline
-                    .slice(0, i)
-                    .map((item) => item.companyName)
-                const postCompanies = pipeline
-                    .slice(i + 1)
-                    .map((item) => item.companyName)
-
-                console.log('post companies: ', postCompanies)
-                console.log('pre copmanies: ', prevCompanies)
-                let companyJson = {}
-
-                if (company.rating === 0) {
-                    companyJson = {
-                        rating: company.rating,
-                        prevCompanies,
-                        postCompanies,
-                        Employees: [user.profileId],
-                    }
-                } else {
-                    companyJson = {
-                        rating: company.rating,
-                        prevCompanies,
-                        postCompanies,
-                        Employees: [user.profileId],
-                        ratedEmployees: [user.profileId],
-                    }
-                }
-
-                const response = await fetch(
-                    `${HOST}/api/company/update/${company.companyName}`,
-                    {
-                        method: 'PATCH',
-                        headers: {
-                            'Content-Type': 'application/json',
-                        },
-                        body: JSON.stringify(companyJson), // Assuming you have data to update
-                    }
-                )
-
-                if (!response.ok) {
-                    console.log(response.status)
-                }
-
-                console.log(response.status)
-            }
-        }
-
         // make sure no input fields are blank
         if (!validateSubmission()) {
             setErrorMessage('Must fill out all input fields.')
             return
         }
+
+        generateCompanies(pipeline)
+
+        console.log('Companies: ', companies)
+
+        const response = await fetch(`${HOST}/api/company/update`, {
+            method: `PATCH`,
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(companies),
+        })
+
+        if (!response.ok) {
+            console.log(response.status)
+        }
+
+        const data = await response.json()
+        console.log('data: ', data)
 
         fetch(`${HOST}/api/profile/${user.profileId}`, {
             method: 'PATCH',

@@ -3,6 +3,7 @@ const {
   createCompany,
   getCompany,
   updateCompany,
+  updateCompanies,
   deleteCompany,
 } = require("../controllers/companyController");
 const router = express();
@@ -16,6 +17,9 @@ router.get("/get/:name", getCompany);
 
 //Update a specific company
 router.patch("/update/:name", bodyParser.json(), updateCompany);
+
+//Update a specific company
+router.patch("/update", bodyParser.json(), updateCompanies);
 
 //Delete a specific company
 router.delete("/delete/:name", deleteCompany);
