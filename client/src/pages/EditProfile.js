@@ -140,6 +140,8 @@ function EditProfile() {
 
                     origDifference = origDifferenceMs / (1000 * 60 * 60 * 24)
 
+                    console.log('origDifference: ', origDifference)
+
                     // Get current date
                     const date1 = new Date(company.startDate)
                     const date2 = new Date(company.endDate)
@@ -523,6 +525,7 @@ function EditProfile() {
             return
         }
 
+        setLoading(true)
         generateCompanies(pipeline)
 
         // update companies
@@ -567,7 +570,7 @@ function EditProfile() {
             .catch((error) => {
                 console.err(error.message)
             })
-
+        setLoading(false)
         navigate('/')
     }
 
