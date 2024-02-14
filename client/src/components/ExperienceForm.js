@@ -212,12 +212,24 @@ export const ExperienceForm = ({
         updateExperience(newExperience, index)
     }
 
+    const handleRemoveExperience = (index) => {
+        const experienceToRemove = {
+            companyName: company,
+            title: title,
+            rating: rating,
+            endDate: flipDateFormat(endDate),
+            startDate: flipDateFormat(startDate),
+        }
+
+        removeExperience(experienceToRemove, index)
+    }
+
     return (
         <>
             <div className="relative z-0 flex h-auto w-auto flex-col items-center justify-center gap-4 overflow-y-hidden rounded-lg bg-white bg-opacity-20 p-10 shadow-lg backdrop-blur-xl backdrop-filter">
                 <button
                     className="self-start"
-                    onClick={() => removeExperience(index)}
+                    onClick={() => handleRemoveExperience(index)}
                 >
                     <X
                         size={20}

@@ -15,7 +15,6 @@ function EditProfile() {
     const [pipeline, setPipeline] = useState([])
     const [dateValidity, setDateValidity] = useState([])
     const [origCompanies, setOrigCompanies] = useState([])
-    const [origRating, setOrigRating] = useState([])
     const [companies, setCompanies] = useState([])
 
     const [loading, setLoading] = useState(false)
@@ -66,12 +65,17 @@ function EditProfile() {
         setLastName(data.lastName)
         setSchool(data.school)
         setAnonymous(data.anonymous)
+        console.log('pipeline: ', data.pipeline)
         setPipeline(data.pipeline)
         initializeDate(data.pipeline.length)
-        const temp = data.pipeline.map((item) => item.companyName)
+        const temp = data.pipeline.map((item) => ({
+            companyName: item.companyName,
+            title: item.title,
+            rating: item.rating,
+            startDate: item.startDate,
+            endDate: item.endDate,
+        }))
         setOrigCompanies(temp)
-        const tempRating = data.pipeline.map((item) => item.rating)
-        setOrigRating(tempRating)
     }
 
     const addExperience = async (index) => {
@@ -95,7 +99,6 @@ function EditProfile() {
         const newPipeline = [...pipeline]
 
         newPipeline.splice(index, 1, experience)
-
         setPipeline(newPipeline)
     }
 
@@ -118,26 +121,28 @@ function EditProfile() {
                 if (company.rating === 0) {
                     companyJson = {
                         name: company.companyName,
-                        rating: company.rating - origRating[i],
-                        prevCompanies,
-                        postCompanies,
+                        rating: company.rating - origCompanies[i].rating,
+                        prevCompanies: prevCompanies || {},
+                        postCompanies: postCompanies || {},
                         Employees: [user.profileId],
+                        ratedEmployees: [],
+                        interns: [],
                     }
                 } else {
                     companyJson = {
                         name: company.companyName,
-                        rating: company.rating - origRating[i],
-                        prevCompanies,
-                        postCompanies,
+                        rating: company.rating - origCompanies[i].rating,
+                        prevCompanies: prevCompanies || {},
+                        postCompanies: postCompanies || {},
                         Employees: [user.profileId],
                         ratedEmployees: [user.profileId],
+                        interns: [],
                     }
                 }
 
                 let temp = companies
                 temp = companies.push(companyJson)
                 setCompanies(temp)
-                console.log('Temp: ', temp)
             } else {
                 const company = pipeline[i]
                 console.log('Company Name: ', company.companyName)
@@ -148,44 +153,136 @@ function EditProfile() {
                     .slice(i + 1)
                     .map((item) => item.companyName)
 
-                console.log('post companies: ', postCompanies)
-                console.log('pre copmanies: ', prevCompanies)
                 let companyJson = {}
 
                 if (company.rating === 0) {
                     companyJson = {
                         name: company.companyName,
                         rating: company.rating,
-                        prevCompanies,
-                        postCompanies,
+                        prevCompanies: prevCompanies || {},
+                        postCompanies: postCompanies || {},
                         Employees: [user.profileId],
+                        ratedEmployees: [],
+                        interns: [],
                     }
                 } else {
                     companyJson = {
                         name: company.companyName,
                         rating: company.rating,
-                        prevCompanies,
-                        postCompanies,
+                        prevCompanies: prevCompanies || {},
+                        postCompanies: postCompanies || {},
                         Employees: [user.profileId],
                         ratedEmployees: [user.profileId],
+                        interns: [],
                     }
                 }
 
                 let temp = companies
                 temp = companies.push(companyJson)
                 setCompanies(temp)
-                console.log('Temp: ', temp)
             }
         }
     }
 
-    const removeExperience = async (index) => {
+    const removeExperience = async (experience, index) => {
         const newPipeline = [...pipeline]
         const removeDate = [...dateValidity]
 
         removeDate.splice(index, 1)
         newPipeline.splice(index, 1)
 
+        let comp = {
+            name: experience.companyName,
+            title: experience.title,
+            removeRating: experience.rating,
+            startDate: experience.startDate,
+            endDate: experience.endDate,
+            removeEmployees: [user.profileId],
+        }
+
+        let tempOrig = origCompanies
+        let found = -1
+        for (let i = 0; i < tempOrig.length; i++) {
+            let company = tempOrig[i]
+            console.log('Company: ', company)
+            console.log('Comp: ', comp)
+            if (
+                comp.name === company.companyName &&
+                comp.title === company.title &&
+                comp.removeRating === company.rating
+            ) {
+                tempOrig.splice(i, 1)
+                found = i
+                break
+            }
+        }
+
+        const prevRemoveCompanies = origCompanies
+            .slice(0, found)
+            .map((item) => item.companyName)
+        const postRemoveCompanies = origCompanies
+            .slice(found + 1)
+            .map((item) => item.companyName)
+
+        if (found !== -1) {
+            comp = { ...comp, prevRemoveCompanies, postRemoveCompanies }
+            const response = await fetch(
+                `${HOST}/api/company/update/${comp.name}`,
+                {
+                    method: `PATCH`,
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(comp),
+                }
+            )
+
+            if (!response.ok) {
+                console.log(response.status)
+            }
+
+            const data = await response.json()
+            console.log('data: ', data)
+
+            const profile = {
+                firstName,
+                lastName,
+                school,
+                anonymous,
+                pipeline: tempOrig,
+            }
+
+            console.log('pipeline: ', profile)
+
+            fetch(`${HOST}/api/profile/${user.profileId}`, {
+                method: 'PATCH',
+                headers: {
+                    'Content-Type': 'application/json', // Specify the content type as JSON
+                },
+                body: JSON.stringify(profile),
+            })
+                .then((res) => {
+                    if (!res.ok) {
+                        // Check if the response has JSON content
+                        if (
+                            res.headers
+                                .get('content-type')
+                                ?.includes('application/json')
+                        ) {
+                            return res.json().then((errorData) => {
+                                throw new Error(`${errorData.error}`)
+                            })
+                        } else {
+                            throw new Error(`HTTP error! Status: ${res.status}`)
+                        }
+                    }
+                })
+                .catch((error) => {
+                    console.err(error.message)
+                })
+        }
+
+        setOrigCompanies(tempOrig)
         setDateValidity(removeDate)
         setPipeline(newPipeline)
     }
@@ -282,8 +379,7 @@ function EditProfile() {
 
         generateCompanies(pipeline)
 
-        console.log('Companies: ', companies)
-
+        // update companies
         const response = await fetch(`${HOST}/api/company/update`, {
             method: `PATCH`,
             headers: {
