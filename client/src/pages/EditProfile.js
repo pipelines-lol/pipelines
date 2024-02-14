@@ -104,9 +104,21 @@ function EditProfile() {
 
     const generateCompanies = (pipeline) => {
         for (let i = 0; i < pipeline.length; i++) {
-            if (origCompanies.includes(pipeline[i].companyName)) {
-                const company = pipeline[i]
-                console.log('Company Name: ', company.companyName)
+            const company = pipeline[i]
+            let found = -1
+            for (let i = 0; i < origCompanies.length; i++) {
+                let comp = origCompanies[i]
+                if (
+                    comp.companyName === company.companyName &&
+                    comp.title === company.title &&
+                    comp.rating === company.rating
+                ) {
+                    found = i
+                    break
+                }
+            }
+
+            if (found !== -1) {
                 const prevCompanies = pipeline
                     .slice(0, i)
                     .map((item) => item.companyName)
@@ -117,35 +129,113 @@ function EditProfile() {
                     .filter((company) => !origCompanies.includes(company))
 
                 let companyJson = {}
+                let origDifference = 0
+                let differenceDays = 0
+                if (!company.isIndefinite) {
+                    // Get original dates
+                    const origDate1 = new Date(origCompanies[found].startDate)
+                    const origDate2 = new Date(origCompanies[found].endDate)
 
-                if (company.rating === 0) {
+                    const origDifferenceMs = origDate2 - origDate1
+
+                    origDifference = origDifferenceMs / (1000 * 60 * 60 * 24)
+
+                    // Get current date
+                    const date1 = new Date(company.startDate)
+                    const date2 = new Date(company.endDate)
+
+                    // Calculate the difference in milliseconds
+                    const differenceMs = Math.abs(date2 - date1)
+
+                    // Convert the difference to days
+                    differenceDays = Math.round(
+                        differenceMs / (1000 * 60 * 60 * 24)
+                    )
+                } else if (
+                    company.isIndefinite &&
+                    new Date(company.startDate) < new Date()
+                ) {
+                    const origDate1 = new Date(origCompanies[found].startDate)
+                    const origDate2 = new Date()
+                    const origMs = origDate2 - origDate1
+                    origDifference = Math.round(origMs / (1000 * 60 * 60 * 24))
+
+                    // Get current date
+                    const date1 = new Date(company.startDate)
+                    const date2 = new Date()
+
+                    // Calculate the difference in milliseconds
+                    const differenceMs = Math.abs(date2 - date1)
+
+                    // Convert the difference to days
+                    differenceDays = Math.round(
+                        differenceMs / (1000 * 60 * 60 * 24)
+                    )
+                }
+
+                // Check if employee rated the company
+                if (
+                    company.rating === 0 &&
+                    company.title.toLowerCase().includes('intern')
+                ) {
                     companyJson = {
                         name: company.companyName,
-                        rating: company.rating - origCompanies[i].rating,
+                        rating: company.rating - origCompanies[found].rating,
                         prevCompanies: prevCompanies || {},
                         postCompanies: postCompanies || {},
+                        Employees: [],
+                        ratedEmployees: [],
+                        interns: [user.profileId],
+                    }
+                } else if (
+                    company.rating === 0 &&
+                    !company.title.toLowerCase().includes('intern')
+                ) {
+                    companyJson = {
+                        name: company.companyName,
+                        rating: company.rating - origCompanies[found].rating,
+                        prevCompanies: prevCompanies || {},
+                        postCompanies: postCompanies || {},
+                        tenure: differenceDays - origDifference,
                         Employees: [user.profileId],
                         ratedEmployees: [],
                         interns: [],
                     }
-                } else {
+                } else if (
+                    company.rating > 0 &&
+                    company.title.toLowerCase().includes('intern')
+                ) {
                     companyJson = {
                         name: company.companyName,
-                        rating: company.rating - origCompanies[i].rating,
+                        rating: company.rating - origCompanies[found].rating,
                         prevCompanies: prevCompanies || {},
                         postCompanies: postCompanies || {},
+                        Employees: [],
+                        ratedEmployees: [user.profileId],
+                        interns: [user.profileId],
+                    }
+                } else if (
+                    company.rating > 0 &&
+                    !company.title.toLowerCase().includes('intern')
+                ) {
+                    companyJson = {
+                        name: company.companyName,
+                        rating: company.rating - origCompanies[found].rating,
+                        prevCompanies: prevCompanies || {},
+                        postCompanies: postCompanies || {},
+                        tenure: differenceDays - origDifference,
                         Employees: [user.profileId],
                         ratedEmployees: [user.profileId],
                         interns: [],
                     }
                 }
 
+                console.log('Company Json: ', companyJson)
                 let temp = companies
                 temp = companies.push(companyJson)
                 setCompanies(temp)
             } else {
-                const company = pipeline[i]
-                console.log('Company Name: ', company.companyName)
+                console.log('Company: ', company)
                 const prevCompanies = pipeline
                     .slice(0, i)
                     .map((item) => item.companyName)
@@ -155,7 +245,34 @@ function EditProfile() {
 
                 let companyJson = {}
 
-                if (company.rating === 0) {
+                let differenceDays = 0
+                if (!company.isIndefinite) {
+                    // Get current date
+                    const date1 = new Date(company.startDate)
+                    const date2 = new Date(company.endDate)
+
+                    // Calculate the difference in milliseconds
+                    const differenceMs = Math.abs(date2 - date1)
+
+                    // Convert the difference to days
+                    differenceDays = differenceMs / (1000 * 60 * 60 * 24)
+                } else if (
+                    company.isIndefinite &&
+                    new Date(company.startDate) < new Date()
+                ) {
+                    const date1 = new Date(company.startDate)
+                    const date2 = new Date()
+                    const differenceMs = Math.abs(date2 - date1)
+
+                    differenceDays = Math.round(
+                        differenceMs / (1000 * 60 * 60 * 24)
+                    )
+                }
+
+                if (
+                    company.rating === 0 &&
+                    company.title.toLowerCase().includes('intern')
+                ) {
                     companyJson = {
                         name: company.companyName,
                         rating: company.rating,
@@ -165,18 +282,48 @@ function EditProfile() {
                         ratedEmployees: [],
                         interns: [],
                     }
-                } else {
+                } else if (
+                    company.rating === 0 &&
+                    !company.title.toLowerCase().includes('intern')
+                ) {
                     companyJson = {
                         name: company.companyName,
                         rating: company.rating,
                         prevCompanies: prevCompanies || {},
                         postCompanies: postCompanies || {},
+                        tenure: differenceDays,
+                        Employees: [user.profileId],
+                        ratedEmployees: [],
+                        interns: [],
+                    }
+                } else if (
+                    company.rating > 0 &&
+                    company.title.toLowerCase().includes('intern')
+                ) {
+                    companyJson = {
+                        name: company.companyName,
+                        rating: company.rating,
+                        prevCompanies: prevCompanies || {},
+                        postCompanies: postCompanies || {},
+                        Employees: [],
+                        ratedEmployees: [user.profileId],
+                        interns: [user.profileId],
+                    }
+                } else if (
+                    company.rating > 0 &&
+                    !company.title.toLowerCase().includes('intern')
+                ) {
+                    companyJson = {
+                        name: company.companyName,
+                        rating: company.rating,
+                        prevCompanies: prevCompanies || {},
+                        postCompanies: postCompanies || {},
+                        tenure: differenceDays,
                         Employees: [user.profileId],
                         ratedEmployees: [user.profileId],
                         interns: [],
                     }
                 }
-
                 let temp = companies
                 temp = companies.push(companyJson)
                 setCompanies(temp)
@@ -204,8 +351,6 @@ function EditProfile() {
         let found = -1
         for (let i = 0; i < tempOrig.length; i++) {
             let company = tempOrig[i]
-            console.log('Company: ', company)
-            console.log('Comp: ', comp)
             if (
                 comp.name === company.companyName &&
                 comp.title === company.title &&
@@ -311,13 +456,6 @@ function EditProfile() {
             return !date.includes('undefined')
         }
 
-        function isValidDate(arr) {
-            for (const valid of arr) {
-                if (!valid) return false
-            }
-            return true
-        }
-
         function checkPipelineForEmptyFields(pipeline) {
             for (const experience of pipeline) {
                 for (const key in experience) {
@@ -353,11 +491,7 @@ function EditProfile() {
         if (school === '') return false
 
         // check none of the fields in the pipeline are blank
-        if (
-            !checkPipelineForEmptyFields(pipeline) ||
-            !isValidDate(dateValidity)
-        )
-            return false
+        if (!checkPipelineForEmptyFields(pipeline)) return false
 
         return true
     }
@@ -371,9 +505,21 @@ function EditProfile() {
             pipeline,
         }
 
+        function isValidDate(arr) {
+            for (const valid of arr) {
+                if (!valid) return false
+            }
+            return true
+        }
+
         // make sure no input fields are blank
         if (!validateSubmission()) {
             setErrorMessage('Must fill out all input fields.')
+            return
+        }
+
+        if (!isValidDate(dateValidity)) {
+            setErrorMessage('Invalid Date')
             return
         }
 
