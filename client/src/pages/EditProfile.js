@@ -60,6 +60,18 @@ function EditProfile() {
         }
     }
 
+    const sortByDate = (array) => {
+        // Custom comparison function
+        function compareDates(a, b) {
+            const dateA = new Date(a.startDate)
+            const dateB = new Date(b.startDate)
+            return dateA - dateB
+        }
+
+        const sortedPipeline = array.sort(compareDates)
+        setPipeline(sortedPipeline)
+    }
+
     const updateUIState = (data) => {
         setFirstName(data.firstName)
         setLastName(data.lastName)
@@ -526,6 +538,8 @@ function EditProfile() {
         }
 
         setLoading(true)
+        sortByDate(pipeline)
+        console.log('sorted pipeline: ', pipeline)
         generateCompanies(pipeline)
 
         // update companies
