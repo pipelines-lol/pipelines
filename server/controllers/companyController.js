@@ -70,6 +70,8 @@ const updateCompany = async (req, res) => {
     interns,
     prevRemoveCompanies,
     postRemoveCompanies,
+    prevRemoveOtherCompanies,
+    postRemoveOtherCompanies,
     removeRating,
     removeEmployees,
   } = req.body;
@@ -134,7 +136,7 @@ const updateCompany = async (req, res) => {
         };
 
         // Construct the dynamic key within $inc
-        updateData.$inc[`prevCompanies.${companyName}`] = 1;
+        updateData.$inc[`prevCompanies.${companyName.toLowerCase()}`] = 1;
 
         const response = await Company.updateOne(
           { name: lowercaseCompanyName },
@@ -158,7 +160,7 @@ const updateCompany = async (req, res) => {
         };
 
         // Construct the dynamic key within $inc
-        updateData.$inc[`postCompanies.${companyName}`] = 1;
+        updateData.$inc[`postCompanies.${companyName.toLowercase()}`] = 1;
 
         const response = await Company.updateOne(
           { name: lowercaseCompanyName },
@@ -182,7 +184,51 @@ const updateCompany = async (req, res) => {
         };
 
         // Construct the dynamic key within inc
-        updateData.$inc[`postCompanies.${lowercaseCompanyName}`] = -1;
+        updateData.$inc[`postCompanies.${companyName.toLowerCase()}`] = -1;
+
+        const response = await Company.updateOne(
+          { name: lowercaseCompanyName },
+          updateData
+        );
+
+        if (!response) {
+          res
+            .status(404)
+            .json({ error: `Company not found for ${companyName}` });
+          return;
+        }
+      }
+    }
+
+    if (prevRemoveCompanies && prevRemoveCompanies.length > 0) {
+      for (const companyName of prevRemoveCompanies) {
+        const updateData = {
+          $inc: {},
+        };
+
+        updateData.$inc[`prevCompanies.${companyName.toLowerCase()}`] = -1;
+
+        const response = await Company.updateOne(
+          { name: lowercaseCompanyName },
+          updateData
+        );
+
+        if (!response) {
+          res
+            .status(404)
+            .json({ error: `Company not found for ${companyName}` });
+          return;
+        }
+      }
+    }
+
+    if (prevRemoveOtherCompanies && prevRemoveOtherCompanies.length > 0) {
+      for (const companyName of prevRemoveOtherCompanies) {
+        const updateData = {
+          $inc: {},
+        };
+
+        updateData.$inc[`prevCompanies.${lowercaseCompanyName}`] = -1;
 
         const response = await Company.updateOne(
           { name: companyName.toLowerCase() },
@@ -198,8 +244,8 @@ const updateCompany = async (req, res) => {
       }
     }
 
-    if (prevRemoveCompanies && prevRemoveCompanies) {
-      for (const companyName of prevRemoveCompanies) {
+    if (postRemoveOtherCompanies && postRemoveOtherCompanies.length > 0) {
+      for (const companyName of postRemoveOtherCompanies) {
         const updateData = {
           $inc: {},
         };
@@ -240,8 +286,10 @@ const updateCompanies = async (req, res) => {
         Employees,
         ratedEmployees,
         interns,
-        preRemoveCompanies,
+        prevRemoveCompanies,
         postRemoveCompanies,
+        prevRemoveOtherCompanies,
+        postRemoveOtherCompanies,
         removeRating,
         removeEmployees,
       } = company;
@@ -305,7 +353,7 @@ const updateCompanies = async (req, res) => {
           };
 
           // Construct the dynamic key within $inc
-          updateData.$inc[`prevCompanies.${companyName}`] = 1;
+          updateData.$inc[`prevCompanies.${companyName.toLowerCase()}`] = 1;
 
           const response = await Company.updateOne(
             { name: lowercaseCompanyName },
@@ -329,7 +377,7 @@ const updateCompanies = async (req, res) => {
           };
 
           // Construct the dynamic key within $inc
-          updateData.$inc[`postCompanies.${companyName}`] = 1;
+          updateData.$inc[`postCompanies.${companyName.toLowerCase()}`] = 1;
 
           const response = await Company.updateOne(
             { name: lowercaseCompanyName },
@@ -352,11 +400,11 @@ const updateCompanies = async (req, res) => {
             $inc: {},
           };
 
-          // Construct the dynamic key within inc
-          updateData.$inc[`postCompanies.${lowercaseCompanyName}`] = -1;
+          // Construct the dynamic key within $inc
+          updateData.$inc[`postCompanies.${companyName.toLowerCase()}`] = -1;
 
           const response = await Company.updateOne(
-            { name: companyName },
+            { name: lowercaseCompanyName },
             updateData
           );
 
@@ -369,8 +417,54 @@ const updateCompanies = async (req, res) => {
         }
       }
 
-      if (preRemoveCompanies && preRemoveCompanies) {
-        for (const companyName of preRemoveCompanies) {
+      // decrement list of previous companies
+      if (prevRemoveCompanies && prevRemoveCompanies.length > 0) {
+        for (const companyName of prevRemoveCompanies) {
+          const updateData = {
+            $inc: {},
+          };
+
+          // Construct the dynamic key within $inc
+          updateData.$inc[`prevCompanies.${companyName.toLowerCase()}`] = -1;
+
+          const response = await Company.updateOne(
+            { name: lowercaseCompanyName },
+            updateData
+          );
+
+          if (!response) {
+            res
+              .status(404)
+              .json({ error: `Company not found for ${companyName}` });
+            return;
+          }
+        }
+      }
+
+      if (prevRemoveOtherCompanies && prevRemoveOtherCompanies.length > 0) {
+        for (const companyName of prevRemoveOtherCompanies) {
+          const updateData = {
+            $inc: {},
+          };
+
+          updateData.$inc[`prevCompanies.${lowercaseCompanyName}`] = -1;
+
+          const response = await Company.updateOne(
+            { name: companyName.toLowerCase() },
+            updateData
+          );
+
+          if (!response) {
+            res
+              .status(404)
+              .json({ error: `Company not found for ${companyName}` });
+            return;
+          }
+        }
+      }
+
+      if (postRemoveOtherCompanies && postRemoveOtherCompanies.length > 0) {
+        for (const companyName of postRemoveOtherCompanies) {
           const updateData = {
             $inc: {},
           };
@@ -378,7 +472,7 @@ const updateCompanies = async (req, res) => {
           updateData.$inc[`postCompanies.${lowercaseCompanyName}`] = -1;
 
           const response = await Company.updateOne(
-            { name: companyName },
+            { name: companyName.toLowerCase() },
             updateData
           );
 

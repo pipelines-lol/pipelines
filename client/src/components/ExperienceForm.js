@@ -49,6 +49,7 @@ export const ExperienceForm = ({
 
     // initialize experience if one exists
     const {
+        globalId,
         company,
         companyId,
         title,
@@ -91,6 +92,7 @@ export const ExperienceForm = ({
         if (field === 'startDate') {
             setStartDate(value)
             const newExperience = {
+                id: globalId,
                 companyName: company,
                 companyId: companyId,
                 title: title,
@@ -111,6 +113,7 @@ export const ExperienceForm = ({
             setEndDate(value)
 
             const newExperience = {
+                id: globalId,
                 companyName: company,
                 companyId: companyId,
                 title: title,
@@ -143,6 +146,7 @@ export const ExperienceForm = ({
         setCompanyId(data._id)
 
         const newExperience = {
+            id: globalId,
             companyName: value,
             companyId: data._id,
             title: title,
@@ -160,6 +164,7 @@ export const ExperienceForm = ({
         setSelectedOption(id)
 
         const newExperience = {
+            id: globalId,
             companyName: company,
             companyId: companyId,
             title: title,
@@ -181,6 +186,7 @@ export const ExperienceForm = ({
         setTitle(value)
 
         const newExperience = {
+            id: globalId,
             companyName: company,
             companyId: companyId,
             title: value,
@@ -198,6 +204,7 @@ export const ExperienceForm = ({
         setFirst(false)
 
         const newExperience = {
+            id: globalId,
             companyName: company,
             companyId: companyId,
             title: title,
@@ -214,6 +221,7 @@ export const ExperienceForm = ({
 
     const handleRemoveExperience = (index) => {
         const experienceToRemove = {
+            id: globalId,
             companyName: company,
             title: title,
             rating: rating,

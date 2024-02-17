@@ -77,21 +77,19 @@ function EditProfile() {
         setLastName(data.lastName)
         setSchool(data.school)
         setAnonymous(data.anonymous)
-        console.log('pipeline: ', data.pipeline)
-        setPipeline(data.pipeline)
         initializeDate(data.pipeline.length)
-        const temp = data.pipeline.map((item) => ({
-            companyName: item.companyName,
-            title: item.title,
-            rating: item.rating,
-            startDate: item.startDate,
-            endDate: item.endDate,
+        const temp = data.pipeline.map((item, index) => ({
+            id: index + 1,
+            ...item,
         }))
+        console.log('Temp: ', temp)
+        setPipeline(temp)
         setOrigCompanies(temp)
     }
 
     const addExperience = async (index) => {
         const placeholder = {
+            id: 0,
             companyName: '',
             title: '',
             startDate: '',
@@ -118,27 +116,76 @@ function EditProfile() {
         for (let i = 0; i < pipeline.length; i++) {
             const company = pipeline[i]
             let found = -1
-            for (let i = 0; i < origCompanies.length; i++) {
-                let comp = origCompanies[i]
-                if (
-                    comp.companyName === company.companyName &&
-                    comp.title === company.title &&
-                    comp.rating === company.rating
-                ) {
-                    found = i
+            for (let j = 0; j < origCompanies.length; j++) {
+                let comp = origCompanies[j]
+                if (comp.id === company.id) {
+                    found = j
                     break
                 }
             }
 
             if (found !== -1) {
-                const prevCompanies = pipeline
+                console.log('orig companies; ', origCompanies)
+                let prevCompanies = []
+                let postCompanies = []
+                let prevRemoveCompanies = []
+                let postRemoveCompanies = []
+
+                const newPrevCompanies = pipeline
                     .slice(0, i)
                     .map((item) => item.companyName)
-                    .filter((company) => !origCompanies.includes(company))
-                const postCompanies = pipeline
+
+                console.log('New Prev: ', newPrevCompanies)
+
+                const newPostCompanies = pipeline
                     .slice(i + 1)
                     .map((item) => item.companyName)
-                    .filter((company) => !origCompanies.includes(company))
+
+                console.log('new Post: ', newPostCompanies)
+
+                const origPrevCompanies = origCompanies
+                    .slice(0, found)
+                    .map((item) => item.companyName)
+
+                console.log('orig prev ', origPrevCompanies)
+
+                const origPostCompanies = origCompanies
+                    .slice(found + 1)
+                    .map((item) => item.companyName)
+
+                console.log('orig post', origPostCompanies)
+
+                // Decide which previous companies need to be incremented
+                for (let i = 0; i < newPostCompanies.length; i++) {
+                    const company = newPostCompanies[i]
+                    if (!origPostCompanies.includes(company)) {
+                        postCompanies.push(company)
+                    }
+                }
+
+                // Decide which next companies need to be incremented
+                for (let i = 0; i < newPrevCompanies.length; i++) {
+                    const company = newPrevCompanies[i]
+                    if (!origPrevCompanies.includes(company)) {
+                        prevCompanies.push(company)
+                    }
+                }
+
+                // Decide which prev comanies need to be decremented
+                for (let i = 0; i < origPrevCompanies.length; i++) {
+                    const company = origPrevCompanies[i]
+                    if (!newPrevCompanies.includes(company)) {
+                        prevRemoveCompanies.push(company)
+                    }
+                }
+
+                // Decide which prev comanies need to be decremented
+                for (let i = 0; i < origPostCompanies.length; i++) {
+                    const company = origPostCompanies[i]
+                    if (!newPostCompanies.includes(company)) {
+                        postRemoveCompanies.push(company)
+                    }
+                }
 
                 let companyJson = {}
                 let origDifference = 0
@@ -195,8 +242,10 @@ function EditProfile() {
                     companyJson = {
                         name: company.companyName,
                         rating: company.rating - origCompanies[found].rating,
-                        prevCompanies: prevCompanies || {},
-                        postCompanies: postCompanies || {},
+                        prevCompanies: prevCompanies || [],
+                        postCompanies: postCompanies || [],
+                        prevRemoveCompanies: prevRemoveCompanies || [],
+                        postRemoveCompanies: postRemoveCompanies || [],
                         Employees: [],
                         ratedEmployees: [],
                         interns: [user.profileId],
@@ -208,8 +257,10 @@ function EditProfile() {
                     companyJson = {
                         name: company.companyName,
                         rating: company.rating - origCompanies[found].rating,
-                        prevCompanies: prevCompanies || {},
-                        postCompanies: postCompanies || {},
+                        prevCompanies: prevCompanies || [],
+                        postCompanies: postCompanies || [],
+                        prevRemoveCompanies: prevRemoveCompanies || [],
+                        postRemoveCompanies: postRemoveCompanies || [],
                         tenure: differenceDays - origDifference,
                         Employees: [user.profileId],
                         ratedEmployees: [],
@@ -222,8 +273,10 @@ function EditProfile() {
                     companyJson = {
                         name: company.companyName,
                         rating: company.rating - origCompanies[found].rating,
-                        prevCompanies: prevCompanies || {},
-                        postCompanies: postCompanies || {},
+                        prevCompanies: prevCompanies || [],
+                        postCompanies: postCompanies || [],
+                        prevRemoveCompanies: prevRemoveCompanies || [],
+                        postRemoveCompanies: postRemoveCompanies || [],
                         Employees: [],
                         ratedEmployees: [user.profileId],
                         interns: [user.profileId],
@@ -235,8 +288,10 @@ function EditProfile() {
                     companyJson = {
                         name: company.companyName,
                         rating: company.rating - origCompanies[found].rating,
-                        prevCompanies: prevCompanies || {},
-                        postCompanies: postCompanies || {},
+                        prevCompanies: prevCompanies || [],
+                        postCompanies: postCompanies || [],
+                        prevRemoveCompanies: prevRemoveCompanies || [],
+                        postRemoveCompanies: postRemoveCompanies || [],
                         tenure: differenceDays - origDifference,
                         Employees: [user.profileId],
                         ratedEmployees: [user.profileId],
@@ -290,8 +345,8 @@ function EditProfile() {
                     companyJson = {
                         name: company.companyName,
                         rating: company.rating,
-                        prevCompanies: prevCompanies || {},
-                        postCompanies: postCompanies || {},
+                        prevCompanies: prevCompanies || [],
+                        postCompanies: postCompanies || [],
                         Employees: [user.profileId],
                         ratedEmployees: [],
                         interns: [],
@@ -303,8 +358,8 @@ function EditProfile() {
                     companyJson = {
                         name: company.companyName,
                         rating: company.rating,
-                        prevCompanies: prevCompanies || {},
-                        postCompanies: postCompanies || {},
+                        prevCompanies: prevCompanies || [],
+                        postCompanies: postCompanies || [],
                         tenure: differenceDays,
                         Employees: [user.profileId],
                         ratedEmployees: [],
@@ -317,8 +372,8 @@ function EditProfile() {
                     companyJson = {
                         name: company.companyName,
                         rating: company.rating,
-                        prevCompanies: prevCompanies || {},
-                        postCompanies: postCompanies || {},
+                        prevCompanies: prevCompanies || [],
+                        postCompanies: postCompanies || [],
                         Employees: [],
                         ratedEmployees: [user.profileId],
                         interns: [user.profileId],
@@ -330,8 +385,8 @@ function EditProfile() {
                     companyJson = {
                         name: company.companyName,
                         rating: company.rating,
-                        prevCompanies: prevCompanies || {},
-                        postCompanies: postCompanies || {},
+                        prevCompanies: prevCompanies || [],
+                        postCompanies: postCompanies || [],
                         tenure: differenceDays,
                         Employees: [user.profileId],
                         ratedEmployees: [user.profileId],
@@ -343,6 +398,12 @@ function EditProfile() {
                 setCompanies(temp)
             }
         }
+
+        let temp = pipeline
+        for (let obj of temp) {
+            delete obj.id
+        }
+        setPipeline(temp)
     }
 
     const removeExperience = async (experience, index) => {
@@ -353,6 +414,7 @@ function EditProfile() {
         newPipeline.splice(index, 1)
 
         let comp = {
+            id: experience.id,
             name: experience.companyName,
             title: experience.title,
             removeRating: experience.rating,
@@ -365,11 +427,7 @@ function EditProfile() {
         let found = -1
         for (let i = 0; i < tempOrig.length; i++) {
             let company = tempOrig[i]
-            if (
-                comp.name === company.companyName &&
-                comp.title === company.title &&
-                comp.removeRating === company.rating
-            ) {
+            if (comp.id === company.id) {
                 tempOrig.splice(i, 1)
                 found = i
                 break
@@ -384,7 +442,14 @@ function EditProfile() {
             .map((item) => item.companyName)
 
         if (found !== -1) {
-            comp = { ...comp, prevRemoveCompanies, postRemoveCompanies }
+            comp = {
+                ...comp,
+                prevRemoveCompanies,
+                postRemoveCompanies,
+                prevRemoveOtherCompanies: postRemoveCompanies,
+                postRemoveOtherCompanies: prevRemoveCompanies,
+            }
+            console.log('Company: ', comp)
             const response = await fetch(
                 `${HOST}/api/company/update/${comp.name}`,
                 {

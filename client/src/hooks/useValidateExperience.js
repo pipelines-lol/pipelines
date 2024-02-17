@@ -10,6 +10,7 @@ const useValidateExperience = (experience) => {
     const [selectedOption, setSelectedOption] = useState(1)
     const [companyId, setCompanyId] = useState('')
     const [first, setFirst] = useState(true)
+    const [globalId, setId] = useState(0)
 
     // initialize experience if one exists
     useEffect(() => {
@@ -20,6 +21,12 @@ const useValidateExperience = (experience) => {
             setRating(experience.rating)
             setSelectedOption(experience.rating / 20)
             setIsIndefinite(experience.isIndefinite)
+
+            if (experience.id) {
+                setId(experience.id)
+            } else {
+                setId(0)
+            }
 
             let start, end
 
@@ -67,6 +74,7 @@ const useValidateExperience = (experience) => {
     }, [experience])
 
     return {
+        globalId,
         company,
         companyId,
         title,
@@ -85,6 +93,7 @@ const useValidateExperience = (experience) => {
         setFirst,
         setStartDate,
         setEndDate,
+        setId,
     }
 }
 
