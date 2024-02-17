@@ -555,6 +555,15 @@ function EditProfile() {
                             key !== 'isIndefinite' &&
                             experience[key].trim() === ''
                         ) {
+                            if (
+                                experience['isIndefinite'] &&
+                                key === 'endDate'
+                            ) {
+                                experience[key] =
+                                    '2200-12-02T00:00:00.000+00:00'
+                                continue
+                            }
+                            console.log('Key: ', key)
                             return false
                         }
                     }
