@@ -135,25 +135,17 @@ function EditProfile() {
                     .slice(0, i)
                     .map((item) => item.companyName)
 
-                console.log('New Prev: ', newPrevCompanies)
-
                 const newPostCompanies = pipeline
                     .slice(i + 1)
                     .map((item) => item.companyName)
-
-                console.log('new Post: ', newPostCompanies)
 
                 const origPrevCompanies = origCompanies
                     .slice(0, found)
                     .map((item) => item.companyName)
 
-                console.log('orig prev ', origPrevCompanies)
-
                 const origPostCompanies = origCompanies
                     .slice(found + 1)
                     .map((item) => item.companyName)
-
-                console.log('orig post', origPostCompanies)
 
                 // Decide which previous companies need to be incremented
                 for (let i = 0; i < newPostCompanies.length; i++) {
@@ -234,6 +226,30 @@ function EditProfile() {
                     )
                 }
 
+                const employeeData = {
+                    removeInterns: [],
+                    removeRatedEmployees: [],
+                }
+
+                console.log('Employee Data')
+                console.log('Orig rating: ', origCompanies[found].rating)
+                console.log('new rating: ', company.rating)
+
+                if (origCompanies[found].rating > 0 && company.rating === 0) {
+                    employeeData.removeRatedEmployees.push(user.profileId)
+                }
+
+                console.log('Orig Company Title: ', origCompanies[found].title)
+                console.log('Company Name: ', company.title)
+                if (
+                    origCompanies[found].title
+                        .toLowerCase()
+                        .includes('intern') &&
+                    !company.title.toLowerCase().includes('intern')
+                ) {
+                    employeeData.removeInterns.push(user.profileId)
+                }
+
                 // Check if employee rated the company
                 if (
                     company.rating === 0 &&
@@ -241,7 +257,6 @@ function EditProfile() {
                 ) {
                     companyJson = {
                         name: company.companyName,
-                        rating: company.rating - origCompanies[found].rating,
                         prevCompanies: prevCompanies || [],
                         postCompanies: postCompanies || [],
                         prevRemoveCompanies: prevRemoveCompanies || [],
@@ -249,6 +264,7 @@ function EditProfile() {
                         Employees: [],
                         ratedEmployees: [],
                         interns: [user.profileId],
+                        ...employeeData,
                     }
                 } else if (
                     company.rating === 0 &&
@@ -256,7 +272,6 @@ function EditProfile() {
                 ) {
                     companyJson = {
                         name: company.companyName,
-                        rating: company.rating - origCompanies[found].rating,
                         prevCompanies: prevCompanies || [],
                         postCompanies: postCompanies || [],
                         prevRemoveCompanies: prevRemoveCompanies || [],
@@ -265,6 +280,7 @@ function EditProfile() {
                         Employees: [user.profileId],
                         ratedEmployees: [],
                         interns: [],
+                        ...employeeData,
                     }
                 } else if (
                     company.rating > 0 &&
@@ -280,6 +296,7 @@ function EditProfile() {
                         Employees: [],
                         ratedEmployees: [user.profileId],
                         interns: [user.profileId],
+                        ...employeeData,
                     }
                 } else if (
                     company.rating > 0 &&
@@ -296,6 +313,7 @@ function EditProfile() {
                         Employees: [user.profileId],
                         ratedEmployees: [user.profileId],
                         interns: [],
+                        ...employeeData,
                     }
                 }
 

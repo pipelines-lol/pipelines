@@ -68,6 +68,8 @@ const updateCompany = async (req, res) => {
     Employees,
     ratedEmployees,
     interns,
+    removeRatedEmployees,
+    removeInterns,
     prevRemoveCompanies,
     postRemoveCompanies,
     prevRemoveOtherCompanies,
@@ -120,6 +122,32 @@ const updateCompany = async (req, res) => {
             ratedEmployees: { $in: removeEmployees },
             interns: { $in: removeEmployees },
           },
+        }
+      );
+
+      if (!response) {
+        res.status(404).json({ error: "company not found" });
+      }
+    }
+
+    if (removeRatedEmployees) {
+      const response = await Company.updateOne(
+        { name: lowercaseCompanyName },
+        {
+          $pull: { $in: removeRatedEmployees },
+        }
+      );
+
+      if (!response) {
+        res.status(404).json({ error: "company not found" });
+      }
+    }
+
+    if (removeInterns) {
+      const response = await Company.updateOne(
+        { name: lowercaseCompanyName },
+        {
+          $pull: { $in: removeInterns },
         }
       );
 

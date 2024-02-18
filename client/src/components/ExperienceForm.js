@@ -178,6 +178,19 @@ export const ExperienceForm = ({
     }
 
     const handleRatingBox = () => {
+        const newExperience = {
+            id: globalId,
+            companyName: company,
+            companyId: companyId,
+            title: title,
+            startDate: flipDateFormat(startDate),
+            endDate: flipDateFormat(endDate),
+            isIndefinite: isIndefinite,
+            rating: 0,
+        }
+
+        updateExperience(newExperience, index)
+
         setRating(0)
         setRatingBox(!ratingBox)
     }
