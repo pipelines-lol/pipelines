@@ -82,7 +82,6 @@ function EditProfile() {
             id: index + 1,
             ...item,
         }))
-        console.log('Temp: ', temp)
         setPipeline(temp)
         setOrigCompanies(temp)
     }
@@ -125,7 +124,6 @@ function EditProfile() {
             }
 
             if (found !== -1) {
-                console.log('orig companies; ', origCompanies)
                 let prevCompanies = []
                 let postCompanies = []
                 let prevRemoveCompanies = []
@@ -191,8 +189,6 @@ function EditProfile() {
 
                     origDifference = origDifferenceMs / (1000 * 60 * 60 * 24)
 
-                    console.log('origDifference: ', origDifference)
-
                     // Get current date
                     const date1 = new Date(company.startDate)
                     const date2 = new Date(company.endDate)
@@ -231,16 +227,10 @@ function EditProfile() {
                     removeRatedEmployees: [],
                 }
 
-                console.log('Employee Data')
-                console.log('Orig rating: ', origCompanies[found].rating)
-                console.log('new rating: ', company.rating)
-
                 if (origCompanies[found].rating > 0 && company.rating === 0) {
                     employeeData.removeRatedEmployees.push(user.profileId)
                 }
 
-                console.log('Orig Company Title: ', origCompanies[found].title)
-                console.log('Company Name: ', company.title)
                 if (
                     origCompanies[found].title
                         .toLowerCase()
@@ -317,12 +307,10 @@ function EditProfile() {
                     }
                 }
 
-                console.log('Company Json: ', companyJson)
                 let temp = companies
                 temp = companies.push(companyJson)
                 setCompanies(temp)
             } else {
-                console.log('Company: ', company)
                 const prevCompanies = pipeline
                     .slice(0, i)
                     .map((item) => item.companyName)
@@ -467,7 +455,6 @@ function EditProfile() {
                 prevRemoveOtherCompanies: postRemoveCompanies,
                 postRemoveOtherCompanies: prevRemoveCompanies,
             }
-            console.log('Company: ', comp)
             const response = await fetch(
                 `${HOST}/api/company/update/${comp.name}`,
                 {
@@ -483,9 +470,6 @@ function EditProfile() {
                 console.log(response.status)
             }
 
-            const data = await response.json()
-            console.log('data: ', data)
-
             const profile = {
                 firstName,
                 lastName,
@@ -493,8 +477,6 @@ function EditProfile() {
                 anonymous,
                 pipeline: tempOrig,
             }
-
-            console.log('pipeline: ', profile)
 
             fetch(`${HOST}/api/profile/${user.profileId}`, {
                 method: 'PATCH',
@@ -538,7 +520,6 @@ function EditProfile() {
 
     const updateDate = (bool, index) => {
         const newDate = [...dateValidity]
-        console.log('newDate: ', newDate)
         newDate.splice(index, 1, bool)
         setDateValidity(newDate)
     }
@@ -581,7 +562,6 @@ function EditProfile() {
                                     '2200-12-02T00:00:00.000+00:00'
                                 continue
                             }
-                            console.log('Key: ', key)
                             return false
                         }
                     }
@@ -631,7 +611,6 @@ function EditProfile() {
 
         setLoading(true)
         sortByDate(pipeline)
-        console.log('sorted pipeline: ', pipeline)
         generateCompanies(pipeline)
 
         // update companies
@@ -646,9 +625,6 @@ function EditProfile() {
         if (!response.ok) {
             console.log(response.status)
         }
-
-        const data = await response.json()
-        console.log('data: ', data)
 
         fetch(`${HOST}/api/profile/${user.profileId}`, {
             method: 'PATCH',
