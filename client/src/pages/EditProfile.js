@@ -7,12 +7,15 @@ import { SchoolQuerySearch } from '../components/SchoolQuerySearch'
 import { useAuthContext } from '../hooks/useAuthContext'
 import { HOST } from '../util/apiRoutes'
 import Loading from './Loading'
+
 function EditProfile() {
     const [firstName, setFirstName] = useState('')
     const [lastName, setLastName] = useState('')
     const [anonymous, setAnonymous] = useState(false)
     const [pipeline, setPipeline] = useState([])
     const [dateValidity, setDateValidity] = useState([])
+    const [origCompanies, setOrigCompanies] = useState([])
+    const [companies, setCompanies] = useState([])
 
     const [loading, setLoading] = useState(false)
     const [errorMessage, setErrorMessage] = useState('')
@@ -57,22 +60,40 @@ function EditProfile() {
         }
     }
 
+    const sortByDate = (array) => {
+        // Custom comparison function
+        function compareDates(a, b) {
+            const dateA = new Date(a.startDate)
+            const dateB = new Date(b.startDate)
+            return dateA - dateB
+        }
+
+        const sortedPipeline = array.sort(compareDates)
+        setPipeline(sortedPipeline)
+    }
+
     const updateUIState = (data) => {
         setFirstName(data.firstName)
         setLastName(data.lastName)
         setSchool(data.school)
         setAnonymous(data.anonymous)
-        setPipeline(data.pipeline)
         initializeDate(data.pipeline.length)
+        const temp = data.pipeline.map((item, index) => ({
+            id: index + 1,
+            ...item,
+        }))
+        setPipeline(temp)
+        setOrigCompanies(temp)
     }
 
     const addExperience = async (index) => {
         const placeholder = {
+            id: 0,
             companyName: '',
             title: '',
             startDate: '',
             endDate: '',
-            isIndefinite: '',
+            isIndefinite: false,
             rating: 0,
         }
         const newPipeline = [...pipeline]
@@ -87,17 +108,405 @@ function EditProfile() {
         const newPipeline = [...pipeline]
 
         newPipeline.splice(index, 1, experience)
-
         setPipeline(newPipeline)
     }
 
-    const removeExperience = async (index) => {
+    const generateCompanies = (pipeline) => {
+        for (let i = 0; i < pipeline.length; i++) {
+            const company = pipeline[i]
+            let found = -1
+            for (let j = 0; j < origCompanies.length; j++) {
+                let comp = origCompanies[j]
+                if (comp.id === company.id) {
+                    found = j
+                    break
+                }
+            }
+
+            if (found !== -1) {
+                let prevCompanies = []
+                let postCompanies = []
+                let prevRemoveCompanies = []
+                let postRemoveCompanies = []
+
+                const newPrevCompanies = pipeline
+                    .slice(0, i)
+                    .map((item) => item.companyName)
+
+                const newPostCompanies = pipeline
+                    .slice(i + 1)
+                    .map((item) => item.companyName)
+
+                const origPrevCompanies = origCompanies
+                    .slice(0, found)
+                    .map((item) => item.companyName)
+
+                const origPostCompanies = origCompanies
+                    .slice(found + 1)
+                    .map((item) => item.companyName)
+
+                // Decide which previous companies need to be incremented
+                for (let i = 0; i < newPostCompanies.length; i++) {
+                    const company = newPostCompanies[i]
+                    if (!origPostCompanies.includes(company)) {
+                        postCompanies.push(company)
+                    }
+                }
+
+                // Decide which next companies need to be incremented
+                for (let i = 0; i < newPrevCompanies.length; i++) {
+                    const company = newPrevCompanies[i]
+                    if (!origPrevCompanies.includes(company)) {
+                        prevCompanies.push(company)
+                    }
+                }
+
+                // Decide which prev comanies need to be decremented
+                for (let i = 0; i < origPrevCompanies.length; i++) {
+                    const company = origPrevCompanies[i]
+                    if (!newPrevCompanies.includes(company)) {
+                        prevRemoveCompanies.push(company)
+                    }
+                }
+
+                // Decide which prev comanies need to be decremented
+                for (let i = 0; i < origPostCompanies.length; i++) {
+                    const company = origPostCompanies[i]
+                    if (!newPostCompanies.includes(company)) {
+                        postRemoveCompanies.push(company)
+                    }
+                }
+
+                let companyJson = {}
+                let origDifference = 0
+                let differenceDays = 0
+                if (!company.isIndefinite) {
+                    // Get original dates
+                    const origDate1 = new Date(origCompanies[found].startDate)
+                    const origDate2 = new Date(origCompanies[found].endDate)
+
+                    const origDifferenceMs = origDate2 - origDate1
+
+                    origDifference = origDifferenceMs / (1000 * 60 * 60 * 24)
+
+                    // Get current date
+                    const date1 = new Date(company.startDate)
+                    const date2 = new Date(company.endDate)
+
+                    // Calculate the difference in milliseconds
+                    const differenceMs = Math.abs(date2 - date1)
+
+                    // Convert the difference to days
+                    differenceDays = Math.round(
+                        differenceMs / (1000 * 60 * 60 * 24)
+                    )
+                } else if (
+                    company.isIndefinite &&
+                    new Date(company.startDate) < new Date()
+                ) {
+                    const origDate1 = new Date(origCompanies[found].startDate)
+                    const origDate2 = new Date()
+                    const origMs = origDate2 - origDate1
+                    origDifference = Math.round(origMs / (1000 * 60 * 60 * 24))
+
+                    // Get current date
+                    const date1 = new Date(company.startDate)
+                    const date2 = new Date()
+
+                    // Calculate the difference in milliseconds
+                    const differenceMs = Math.abs(date2 - date1)
+
+                    // Convert the difference to days
+                    differenceDays = Math.round(
+                        differenceMs / (1000 * 60 * 60 * 24)
+                    )
+                }
+
+                const employeeData = {
+                    removeInterns: [],
+                    removeRatedEmployees: [],
+                }
+
+                if (origCompanies[found].rating > 0 && company.rating === 0) {
+                    employeeData.removeRatedEmployees.push(user.profileId)
+                }
+
+                if (
+                    origCompanies[found].title
+                        .toLowerCase()
+                        .includes('intern') &&
+                    !company.title.toLowerCase().includes('intern')
+                ) {
+                    employeeData.removeInterns.push(user.profileId)
+                }
+
+                // Check if employee rated the company
+                if (
+                    company.rating === 0 &&
+                    company.title.toLowerCase().includes('intern')
+                ) {
+                    companyJson = {
+                        name: company.companyName,
+                        prevCompanies: prevCompanies || [],
+                        postCompanies: postCompanies || [],
+                        prevRemoveCompanies: prevRemoveCompanies || [],
+                        postRemoveCompanies: postRemoveCompanies || [],
+                        Employees: [],
+                        ratedEmployees: [],
+                        interns: [user.profileId],
+                        ...employeeData,
+                    }
+                } else if (
+                    company.rating === 0 &&
+                    !company.title.toLowerCase().includes('intern')
+                ) {
+                    companyJson = {
+                        name: company.companyName,
+                        prevCompanies: prevCompanies || [],
+                        postCompanies: postCompanies || [],
+                        prevRemoveCompanies: prevRemoveCompanies || [],
+                        postRemoveCompanies: postRemoveCompanies || [],
+                        tenure: differenceDays - origDifference,
+                        Employees: [user.profileId],
+                        ratedEmployees: [],
+                        interns: [],
+                        ...employeeData,
+                    }
+                } else if (
+                    company.rating > 0 &&
+                    company.title.toLowerCase().includes('intern')
+                ) {
+                    companyJson = {
+                        name: company.companyName,
+                        rating: company.rating - origCompanies[found].rating,
+                        prevCompanies: prevCompanies || [],
+                        postCompanies: postCompanies || [],
+                        prevRemoveCompanies: prevRemoveCompanies || [],
+                        postRemoveCompanies: postRemoveCompanies || [],
+                        Employees: [],
+                        ratedEmployees: [user.profileId],
+                        interns: [user.profileId],
+                        ...employeeData,
+                    }
+                } else if (
+                    company.rating > 0 &&
+                    !company.title.toLowerCase().includes('intern')
+                ) {
+                    companyJson = {
+                        name: company.companyName,
+                        rating: company.rating - origCompanies[found].rating,
+                        prevCompanies: prevCompanies || [],
+                        postCompanies: postCompanies || [],
+                        prevRemoveCompanies: prevRemoveCompanies || [],
+                        postRemoveCompanies: postRemoveCompanies || [],
+                        tenure: differenceDays - origDifference,
+                        Employees: [user.profileId],
+                        ratedEmployees: [user.profileId],
+                        interns: [],
+                        ...employeeData,
+                    }
+                }
+
+                let temp = companies
+                temp = companies.push(companyJson)
+                setCompanies(temp)
+            } else {
+                const prevCompanies = pipeline
+                    .slice(0, i)
+                    .map((item) => item.companyName)
+                const postCompanies = pipeline
+                    .slice(i + 1)
+                    .map((item) => item.companyName)
+
+                let companyJson = {}
+
+                let differenceDays = 0
+                if (!company.isIndefinite) {
+                    // Get current date
+                    const date1 = new Date(company.startDate)
+                    const date2 = new Date(company.endDate)
+
+                    // Calculate the difference in milliseconds
+                    const differenceMs = Math.abs(date2 - date1)
+
+                    // Convert the difference to days
+                    differenceDays = differenceMs / (1000 * 60 * 60 * 24)
+                } else if (
+                    company.isIndefinite &&
+                    new Date(company.startDate) < new Date()
+                ) {
+                    const date1 = new Date(company.startDate)
+                    const date2 = new Date()
+                    const differenceMs = Math.abs(date2 - date1)
+
+                    differenceDays = Math.round(
+                        differenceMs / (1000 * 60 * 60 * 24)
+                    )
+                }
+
+                if (
+                    company.rating === 0 &&
+                    company.title.toLowerCase().includes('intern')
+                ) {
+                    companyJson = {
+                        name: company.companyName,
+                        rating: company.rating,
+                        prevCompanies: prevCompanies || [],
+                        postCompanies: postCompanies || [],
+                        Employees: [user.profileId],
+                        ratedEmployees: [],
+                        interns: [],
+                    }
+                } else if (
+                    company.rating === 0 &&
+                    !company.title.toLowerCase().includes('intern')
+                ) {
+                    companyJson = {
+                        name: company.companyName,
+                        rating: company.rating,
+                        prevCompanies: prevCompanies || [],
+                        postCompanies: postCompanies || [],
+                        tenure: differenceDays,
+                        Employees: [user.profileId],
+                        ratedEmployees: [],
+                        interns: [],
+                    }
+                } else if (
+                    company.rating > 0 &&
+                    company.title.toLowerCase().includes('intern')
+                ) {
+                    companyJson = {
+                        name: company.companyName,
+                        rating: company.rating,
+                        prevCompanies: prevCompanies || [],
+                        postCompanies: postCompanies || [],
+                        Employees: [],
+                        ratedEmployees: [user.profileId],
+                        interns: [user.profileId],
+                    }
+                } else if (
+                    company.rating > 0 &&
+                    !company.title.toLowerCase().includes('intern')
+                ) {
+                    companyJson = {
+                        name: company.companyName,
+                        rating: company.rating,
+                        prevCompanies: prevCompanies || [],
+                        postCompanies: postCompanies || [],
+                        tenure: differenceDays,
+                        Employees: [user.profileId],
+                        ratedEmployees: [user.profileId],
+                        interns: [],
+                    }
+                }
+                let temp = companies
+                temp = companies.push(companyJson)
+                setCompanies(temp)
+            }
+        }
+
+        let temp = pipeline
+        for (let obj of temp) {
+            delete obj.id
+        }
+        setPipeline(temp)
+    }
+
+    const removeExperience = async (experience, index) => {
         const newPipeline = [...pipeline]
         const removeDate = [...dateValidity]
 
         removeDate.splice(index, 1)
         newPipeline.splice(index, 1)
 
+        let comp = {
+            id: experience.id,
+            name: experience.companyName,
+            title: experience.title,
+            removeRating: experience.rating,
+            startDate: experience.startDate,
+            endDate: experience.endDate,
+            removeEmployees: [user.profileId],
+        }
+
+        let tempOrig = origCompanies
+        let found = -1
+        for (let i = 0; i < tempOrig.length; i++) {
+            let company = tempOrig[i]
+            if (comp.id === company.id) {
+                tempOrig.splice(i, 1)
+                found = i
+                break
+            }
+        }
+
+        const prevRemoveCompanies = origCompanies
+            .slice(0, found)
+            .map((item) => item.companyName)
+        const postRemoveCompanies = origCompanies
+            .slice(found + 1)
+            .map((item) => item.companyName)
+
+        if (found !== -1) {
+            comp = {
+                ...comp,
+                prevRemoveCompanies,
+                postRemoveCompanies,
+                prevRemoveOtherCompanies: postRemoveCompanies,
+                postRemoveOtherCompanies: prevRemoveCompanies,
+            }
+            const response = await fetch(
+                `${HOST}/api/company/update/${comp.name}`,
+                {
+                    method: `PATCH`,
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(comp),
+                }
+            )
+
+            if (!response.ok) {
+                console.log(response.status)
+            }
+
+            const profile = {
+                firstName,
+                lastName,
+                school,
+                anonymous,
+                pipeline: tempOrig,
+            }
+
+            fetch(`${HOST}/api/profile/${user.profileId}`, {
+                method: 'PATCH',
+                headers: {
+                    'Content-Type': 'application/json', // Specify the content type as JSON
+                },
+                body: JSON.stringify(profile),
+            })
+                .then((res) => {
+                    if (!res.ok) {
+                        // Check if the response has JSON content
+                        if (
+                            res.headers
+                                .get('content-type')
+                                ?.includes('application/json')
+                        ) {
+                            return res.json().then((errorData) => {
+                                throw new Error(`${errorData.error}`)
+                            })
+                        } else {
+                            throw new Error(`HTTP error! Status: ${res.status}`)
+                        }
+                    }
+                })
+                .catch((error) => {
+                    console.err(error.message)
+                })
+        }
+
+        setOrigCompanies(tempOrig)
         setDateValidity(removeDate)
         setPipeline(newPipeline)
     }
@@ -111,7 +520,6 @@ function EditProfile() {
 
     const updateDate = (bool, index) => {
         const newDate = [...dateValidity]
-        console.log('newDate: ', newDate)
         newDate.splice(index, 1, bool)
         setDateValidity(newDate)
     }
@@ -124,13 +532,6 @@ function EditProfile() {
     const validateSubmission = () => {
         function isValidDateFormat(date) {
             return !date.includes('undefined')
-        }
-
-        function isValidDate(arr) {
-            for (const valid of arr) {
-                if (!valid) return false
-            }
-            return true
         }
 
         function checkPipelineForEmptyFields(pipeline) {
@@ -153,6 +554,14 @@ function EditProfile() {
                             key !== 'isIndefinite' &&
                             experience[key].trim() === ''
                         ) {
+                            if (
+                                experience['isIndefinite'] &&
+                                key === 'endDate'
+                            ) {
+                                experience[key] =
+                                    '2200-12-02T00:00:00.000+00:00'
+                                continue
+                            }
                             return false
                         }
                     }
@@ -168,11 +577,7 @@ function EditProfile() {
         if (school === '') return false
 
         // check none of the fields in the pipeline are blank
-        if (
-            !checkPipelineForEmptyFields(pipeline) ||
-            !isValidDate(dateValidity)
-        )
-            return false
+        if (!checkPipelineForEmptyFields(pipeline)) return false
 
         return true
     }
@@ -186,10 +591,39 @@ function EditProfile() {
             pipeline,
         }
 
+        function isValidDate(arr) {
+            for (const valid of arr) {
+                if (!valid) return false
+            }
+            return true
+        }
+
         // make sure no input fields are blank
         if (!validateSubmission()) {
             setErrorMessage('Must fill out all input fields.')
             return
+        }
+
+        if (!isValidDate(dateValidity)) {
+            setErrorMessage('Invalid Date')
+            return
+        }
+
+        setLoading(true)
+        sortByDate(pipeline)
+        generateCompanies(pipeline)
+
+        // update companies
+        const response = await fetch(`${HOST}/api/company/update`, {
+            method: `PATCH`,
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(companies),
+        })
+
+        if (!response.ok) {
+            console.log(response.status)
         }
 
         fetch(`${HOST}/api/profile/${user.profileId}`, {
@@ -218,7 +652,7 @@ function EditProfile() {
             .catch((error) => {
                 console.err(error.message)
             })
-
+        setLoading(false)
         navigate('/')
     }
 

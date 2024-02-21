@@ -49,6 +49,7 @@ export const ExperienceForm = ({
 
     // initialize experience if one exists
     const {
+        globalId,
         company,
         companyId,
         title,
@@ -91,6 +92,7 @@ export const ExperienceForm = ({
         if (field === 'startDate') {
             setStartDate(value)
             const newExperience = {
+                id: globalId,
                 companyName: company,
                 companyId: companyId,
                 title: title,
@@ -111,6 +113,7 @@ export const ExperienceForm = ({
             setEndDate(value)
 
             const newExperience = {
+                id: globalId,
                 companyName: company,
                 companyId: companyId,
                 title: title,
@@ -143,6 +146,7 @@ export const ExperienceForm = ({
         setCompanyId(data._id)
 
         const newExperience = {
+            id: globalId,
             companyName: value,
             companyId: data._id,
             title: title,
@@ -160,6 +164,7 @@ export const ExperienceForm = ({
         setSelectedOption(id)
 
         const newExperience = {
+            id: globalId,
             companyName: company,
             companyId: companyId,
             title: title,
@@ -173,6 +178,19 @@ export const ExperienceForm = ({
     }
 
     const handleRatingBox = () => {
+        const newExperience = {
+            id: globalId,
+            companyName: company,
+            companyId: companyId,
+            title: title,
+            startDate: flipDateFormat(startDate),
+            endDate: flipDateFormat(endDate),
+            isIndefinite: isIndefinite,
+            rating: 0,
+        }
+
+        updateExperience(newExperience, index)
+
         setRating(0)
         setRatingBox(!ratingBox)
     }
@@ -181,6 +199,7 @@ export const ExperienceForm = ({
         setTitle(value)
 
         const newExperience = {
+            id: globalId,
             companyName: company,
             companyId: companyId,
             title: value,
@@ -198,6 +217,7 @@ export const ExperienceForm = ({
         setFirst(false)
 
         const newExperience = {
+            id: globalId,
             companyName: company,
             companyId: companyId,
             title: title,
@@ -212,12 +232,25 @@ export const ExperienceForm = ({
         updateExperience(newExperience, index)
     }
 
+    const handleRemoveExperience = (index) => {
+        const experienceToRemove = {
+            id: globalId,
+            companyName: company,
+            title: title,
+            rating: rating,
+            endDate: flipDateFormat(endDate),
+            startDate: flipDateFormat(startDate),
+        }
+
+        removeExperience(experienceToRemove, index)
+    }
+
     return (
         <>
             <div className="relative z-0 flex h-auto w-auto flex-col items-center justify-center gap-4 overflow-y-hidden rounded-lg bg-white bg-opacity-20 p-10 shadow-lg backdrop-blur-xl backdrop-filter">
                 <button
                     className="self-start"
-                    onClick={() => removeExperience(index)}
+                    onClick={() => handleRemoveExperience(index)}
                 >
                     <X
                         size={20}
