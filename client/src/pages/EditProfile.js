@@ -562,6 +562,8 @@ function EditProfile() {
                                     '2200-12-02T00:00:00.000+00:00'
                                 continue
                             }
+                            console.log('Key: ', key)
+                            console.log('Logo: ', experience[key])
                             return false
                         }
                     }

@@ -7,7 +7,6 @@ import smiley from '../static/ratings/smiley.png'
 import neutral from '../static/ratings/neutral.png'
 import frown from '../static/ratings/frown.png'
 import demon from '../static/ratings/demon.jpeg'
-import { HOST } from '../util/apiRoutes'
 import useValidateExperience from '../hooks/useValidateExperience'
 
 export const ExperienceForm = ({
@@ -59,6 +58,7 @@ export const ExperienceForm = ({
         rating,
         selectedOption,
         first,
+        logo,
         setCompany,
         setCompanyId,
         setTitle,
@@ -95,6 +95,7 @@ export const ExperienceForm = ({
                 id: globalId,
                 companyName: company,
                 companyId: companyId,
+                logo: logo,
                 title: title,
                 endDate: flipDateFormat(endDate),
                 startDate: flipDateFormat(value),
@@ -116,6 +117,7 @@ export const ExperienceForm = ({
                 id: globalId,
                 companyName: company,
                 companyId: companyId,
+                logo: logo,
                 title: title,
                 endDate: flipDateFormat(value),
                 startDate: flipDateFormat(startDate),
@@ -134,21 +136,15 @@ export const ExperienceForm = ({
     }
 
     const handleCompanyChange = async (value) => {
-        setCompany(value)
-
-        const response = await fetch(`${HOST}/api/company/get/${value}`, {
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json', // Specify the content type as JSON
-            },
-        })
-        const data = await response.json()
-        setCompanyId(data._id)
+        console.log('value: ', value)
+        setCompany(value.name)
+        setCompanyId(value._id)
 
         const newExperience = {
             id: globalId,
-            companyName: value,
-            companyId: data._id,
+            companyName: value.name,
+            companyId: value._id,
+            logo: value.logo,
             title: title,
             endDate: flipDateFormat(endDate),
             startDate: flipDateFormat(startDate),
@@ -167,6 +163,7 @@ export const ExperienceForm = ({
             id: globalId,
             companyName: company,
             companyId: companyId,
+            logo: logo,
             title: title,
             endDate: flipDateFormat(endDate),
             startDate: flipDateFormat(startDate),
@@ -182,6 +179,7 @@ export const ExperienceForm = ({
             id: globalId,
             companyName: company,
             companyId: companyId,
+            logo: logo,
             title: title,
             startDate: flipDateFormat(startDate),
             endDate: flipDateFormat(endDate),
@@ -202,6 +200,7 @@ export const ExperienceForm = ({
             id: globalId,
             companyName: company,
             companyId: companyId,
+            logo: logo,
             title: value,
             startDate: flipDateFormat(startDate),
             endDate: flipDateFormat(endDate),
@@ -220,6 +219,7 @@ export const ExperienceForm = ({
             id: globalId,
             companyName: company,
             companyId: companyId,
+            logo: logo,
             title: title,
             endDate: !isIndefinite ? '2200-12-02T00:00:00.000+00:00' : '',
             startDate: flipDateFormat(startDate),

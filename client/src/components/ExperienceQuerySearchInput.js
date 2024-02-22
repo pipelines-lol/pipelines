@@ -20,7 +20,8 @@ export const ExperienceQuerySearchInput = ({ value, handleSearch }) => {
 
     const handleInputChange = async (event) => {
         const inputValue = event.target.value
-        setQuery(inputValue)
+        console.log('Input Value: ', inputValue)
+        setQuery(inputValue.name)
 
         // make sure theres an input before querying
         if (inputValue.length > 0) {
@@ -35,7 +36,6 @@ export const ExperienceQuerySearchInput = ({ value, handleSearch }) => {
                 }
             )
             const data = await response.json()
-            console.log('Data: ', data)
             setResults(data)
         } else {
             setResults([])
@@ -46,10 +46,11 @@ export const ExperienceQuerySearchInput = ({ value, handleSearch }) => {
 
     const handleCompanyButtonClick = async (company) => {
         // reset text input
+        console.log('company: ', company)
         setQuery(company.name)
         setResults([])
 
-        await handleSearch(company.name)
+        await handleSearch(company)
     }
 
     return (
