@@ -68,6 +68,7 @@ export const ExperienceForm = ({
         setFirst,
         setStartDate,
         setEndDate,
+        setLogo,
     } = useValidateExperience(experience)
 
     function flipDateFormat(inputDate) {
@@ -139,6 +140,7 @@ export const ExperienceForm = ({
         console.log('value: ', value)
         setCompany(value.name)
         setCompanyId(value._id)
+        setLogo(value.logo)
 
         const newExperience = {
             id: globalId,

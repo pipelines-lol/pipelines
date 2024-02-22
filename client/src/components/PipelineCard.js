@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import { companies } from '../data/companyData'
 
-import { HOMEPAGE, HOST } from '../util/apiRoutes'
+import { HOST } from '../util/apiRoutes'
 import { ConditionalLink } from './ConditionalLink'
 
 export const PipelineCard = ({ profileId, name, pfp, anonymous, pipeline }) => {
@@ -101,16 +101,6 @@ export const ExperienceCard = ({ experience }) => {
         return date.toLocaleDateString(undefined, options)
     }
 
-    function getLogoByName(companyName) {
-        companyName = capitalize(companyName)
-        const foundCompany = companies.find(
-            (company) => company.name === companyName
-        )
-        return foundCompany ? foundCompany.logo : null
-    }
-
-    const logo = `${HOMEPAGE}/logos/${getLogoByName(experience.companyName)}`
-
     function capitalize(str) {
         // shoutout bobdagoat
         if (typeof str !== 'string' || str.trim() === '') {
@@ -141,7 +131,7 @@ export const ExperienceCard = ({ experience }) => {
             <div className="inline-block rounded-md  p-2 backdrop-blur-2xl backdrop-filter">
                 <img
                     className="h-24 w-24 rounded-md object-contain"
-                    src={logo}
+                    src={experience.logo}
                     alt={`${capitalize(experience.companyName)}_logo`}
                 />
                 <div className="absolute left-2 top-5 h-24 w-24 animate-blob rounded-full bg-pipelines-gray-100/20 opacity-70 mix-blend-multiply blur-xl filter" />

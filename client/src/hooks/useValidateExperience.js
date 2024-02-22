@@ -100,6 +100,7 @@ const useValidateExperience = (experience) => {
         setStartDate,
         setEndDate,
         setId,
+        setLogo,
     }
 }
 

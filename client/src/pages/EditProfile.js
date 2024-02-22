@@ -89,6 +89,7 @@ function EditProfile() {
     const addExperience = async (index) => {
         const placeholder = {
             id: 0,
+            logo: '',
             companyName: '',
             title: '',
             startDate: '',
@@ -562,8 +563,6 @@ function EditProfile() {
                                     '2200-12-02T00:00:00.000+00:00'
                                 continue
                             }
-                            console.log('Key: ', key)
-                            console.log('Logo: ', experience[key])
                             return false
                         }
                     }
@@ -592,6 +591,8 @@ function EditProfile() {
             anonymous,
             pipeline,
         }
+
+        console.log('pipeline: ', pipeline)
 
         function isValidDate(arr) {
             for (const valid of arr) {
@@ -627,6 +628,8 @@ function EditProfile() {
         if (!response.ok) {
             console.log(response.status)
         }
+
+        console.log('profile: ', profile)
 
         fetch(`${HOST}/api/profile/${user.profileId}`, {
             method: 'PATCH',
