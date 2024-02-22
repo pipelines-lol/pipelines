@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { companies } from '../data/companyData'
+import { HOST } from '../util/apiRoutes'
 
 export const ExperienceQuerySearchInput = ({ value, handleSearch }) => {
     const [query, setQuery] = useState('')
@@ -24,10 +24,19 @@ export const ExperienceQuerySearchInput = ({ value, handleSearch }) => {
 
         // make sure theres an input before querying
         if (inputValue.length > 0) {
-            const filteredCompanies = companies.filter((company) =>
-                company.name.toLowerCase().startsWith(inputValue.toLowerCase())
+            // query the backend
+            const response = await fetch(
+                `${HOST}/api/company/get/companies/${inputValue.toLowerCase()}`,
+                {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                }
             )
-            setResults(filteredCompanies)
+            const data = await response.json()
+            console.log('Data: ', data)
+            setResults(data)
         } else {
             setResults([])
 
@@ -69,7 +78,7 @@ export const ExperienceQuerySearchInput = ({ value, handleSearch }) => {
                             >
                                 <img
                                     className="h-10 w-10 rounded-lg object-contain"
-                                    src={`logos/${company.logo}`}
+                                    src={`${company.logo}`}
                                     alt={`logo_${company.name}`}
                                 />
                                 <button

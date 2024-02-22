@@ -2,6 +2,7 @@ const express = require("express");
 const {
   createCompany,
   getCompany,
+  getCompanies,
   updateCompany,
   updateCompanies,
   deleteCompany,
@@ -14,6 +15,9 @@ router.post("/create", bodyParser.json(), createCompany);
 
 //get a specific company
 router.get("/get/:name", getCompany);
+
+//get multiple companies based on a query
+router.get("/get/companies/:query", getCompanies);
 
 //Update a specific company
 router.patch("/update/:name", bodyParser.json(), updateCompany);
