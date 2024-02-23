@@ -79,7 +79,9 @@ const getProfiles = async (req, res) => {
 const getPipelinesByCompany = async (req, res) => {
   const { company } = req.params; // company = company name
   const { title, school, exp_level, currently_working } = req.body;
-  const companyDocument = await Company.findOne({ name: company });
+  const companyDocument = await Company.findOne({
+    name: company.toLowerCase(),
+  });
 
   if (!companyDocument) {
     return res.status(404).json({ error: "Company not found." });

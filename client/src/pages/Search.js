@@ -18,9 +18,11 @@ function Search() {
             setLoading(true)
             setSearchPerformed(true)
 
+            console.log(query)
+
             try {
                 const response = await fetch(
-                    `${HOST}/api/pipeline/search/${query}`,
+                    `${HOST}/api/pipeline/search/company/${query}`,
                     {
                         method: 'GET',
                         headers: {
