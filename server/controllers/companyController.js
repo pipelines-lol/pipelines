@@ -228,10 +228,10 @@ const updateCompany = async (req, res) => {
         };
 
         // Construct the dynamic key within inc
-        updateData.$inc[`postCompanies.${companyName.toLowerCase()}`] = -1;
+        updateData.$inc[`postCompanies.${lowercaseCompanyName}`] = -1;
 
         const response = await Company.updateOne(
-          { name: lowercaseCompanyName },
+          { name: companyName },
           updateData
         );
 
@@ -244,16 +244,17 @@ const updateCompany = async (req, res) => {
       }
     }
 
+    console.log("prev remove companies: ", prevRemoveCompanies);
     if (prevRemoveCompanies && prevRemoveCompanies.length > 0) {
       for (const companyName of prevRemoveCompanies) {
         const updateData = {
           $inc: {},
         };
 
-        updateData.$inc[`prevCompanies.${companyName.toLowerCase()}`] = -1;
+        updateData.$inc[`prevCompanies.${lowercaseCompanyName}`] = -1;
 
         const response = await Company.updateOne(
-          { name: lowercaseCompanyName },
+          { name: companyName },
           updateData
         );
 

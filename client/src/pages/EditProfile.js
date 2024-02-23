@@ -448,6 +448,9 @@ function EditProfile() {
             .slice(found + 1)
             .map((item) => item.companyName)
 
+        console.log('prev remove companies: ', prevRemoveCompanies)
+        console.log('post remove companies: ', postRemoveCompanies)
+
         if (found !== -1) {
             comp = {
                 ...comp,
