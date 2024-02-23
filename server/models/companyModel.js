@@ -16,9 +16,9 @@ const companySchema = new Schema({
     of: Number,
   },
   tenure: Number,
-  employees: [{ type: Schema.Types.ObjectId, ref: "Profile" }], // Store profile IDs
-  ratedEmployees: [{ type: Schema.Types.ObjectId, ref: "Profile" }],
+  Employees: [{ type: Schema.Types.ObjectId, ref: "Profile" }],
   interns: [{ type: Schema.Types.ObjectId, ref: "Profile" }],
+  ratedEmployees: [{ type: Schema.Types.ObjectId, ref: "Profile" }],
 });
 
 module.exports = mongoose.model("Company", companySchema);
