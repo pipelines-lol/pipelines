@@ -592,8 +592,6 @@ function EditProfile() {
             pipeline,
         }
 
-        console.log('pipeline: ', pipeline)
-
         function isValidDate(arr) {
             for (const valid of arr) {
                 if (!valid) return false
@@ -628,8 +626,6 @@ function EditProfile() {
         if (!response.ok) {
             console.log(response.status)
         }
-
-        console.log('profile: ', profile)
 
         fetch(`${HOST}/api/profile/${user.profileId}`, {
             method: 'PATCH',

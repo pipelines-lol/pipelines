@@ -20,7 +20,6 @@ export const ExperienceQuerySearchInput = ({ value, handleSearch }) => {
 
     const handleInputChange = async (event) => {
         const inputValue = event.target.value
-        console.log('Input Value: ', inputValue)
         setQuery(inputValue.name)
 
         // make sure theres an input before querying
@@ -46,7 +45,6 @@ export const ExperienceQuerySearchInput = ({ value, handleSearch }) => {
 
     const handleCompanyButtonClick = async (company) => {
         // reset text input
-        console.log('company: ', company)
         setQuery(company.name)
         setResults([])
 

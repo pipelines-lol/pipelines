@@ -60,15 +60,14 @@ const getCompany = async (req, res) => {
 const getCompanies = async (req, res) => {
   const { query } = req.params;
 
-  // Create a regular expression to find documents that start with the query
-  const regex = new RegExp("^" + query, "i"); // "i" for case-insensitive search
-
-  // Find companies that match the regex
-  const companies = await Company.find({ name: regex });
-
-  res.status(200).json(companies);
-
   try {
+    // Create a regular expression to find documents that start with the query
+    const regex = new RegExp("^" + query, "i"); // "i" for case-insensitive search
+
+    // Find companies that match the regex
+    const companies = await Company.find({ name: regex });
+
+    res.status(200).json(companies);
   } catch (err) {
     return res.status(400).json({ error: "Failed to retrieve company " });
   }
