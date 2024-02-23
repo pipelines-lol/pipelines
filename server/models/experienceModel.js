@@ -9,6 +9,7 @@ const ExperienceSchema = new Schema({
   endDate: Date,
   isIndefinite: Boolean,
   rating: Number,
+  logo: String,
 });
 
 module.exports = mongoose.model("Experience", ExperienceSchema);

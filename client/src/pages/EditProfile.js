@@ -89,6 +89,7 @@ function EditProfile() {
     const addExperience = async (index) => {
         const placeholder = {
             id: 0,
+            logo: '',
             companyName: '',
             title: '',
             startDate: '',
