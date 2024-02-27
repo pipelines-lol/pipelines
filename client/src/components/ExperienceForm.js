@@ -2,11 +2,11 @@ import { useState } from 'react'
 import { ExperienceQuerySearchInput } from './ExperienceQuerySearchInput'
 import { TitleQuerySearchInput } from './TitleQuerySearchInput'
 import { X } from 'lucide-react'
-import BigSmiley from '../static/ratings/BigSmiley.jpg'
+import BigSmiley from '../static/ratings/BigSmiley.png'
 import smiley from '../static/ratings/smiley.png'
 import neutral from '../static/ratings/neutral.png'
 import frown from '../static/ratings/frown.png'
-import demon from '../static/ratings/demon.jpeg'
+import demon from '../static/ratings/demon.png'
 import useValidateExperience from '../hooks/useValidateExperience'
 
 export const ExperienceForm = ({
@@ -264,7 +264,7 @@ export const ExperienceForm = ({
                         Company
                     </label>
                     <ExperienceQuerySearchInput
-                        value={company}
+                        value={experience}
                         handleSearch={handleCompanyChange}
                     />
                 </div>

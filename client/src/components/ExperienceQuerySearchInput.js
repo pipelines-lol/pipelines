@@ -14,7 +14,8 @@ export const ExperienceQuerySearchInput = ({ value, handleSearch }) => {
         // check if there was a previous value
         // if there was, set query to it
         if (value) {
-            setQuery(value)
+            console.log('value: ', value)
+            setQuery(value.companyName)
         }
     }, [value])
 
@@ -45,7 +46,7 @@ export const ExperienceQuerySearchInput = ({ value, handleSearch }) => {
 
     const handleCompanyButtonClick = async (company) => {
         // reset text input
-        setQuery(company.name)
+        setQuery(company.displayName)
         setResults([])
 
         await handleSearch(company)
@@ -67,18 +68,18 @@ export const ExperienceQuerySearchInput = ({ value, handleSearch }) => {
                     placeholder="i.e. Google"
                 />
                 <div
-                    className={`z-30 max-h-44 w-full translate-y-1 overflow-y-scroll bg-gray-800 shadow-md ${hasResults ? 'absolute top-full' : ''}`}
+                    className={`z-30 max-h-44 w-full translate-y-1 overflow-y-scroll bg-slate-200 text-gray-800 shadow-md ${hasResults ? 'absolute top-full' : ''}`}
                 >
                     {hasResults &&
                         results.map((company) => (
                             <div
                                 key={`${company.name}_result`}
-                                className="flex flex-row items-center justify-center px-5 py-2 hover:bg-gray-100"
+                                className="flex flex-row items-center justify-center px-5 py-2 transition-all duration-500 hover:bg-pipeline-blue-200 hover:text-white"
                             >
                                 <img
                                     className="h-10 w-10 rounded-lg object-contain"
                                     src={`${company.logo}`}
-                                    alt={`logo_${company.name}`}
+                                    alt={`logo_${company.displayName}`}
                                 />
                                 <button
                                     key={company.id} // Add a unique key for each button
@@ -87,7 +88,7 @@ export const ExperienceQuerySearchInput = ({ value, handleSearch }) => {
                                         handleCompanyButtonClick(company)
                                     }
                                 >
-                                    <h1>{company.name}</h1>
+                                    <h1>{company.displayName}</h1>
                                 </button>
                             </div>
                         ))}

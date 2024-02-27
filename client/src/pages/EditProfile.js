@@ -575,7 +575,8 @@ function EditProfile() {
         }
 
         // check none of the singular fields are blank
-        if (firstName === '' || lastName === '') return false
+        if (!firstName || firstName === '' || !lastName || lastName === '')
+            return false
 
         // check the education isnt blank
         if (school === '') return false
