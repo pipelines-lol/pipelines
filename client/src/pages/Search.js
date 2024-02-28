@@ -10,13 +10,12 @@ function Search() {
 
     const [loading, setLoading] = useState(false)
 
-    const [searchPerformed, setSearchPerformed] = useState(false)
+    const [noneFound, setNoneFound] = useState(false)
 
     const handleSearch = useCallback(
         async (query) => {
             // loading state to load query
             setLoading(true)
-            setSearchPerformed(true)
 
             console.log(query)
 
@@ -32,6 +31,10 @@ function Search() {
                 )
 
                 if (!response.ok) {
+                    if (response.status === 404) {
+                        setNoneFound(true)
+                    }
+
                     if (
                         response.headers
                             .get('content-type')
@@ -45,7 +48,9 @@ function Search() {
                         )
                     }
                 }
-
+                if (response.status === 200) {
+                    setNoneFound(false)
+                }
                 const data = await response.json()
                 setProfiles([...data])
                 setLoading(false)
@@ -54,7 +59,7 @@ function Search() {
                 setLoading(false)
             }
         },
-        [setLoading, setSearchPerformed, setProfiles]
+        [setLoading, setNoneFound, setProfiles]
     )
 
     if (loading) {
@@ -91,21 +96,24 @@ function Search() {
                     <QuerySearchInput handleSearch={handleSearch} />
                 </div>
                 <div className="grid grid-cols-2 gap-1 pb-12 sm:gap-2 md:grid-cols-4 md:gap-4">
-                    {searchPerformed && profiles.length === 0 && !loading && (
+                    {noneFound ? (
                         <div className="col-span-full mt-9 text-center text-3xl font-bold text-pipelines-gray-500">
                             No users on this site for this company :/
                         </div>
+                    ) : (
+                        profiles.map((profile) => (
+                            <PipelineCard
+                                key={`pipeline_${profile._id}`}
+                                profileId={profile._id}
+                                name={
+                                    profile.firstName + ' ' + profile.lastName
+                                }
+                                pfp={profile.pfp}
+                                anonymous={profile.anonymous}
+                                pipeline={profile.pipeline}
+                            />
+                        ))
                     )}
-                    {profiles.map((profile) => (
-                        <PipelineCard
-                            key={`pipeline_${profile._id}`}
-                            profileId={profile._id}
-                            name={profile.firstName + ' ' + profile.lastName}
-                            pfp={profile.pfp}
-                            anonymous={profile.anonymous}
-                            pipeline={profile.pipeline}
-                        />
-                    ))}
                 </div>
             </div>
         </>
