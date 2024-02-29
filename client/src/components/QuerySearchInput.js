@@ -1,41 +1,43 @@
-import { useState, useCallback } from 'react'
-import { companies } from '../data/companyData'
+import { useState } from 'react'
+import { HOST } from '../util/apiRoutes'
 
 export const QuerySearchInput = ({ handleSearch }) => {
     const [query, setQuery] = useState('')
     const [results, setResults] = useState([])
     const hasResults = results.length > 0
 
-    const handleInputChange = useCallback(
-        (event) => {
-            const inputValue = event.target.value
-            setQuery(inputValue)
+    const handleInputChange = async (event) => {
+        const inputValue = event.target.value
+        setQuery(inputValue.name)
 
-            // make sure there's an input before querying
-            if (inputValue.length > 0) {
-                const filteredCompanies = companies.filter((company) =>
-                    company.name
-                        .toLowerCase()
-                        .startsWith(inputValue.toLowerCase())
-                )
-                setResults(filteredCompanies)
-            } else {
-                setResults([])
-            }
-        },
-        [companies]
-    )
-
-    const handleCompanyButtonClick = useCallback(
-        async (company) => {
-            // reset text input
-            setQuery('')
+        // make sure theres an input before querying
+        if (inputValue.length > 0) {
+            // query the backend
+            const response = await fetch(
+                `${HOST}/api/company/get/companies/${inputValue.toLowerCase()}`,
+                {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                }
+            )
+            const data = await response.json()
+            setResults(data)
+        } else {
             setResults([])
 
-            await handleSearch(company.name)
-        },
-        [setQuery, setResults, handleSearch]
-    )
+            await handleSearch('')
+        }
+    }
+
+    const handleCompanyButtonClick = async (company) => {
+        // reset text input
+        setQuery(company.displayName)
+        setResults([])
+
+        await handleSearch(company)
+    }
 
     return (
         <>
@@ -53,27 +55,27 @@ export const QuerySearchInput = ({ handleSearch }) => {
                     placeholder="Search companies..."
                 />
                 <div
-                    className={`z-10 max-h-96 w-1/2 overflow-y-scroll rounded-lg bg-pipeline-blue-200/10 shadow-md ${hasResults ? 'absolute top-full' : ''}`}
+                    className={`z-10 max-h-96 w-1/2 overflow-y-scroll rounded-lg bg-slate-200 text-gray-800 shadow-md ${hasResults ? 'absolute top-full' : ''}`}
                 >
                     {hasResults &&
                         results.map((company) => (
                             <div
-                                key={`${company.name}_result`}
-                                className="flex flex-row items-center justify-center px-5 py-2 hover:bg-pipeline-blue-200"
+                                key={`${company.displayName}_result`}
+                                className="flex flex-row items-center justify-center px-5 py-2 transition-all duration-500 hover:bg-pipeline-blue-200 hover:text-white"
                             >
                                 <img
                                     className="h-10 w-10 rounded-lg object-contain"
-                                    src={`logos/${company.logo}`}
-                                    alt={`logo_${company.name}`}
+                                    src={company.logo}
+                                    alt={`logo_${company.displayName}`}
                                 />
                                 <button
                                     key={company.id} // Add a unique key for each button
-                                    className="h-16 w-full p-5 text-start text-white"
+                                    className="h-16 w-full p-5 text-start"
                                     onClick={() =>
                                         handleCompanyButtonClick(company)
                                     }
                                 >
-                                    <h1>{company.name}</h1>
+                                    <h1>{company.displayName}</h1>
                                 </button>
                             </div>
                         ))}

@@ -17,11 +17,9 @@ function Search() {
             // loading state to load query
             setLoading(true)
 
-            console.log(query)
-
             try {
                 const response = await fetch(
-                    `${HOST}/api/pipeline/search/company/${query}`,
+                    `${HOST}/api/pipeline/search/company/${query.name}`,
                     {
                         method: 'GET',
                         headers: {
