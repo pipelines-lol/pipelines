@@ -6,7 +6,7 @@ export const SchoolQuerySearch = ({ value, handleSearch }) => {
     const hasResults = results.length > 0
 
     const [timerId, setTimerId] = useState(null)
-    const TIMER_DELAY = 500 // milliseconds
+    const TIMER_DELAY = 100 // milliseconds
 
     useEffect(() => {
         // Cleanup the timer on component unmount

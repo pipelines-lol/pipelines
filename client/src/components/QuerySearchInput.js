@@ -8,7 +8,7 @@ export const QuerySearchInput = ({ handleSearch }) => {
 
     const handleInputChange = async (event) => {
         const inputValue = event.target.value
-        setQuery(inputValue.name)
+        setQuery(inputValue)
 
         // make sure theres an input before querying
         if (inputValue.length > 0) {
@@ -26,8 +26,6 @@ export const QuerySearchInput = ({ handleSearch }) => {
             setResults(data)
         } else {
             setResults([])
-
-            await handleSearch('')
         }
     }
 
