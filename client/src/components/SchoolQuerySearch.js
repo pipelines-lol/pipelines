@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react'
 export const SchoolQuerySearch = ({ value, handleSearch }) => {
     const [query, setQuery] = useState('')
     const [results, setResults] = useState([])
-    const hasResults = results.length > 0
+    const hasResults = results.length > 0 && query !== ''
 
     const [timerId, setTimerId] = useState(null)
     const TIMER_DELAY = 100 // milliseconds
@@ -107,7 +107,7 @@ export const SchoolQuerySearch = ({ value, handleSearch }) => {
     return (
         <>
             <form
-                className={`flex w-full flex-col items-center justify-center gap-6 ${hasResults ? 'relative' : ''}`}
+                className={`relative mx-auto flex w-full flex-col items-center justify-center gap-6 transition-all duration-500 ease-in-out ${hasResults ? 'visible mb-44' : ''}`}
                 onSubmit={(e) => e.preventDefault()} // Prevent form submission
             >
                 <label className="text-light text-pipelines-gray-100">
@@ -132,8 +132,9 @@ export const SchoolQuerySearch = ({ value, handleSearch }) => {
                                 className="flex flex-row items-center justify-center bg-white px-5 py-2 hover:bg-pipeline-blue-200/10"
                             >
                                 <button
-                                    key={`school_button_${school.name}`} // Add a unique key for each button
+                                    key={`school_button_${school.name}`}
                                     className="h-16 w-full p-5 text-start"
+                                    type="button"
                                     onClick={() =>
                                         handleSchoolButtonClick(school)
                                     }

@@ -5,6 +5,7 @@ import './App.css'
 // Components
 import Footer from './components/Footer'
 import Navbar from './components/Navbar'
+import { error404 } from './components/Error404'
 
 // Pages
 import Discover from './pages/Discover'
@@ -15,11 +16,10 @@ import Profile from './pages/Profile'
 import Search from './pages/Search'
 import Signup from './pages/Signup'
 import Suggestions from './pages/Suggestions'
+import Company from './pages/Company'
 
 // Context
 import { useAuthContext } from './hooks/useAuthContext'
-import Company from './pages/Company'
-import { error404 } from './components/Error404'
 
 // Navbar Component
 function AppNavbar() {

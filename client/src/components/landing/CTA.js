@@ -38,7 +38,7 @@ export default function CTA() {
                     </p>
 
                     <img
-                        className="h-[35vh] w-full -translate-x-4 object-contain"
+                        className="h-[35vh] w-full -translate-x-4 scale-90 object-contain"
                         src={'Hero2.svg'}
                         alt={'Hero'}
                     />
