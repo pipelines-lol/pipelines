@@ -66,7 +66,7 @@ export default function About() {
                     ref={ref}
                     className="flex h-full w-full flex-col items-start justify-center"
                 >
-                    <p className="mx-20 text-left text-xl font-light leading-7 text-pipelines-gray-100 md:text-xl lg:text-2xl xl:text-3xl">
+                    <p className="mx-20 max-w-xl text-left text-xl font-light leading-7 text-pipelines-gray-100 md:text-xl lg:text-2xl xl:text-3xl">
                         With{' '}
                         <span className="font-semibold text-pipeline-blue-200">
                             pipelines.lol

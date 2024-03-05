@@ -673,7 +673,7 @@ function EditProfile() {
         <>
             <div className="flex h-auto min-h-full w-full items-center justify-center pt-24">
                 <div
-                    className="flex w-full flex-col items-center justify-center gap-5 bg-pipeline-blue-200/20 text-center"
+                    className="flex w-full flex-col items-center justify-center gap-5 bg-pipelines-gray-100/20 text-center"
                     style={{
                         backgroundImage: 'url("hero.png")',
                         backgroundSize: 'cover',
@@ -685,7 +685,7 @@ function EditProfile() {
                     }}
                 >
                     <div className="flex w-full flex-col items-center justify-center gap-3 pt-12 text-center">
-                        <h1 className="py-4 text-4xl font-light text-pipelines-gray-100 md:text-6xl">
+                        <h1 className="mb-2 py-4 text-4xl font-light text-pipelines-gray-100 md:text-6xl">
                             Edit Your Profile
                         </h1>
                         <p className="text-xl font-light text-pipelines-gray-100/80">
@@ -725,9 +725,7 @@ function EditProfile() {
                             </div>
                         </div>
 
-                        {/* TODO: fix styling */}
                         <div className="flex flex-col gap-1">
-                            <label className="text-medium">Education</label>
                             <SchoolQuerySearch
                                 value={school}
                                 handleSearch={setSchool}
