@@ -337,6 +337,7 @@ const updateCompanies = async (req, res) => {
         postRemoveOtherCompanies,
         removeRating,
         removeEmployees,
+        removeRatedEmployees,
       } = company;
       const lowercaseCompanyName = name.toLowerCase();
 
@@ -387,6 +388,19 @@ const updateCompanies = async (req, res) => {
 
         if (!response) {
           res.status(404).json({ error: "company not found" });
+        }
+      }
+
+      //remove rated employees
+      if (removeRatedEmployees && removeRatedEmployees.length > 0) {
+        const response = await Company.updateOne(
+          { name: lowercaseCompanyName },
+          { $pull: { ratedEmployees: { $in: removeRatedEmployees } } }
+        );
+
+        if (!response) {
+          res.status(404).json({ error: "Company not found" });
+          return;
         }
       }
 

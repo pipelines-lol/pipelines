@@ -248,6 +248,7 @@ function EditProfile() {
                 ) {
                     companyJson = {
                         name: company.companyName,
+                        rating: company.rating - origCompanies[found].rating,
                         prevCompanies: prevCompanies || [],
                         postCompanies: postCompanies || [],
                         prevRemoveCompanies: prevRemoveCompanies || [],
@@ -263,6 +264,7 @@ function EditProfile() {
                 ) {
                     companyJson = {
                         name: company.companyName,
+                        rating: company.rating - origCompanies[found].rating,
                         prevCompanies: prevCompanies || [],
                         postCompanies: postCompanies || [],
                         prevRemoveCompanies: prevRemoveCompanies || [],
@@ -311,6 +313,7 @@ function EditProfile() {
                 let temp = companies
                 temp = companies.push(companyJson)
                 setCompanies(temp)
+                console.log('Company Json: ', companyJson)
             } else {
                 const prevCompanies = pipeline
                     .slice(0, i)
