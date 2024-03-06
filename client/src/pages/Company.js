@@ -166,7 +166,6 @@ const Company = () => {
         )
     }
 
-
     const previousTable = () => {
         return (
             <div className="overflow-x-auto">
@@ -177,7 +176,6 @@ const Company = () => {
                             <th>Company Name</th>
                         </tr>
                     </thead>
-
 
                     <tbody>
                         {prevCompanies.map((elem, idx) => {
@@ -203,7 +201,6 @@ const Company = () => {
                         {postCompanies.map((elem, idx) => {
                             return tableElem(idx, elem)
                         })}
-
                     </tbody>
                 </table>
             </div>
@@ -258,7 +255,6 @@ const Company = () => {
                         <div className="card-body">
                             <h2 className="card-title text-xl text-slate-200">
                                 Prior Companies
-
                             </h2>
                             {previousTable()}
                         </div>
@@ -266,7 +262,6 @@ const Company = () => {
                     <div className="card w-full bg-sky-900 shadow-xl">
                         <div className="card-body">
                             <h2 className="card-title text-xl text-slate-200">
-
                                 Next Companies
                             </h2>
                             {nextTable()}
@@ -287,7 +282,6 @@ const Company = () => {
     return loading ? (
         <Loading />
     ) : name === null ? (
-
         error404component
     ) : (
         <div

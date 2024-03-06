@@ -126,8 +126,6 @@ export const ExperienceCard = ({ experience }) => {
 
     const navigate = useNavigate()
 
-    const navigate = useNavigate()
-
     return (
         <div
             className="flex flex-col items-center justify-center gap-3"
