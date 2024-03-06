@@ -448,7 +448,7 @@ function EditProfile() {
             .slice(0, found)
             .map((item) => item.companyName)
         const postRemoveCompanies = origCompanies
-            .slice(found + 1)
+            .slice(found)
             .map((item) => item.companyName)
 
         console.log('prev remove companies: ', prevRemoveCompanies)
@@ -462,6 +462,7 @@ function EditProfile() {
                 prevRemoveOtherCompanies: postRemoveCompanies,
                 postRemoveOtherCompanies: prevRemoveCompanies,
             }
+            console.log('comp: ', comp)
             const response = await fetch(
                 `${HOST}/api/company/update/${comp.name}`,
                 {

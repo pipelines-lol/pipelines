@@ -137,7 +137,6 @@ export const ExperienceForm = ({
     }
 
     const handleCompanyChange = async (value) => {
-        console.log('value: ', value)
         setCompany(value.name)
         setCompanyId(value._id)
         setLogo(value.logo)

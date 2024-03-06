@@ -94,6 +94,7 @@ const updateCompany = async (req, res) => {
     removeEmployees,
   } = req.body;
   const lowercaseCompanyName = name.toLowerCase();
+  console.log("comp", req.body);
 
   try {
     if (Employees && Employees.length > 0) {
@@ -228,12 +229,14 @@ const updateCompany = async (req, res) => {
         };
 
         // Construct the dynamic key within inc
-        updateData.$inc[`postCompanies.${lowercaseCompanyName}`] = -1;
+        updateData.$inc[`postCompanies.${companyName.toLowerCase()}`] = -1;
 
         const response = await Company.updateOne(
-          { name: companyName },
+          { name: lowercaseCompanyName },
           updateData
         );
+
+        console.log(`postRemove ${companyName} from ${lowercaseCompanyName}`);
 
         if (!response) {
           res
@@ -251,12 +254,13 @@ const updateCompany = async (req, res) => {
           $inc: {},
         };
 
-        updateData.$inc[`prevCompanies.${lowercaseCompanyName}`] = -1;
+        updateData.$inc[`prevCompanies.${companyName.toLowerCase()}`] = -1;
 
         const response = await Company.updateOne(
-          { name: companyName },
+          { name: lowercaseCompanyName },
           updateData
         );
+        console.log(`prevremove ${companyName} from ${lowercaseCompanyName}`);
 
         if (!response) {
           res
@@ -274,7 +278,9 @@ const updateCompany = async (req, res) => {
         };
 
         updateData.$inc[`prevCompanies.${lowercaseCompanyName}`] = -1;
-
+        console.log(
+          `prev other remove ${lowercaseCompanyName} from ${companyName}`
+        );
         const response = await Company.updateOne(
           { name: companyName.toLowerCase() },
           updateData
@@ -300,6 +306,10 @@ const updateCompany = async (req, res) => {
         const response = await Company.updateOne(
           { name: companyName.toLowerCase() },
           updateData
+        );
+
+        console.log(
+          `post other remove ${lowercaseCompanyName} from ${companyName}`
         );
 
         if (!response) {
