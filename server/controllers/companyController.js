@@ -94,7 +94,6 @@ const updateCompany = async (req, res) => {
     removeEmployees,
   } = req.body;
   const lowercaseCompanyName = name.toLowerCase();
-  console.log("comp", req.body);
 
   try {
     if (Employees && Employees.length > 0) {
@@ -236,8 +235,6 @@ const updateCompany = async (req, res) => {
           updateData
         );
 
-        console.log(`postRemove ${companyName} from ${lowercaseCompanyName}`);
-
         if (!response) {
           res
             .status(404)
@@ -247,7 +244,6 @@ const updateCompany = async (req, res) => {
       }
     }
 
-    console.log("prev remove companies: ", prevRemoveCompanies);
     if (prevRemoveCompanies && prevRemoveCompanies.length > 0) {
       for (const companyName of prevRemoveCompanies) {
         const updateData = {
@@ -260,7 +256,6 @@ const updateCompany = async (req, res) => {
           { name: lowercaseCompanyName },
           updateData
         );
-        console.log(`prevremove ${companyName} from ${lowercaseCompanyName}`);
 
         if (!response) {
           res
@@ -278,9 +273,6 @@ const updateCompany = async (req, res) => {
         };
 
         updateData.$inc[`prevCompanies.${lowercaseCompanyName}`] = -1;
-        console.log(
-          `prev other remove ${lowercaseCompanyName} from ${companyName}`
-        );
         const response = await Company.updateOne(
           { name: companyName.toLowerCase() },
           updateData
@@ -306,10 +298,6 @@ const updateCompany = async (req, res) => {
         const response = await Company.updateOne(
           { name: companyName.toLowerCase() },
           updateData
-        );
-
-        console.log(
-          `post other remove ${lowercaseCompanyName} from ${companyName}`
         );
 
         if (!response) {

@@ -313,7 +313,6 @@ function EditProfile() {
                 let temp = companies
                 temp = companies.push(companyJson)
                 setCompanies(temp)
-                console.log('Company Json: ', companyJson)
             } else {
                 const prevCompanies = pipeline
                     .slice(0, i)
@@ -451,9 +450,6 @@ function EditProfile() {
             .slice(found)
             .map((item) => item.companyName)
 
-        console.log('prev remove companies: ', prevRemoveCompanies)
-        console.log('post remove companies: ', postRemoveCompanies)
-
         if (found !== -1) {
             comp = {
                 ...comp,
@@ -462,7 +458,6 @@ function EditProfile() {
                 prevRemoveOtherCompanies: postRemoveCompanies,
                 postRemoveOtherCompanies: prevRemoveCompanies,
             }
-            console.log('comp: ', comp)
             const response = await fetch(
                 `${HOST}/api/company/update/${comp.name}`,
                 {
