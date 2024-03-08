@@ -87,7 +87,7 @@ function Discover() {
                         </svg>
                     </div>
                 </div>
-                <div className="grid min-h-96 w-full grid-cols-1 overflow-y-scroll border-b-[0.5px] border-t-[0.5px] border-pipeline-blue-200 bg-pipelines-gray-100/10 bg-opacity-95  pb-12 sm:grid-cols-2 sm:gap-2 md:grid-cols-3 md:gap-4 lg:grid-cols-4">
+                <div className="min-h-96 grid w-full grid-cols-1 overflow-y-scroll border-b-[0.5px] border-t-[0.5px] border-pipeline-blue-200 bg-pipelines-gray-100/10 bg-opacity-95  pb-12 sm:grid-cols-2 sm:gap-2 md:grid-cols-3 md:gap-4 lg:grid-cols-4">
                     {profiles.map((profile) => (
                         <div key={`profile_${profile._id}`}>
                             <div className="p-5"></div>

@@ -2,7 +2,7 @@ import { useNavigate } from 'react-router-dom'
 import { useAuthContext } from '../hooks/useAuthContext'
 
 import { HOMEPAGE, HOST } from '../util/apiRoutes'
-import { CLIENT_ID, SCOPE } from '../util/linkedinKeys'
+import { CLIENT_ID, SCOPE } from '../util/linkedinUtils'
 
 import { useEffect, useState } from 'react'
 import MobileNavigationBar from './nav/Mobile'

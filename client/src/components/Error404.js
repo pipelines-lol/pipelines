@@ -5,7 +5,7 @@ export const error404 = (error_text) => {
     const navigate = useNavigate()
     return (
         <div
-            className="flex h-lvh flex-row items-start justify-center gap-16 px-4 py-48 md:gap-28 md:px-44 md:py-20 lg:px-48 lg:py-64"
+            className="h-lvh flex flex-row items-start justify-center gap-16 px-4 py-48 md:gap-28 md:px-44 md:py-20 lg:px-48 lg:py-64"
             style={{
                 backgroundImage: `url("${HOMEPAGE}/CTA.png")`,
                 backgroundSize: 'cover',

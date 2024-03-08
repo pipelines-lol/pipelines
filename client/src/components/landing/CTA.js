@@ -1,6 +1,6 @@
 import { useNavigate } from 'react-router-dom'
 import { HOMEPAGE } from '../../util/apiRoutes'
-import { CLIENT_ID, SCOPE } from '../../util/linkedinKeys'
+import { CLIENT_ID, SCOPE } from '../../util/linkedinUtils'
 import { useAuthContext } from '../../hooks/useAuthContext'
 
 export default function CTA() {
