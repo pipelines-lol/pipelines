@@ -5,7 +5,7 @@ export default function Testimonies() {
     const isInView = useInView(ref)
     return (
         <>
-            <section className="bg-black/35 flex h-full w-full flex-col items-center justify-center gap-4 border-b-[0.5px] border-pipeline-blue-200 bg-opacity-95  py-20 backdrop-blur-lg backdrop-filter">
+            <section className="flex h-full w-full flex-col items-center justify-center gap-4 border-b-[0.5px] border-pipeline-blue-200 bg-black/35 bg-opacity-95  py-20 backdrop-blur-lg backdrop-filter">
                 <div className="mx-auto max-w-2xl px-12 lg:max-w-none">
                     <h1 className="xs:text-xl mx-8 text-center text-xl font-normal text-pipelines-gray-100/80 sm:text-2xl md:text-3xl lg:text-3xl xl:text-4xl">
                         What are our users saying?
