@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { companies } from '../data/companyData'
+import { HOST } from '../util/apiRoutes'
 
 export const ExperienceQuerySearchInput = ({ value, handleSearch }) => {
     const [query, setQuery] = useState('')
@@ -14,20 +14,28 @@ export const ExperienceQuerySearchInput = ({ value, handleSearch }) => {
         // check if there was a previous value
         // if there was, set query to it
         if (value) {
-            setQuery(value)
+            setQuery(value.companyName)
         }
     }, [value])
 
     const handleInputChange = async (event) => {
         const inputValue = event.target.value
-        setQuery(inputValue)
+        setQuery(inputValue.name)
 
         // make sure theres an input before querying
         if (inputValue.length > 0) {
-            const filteredCompanies = companies.filter((company) =>
-                company.name.toLowerCase().startsWith(inputValue.toLowerCase())
+            // query the backend
+            const response = await fetch(
+                `${HOST}/api/company/get/companies/${inputValue.toLowerCase()}`,
+                {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                }
             )
-            setResults(filteredCompanies)
+            const data = await response.json()
+            setResults(data)
         } else {
             setResults([])
 
@@ -37,10 +45,10 @@ export const ExperienceQuerySearchInput = ({ value, handleSearch }) => {
 
     const handleCompanyButtonClick = async (company) => {
         // reset text input
-        setQuery(company.name)
+        setQuery(company.displayName)
         setResults([])
 
-        await handleSearch(company.name)
+        await handleSearch(company)
     }
 
     return (
@@ -59,18 +67,18 @@ export const ExperienceQuerySearchInput = ({ value, handleSearch }) => {
                     placeholder="i.e. Google"
                 />
                 <div
-                    className={`z-30 max-h-44 w-full translate-y-1 overflow-y-scroll bg-gray-800 shadow-md ${hasResults ? 'absolute top-full' : ''}`}
+                    className={`z-30 max-h-44 w-full translate-y-1 overflow-y-scroll bg-slate-200 text-gray-800 shadow-md ${hasResults ? 'absolute top-full' : ''}`}
                 >
                     {hasResults &&
                         results.map((company) => (
                             <div
                                 key={`${company.name}_result`}
-                                className="flex flex-row items-center justify-center px-5 py-2 hover:bg-gray-100"
+                                className="flex flex-row items-center justify-center px-5 py-2 transition-all duration-500 hover:bg-pipeline-blue-200 hover:text-white"
                             >
                                 <img
                                     className="h-10 w-10 rounded-lg object-contain"
-                                    src={`logos/${company.logo}`}
-                                    alt={`logo_${company.name}`}
+                                    src={`${company.logo}`}
+                                    alt={`logo_${company.displayName}`}
                                 />
                                 <button
                                     key={company.id} // Add a unique key for each button
@@ -79,7 +87,7 @@ export const ExperienceQuerySearchInput = ({ value, handleSearch }) => {
                                         handleCompanyButtonClick(company)
                                     }
                                 >
-                                    <h1>{company.name}</h1>
+                                    <h1>{company.displayName}</h1>
                                 </button>
                             </div>
                         ))}

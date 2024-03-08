@@ -117,15 +117,15 @@ function Profile() {
     }
 
     const getCurrentExperience = () => {
-        function splitDateString(dateString) {
+        /*function splitDateString(dateString) {
             const dateParts = dateString.split(' - ')
             const startDate = parseDateString(dateParts[0])
             const endDate = parseDateString(dateParts[1])
 
             return [startDate, endDate]
-        }
+        }*/
 
-        function parseDateString(dateString) {
+        /*function parseDateString(dateString) {
             const months = [
                 'January',
                 'February',
@@ -146,14 +146,15 @@ function Profile() {
             const parsedDate = new Date(year, monthIndex)
 
             return parsedDate
-        }
+        }*/
 
         if (!profile || !profile.pipeline) return
 
         // compare experience dates to todays date
         const currentDate = new Date()
         for (const [index, experience] of profile.pipeline.entries()) {
-            const [startDate, endDate] = splitDateString(experience.date)
+            const startDate = new Date(experience.startDate)
+            const endDate = new Date(experience.endDate)
 
             // check if current experience date range overlaps current date
             if (

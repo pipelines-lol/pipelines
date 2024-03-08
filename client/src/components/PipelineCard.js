@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import { companies } from '../data/companyData'
 
-import { HOMEPAGE, HOST } from '../util/apiRoutes'
+import { HOST } from '../util/apiRoutes'
 import { ConditionalLink } from './ConditionalLink'
 
 export const PipelineCard = ({ profileId, name, pfp, anonymous, pipeline }) => {
@@ -89,14 +89,39 @@ export const PipelineCard = ({ profileId, name, pfp, anonymous, pipeline }) => {
 import { useNavigate } from 'react-router-dom'
 
 export const ExperienceCard = ({ experience }) => {
-    function getLogoByName(companyName) {
-        const foundCompany = companies.find(
-            (company) => company.name === companyName
-        )
-        return foundCompany ? foundCompany.logo : null
+    const current = new Date(experience.startDate) > new Date()
+    const formatDateToMMYY = (dateString) => {
+        // Converts 2023-01-01T00:00:00.000Z to January 2023
+        const date = new Date(dateString)
+
+        if (!(date instanceof Date) || isNaN(date.getTime())) {
+            return 'Invalid Date'
+        }
+
+        const options = { year: 'numeric', month: 'long' }
+        return date.toLocaleDateString(undefined, options)
     }
 
-    const logo = `${HOMEPAGE}/logos/${getLogoByName(experience.company)}`
+    function capitalize(str) {
+        // shoutout bobdagoat
+        if (typeof str !== 'string' || str.trim() === '') {
+            // bad input
+            return str
+        }
+
+        const formattedCompany = companies.find(
+            (company) => company.name.toLowerCase() === str.toLowerCase()
+        )
+
+        if (formattedCompany) {
+            return formattedCompany.name
+        }
+
+        return str
+            .split(' ')
+            .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+            .join(' ')
+    }
 
     const navigate = useNavigate()
 
@@ -108,25 +133,30 @@ export const ExperienceCard = ({ experience }) => {
             <div
                 className="inline-block rounded-md p-2 backdrop-blur-2xl backdrop-filter transition duration-500 hover:scale-125 hover:cursor-pointer"
                 onClick={() => {
-                    navigate(`/company/${experience.company.toLowerCase()}`)
+                    navigate(`/company/${experience.companyName}`)
                 }}
             >
                 <img
                     className="h-24 w-24 rounded-md object-contain"
-                    src={logo}
-                    alt={`${experience.company}_logo`}
+                    src={experience.logo}
+                    alt={`${capitalize(experience.companyName)}_logo`}
                 />
-                <div className="animate-blob absolute left-2 top-5 h-24 w-24 rounded-full bg-pipelines-gray-100/20 opacity-70 mix-blend-multiply blur-xl filter" />
+                <div className="absolute left-2 top-5 h-24 w-24 animate-blob rounded-full bg-pipelines-gray-100/20 opacity-70 mix-blend-multiply blur-xl filter" />
             </div>
             <div className="flex flex-col items-center justify-center">
                 <h1 className="text-2xl font-semibold text-pipelines-gray-100">
-                    {experience.company}
+                    {capitalize(experience.companyName)}
                 </h1>
                 <h1 className="text-xl font-thin italic text-pipelines-gray-100">
                     {experience.title}
                 </h1>
                 <h1 className="text-xl font-light text-pipelines-gray-100 opacity-60">
-                    {experience.date}
+                    {formatDateToMMYY(experience.startDate)} -{' '}
+                    {!experience.isIndefinite
+                        ? formatDateToMMYY(experience.endDate)
+                        : !current
+                          ? 'Present'
+                          : 'Indefinite'}
                 </h1>
             </div>
         </div>

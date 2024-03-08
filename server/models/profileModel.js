@@ -1,15 +1,12 @@
-const mongoose = require('mongoose')
-const random = require('mongoose-simple-random');
+const mongoose = require("mongoose");
+const random = require("mongoose-simple-random");
+const Experience = require("./experienceModel"); // Import the Experience model
+const Offer = require("./offerModel"); // Import the Offer model
 
-const Schema = mongoose.Schema
+const Schema = mongoose.Schema;
 
-const Experience = new mongoose.Schema({
-    company: String,
-    title: String,
-    date: String
-});
-
-const profileSchema = new Schema({
+const profileSchema = new Schema(
+  {
     userId: String,
     firstName: String,
     lastName: String,
@@ -20,20 +17,23 @@ const profileSchema = new Schema({
     location: String,
     anonymous: Boolean,
     school: String,
-    pipeline: [Experience],
-    created: Boolean
-}, { timestamps: true })
+    pipeline: [Experience.schema],
+    offers: [Offer.schema],
+    created: Boolean,
+  },
+  { timestamps: true }
+);
 profileSchema.plugin(random);
 
 // static methods
 profileSchema.statics.getByUserId = async function (userId) {
-    const profile = await this.findOne({ userId })
+  const profile = await this.findOne({ userId });
 
-    if (!profile) {
-        throw Error(`Invalid user ID.`)
-    }
+  if (!profile) {
+    throw Error(`Invalid user ID.`);
+  }
 
-    return profile
-}
+  return profile;
+};
 
-module.exports = mongoose.model('Profile', profileSchema)
+module.exports = mongoose.model("Profile", profileSchema);
