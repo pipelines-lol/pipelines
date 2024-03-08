@@ -93,7 +93,7 @@ function Search() {
                     </div>
                     <QuerySearchInput handleSearch={handleSearch} />
                 </div>
-                <div className="grid grid-cols-2 gap-1 pb-12 sm:gap-2 md:grid-cols-4 md:gap-4">
+                <div className="my-4 grid grid-cols-2 gap-1 pb-12 sm:gap-2 md:grid-cols-4 md:gap-4">
                     {noneFound ? (
                         <div className="col-span-full mt-9 text-center text-3xl font-bold text-pipelines-gray-500">
                             No users on this site for this company :/

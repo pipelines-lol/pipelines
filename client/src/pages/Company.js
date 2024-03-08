@@ -47,7 +47,6 @@ const Company = () => {
             setLoading(false)
             return
         }
-        console.log(data)
         setEmployeeCount(data.Employees.length)
         setName(data.displayName)
         setLogo(data.logo)
@@ -55,7 +54,6 @@ const Company = () => {
         if (data.rating) {
             setRating(Math.floor(data.rating / data.ratedEmployees.length / 20))
         }
-        console.log(rating)
         await setPrevAndPost(data)
     }
 

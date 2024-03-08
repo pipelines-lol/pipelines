@@ -114,7 +114,6 @@ export const ExperienceCard = ({ experience }) => {
         )
 
         if (formattedCompany) {
-            console.log('found', formattedCompany.name)
             return formattedCompany.name
         }
 
