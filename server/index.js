@@ -8,6 +8,7 @@ const bodyParser = require("body-parser");
 // route imports
 const authRoutes = require("./routes/auth");
 const profileRoutes = require("./routes/profiles");
+const schoolRoutes = require("./routes/school")
 const companyRoutes = require("./routes/companies");
 const pipelineRoutes = require("./routes/pipelines");
 const mongodbIdRoutes = require("./routes/mongodbId");
@@ -60,6 +61,7 @@ app.get("/", (req, res) => {
 // routes
 app.use("/api/user", authRoutes);
 app.use("/api/profile", profileRoutes);
+app.use("/api/school", schoolRoutes);
 app.use("/api/company", companyRoutes);
 app.use("/api/pipeline", pipelineRoutes);
 app.use("/api/mongodbId", mongodbIdRoutes);
