@@ -67,7 +67,7 @@ function App() {
 
     return (
         <Router>
-            <div className="flex min-h-screen w-screen flex-col">
+            <div className="flex min-h-screen w-full flex-col">
                 <AppNavbar />
                 <AppRoutes user={user} />
                 <AppFooter />

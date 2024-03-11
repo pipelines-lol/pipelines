@@ -5,7 +5,7 @@ const OVERLAY_CLASS = `absolute left-0 top-16 z-50 flex h-96 w-full flex-col ite
 const MobileNavLink = ({ to, children, className, ...props }) => (
     <NavLink
         to={to}
-        className={`${className || ' pb-7 text-xl font-light uppercase text-white'}`}
+        className={`${className || ' pb-7 text-xl font-medium uppercase text-white'}`}
         {...props}
     >
         {children}

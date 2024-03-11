@@ -140,7 +140,7 @@ const Offerings = () => {
 
     return (
         <div className="mb-12 flex h-full w-full flex-col items-center  justify-center border-b-[0.5px] border-t-[0.5px] border-pipeline-blue-200">
-            <div className="my-20 rounded-lg bg-[#01184C]/50 p-8">
+            <div className="w-full rounded-lg">
                 <div className="rounded-xl bg-gray-950 py-12">
                     <div className="mx-auto max-w-7xl px-4 md:px-8">
                         <motion.div
@@ -150,7 +150,7 @@ const Offerings = () => {
                             ref={ref2}
                         >
                             <div className="text-center">
-                                <h2 className="text-uppercase mx-auto font-semibold tracking-wide text-pipeline-blue-200 md:max-w-3xl md:text-center">
+                                <h2 className="text-uppercase mx-auto mt-10 font-semibold tracking-wide text-pipeline-blue-200 md:max-w-3xl md:text-center">
                                     What We Offer
                                 </h2>
                                 <p className="xs:max-w-3xl mx-auto my-8 text-2xl font-normal tracking-tight text-pipelines-gray-100 sm:px-12 sm:text-4xl md:text-center lg:text-6xl">
@@ -179,6 +179,7 @@ const Offerings = () => {
                                             <motion.div
                                                 key={idx}
                                                 variants={item}
+                                                className="rounded-md border border-[0.5px] border-white/20 p-5"
                                             >
                                                 <Offering
                                                     title={offering.title}
@@ -192,7 +193,7 @@ const Offerings = () => {
                                 </motion.div>
                             </div>
 
-                            <p className="mx-auto mt-12 p-4 text-center text-xl font-normal tracking-normal text-pipelines-gray-100/80 md:max-w-3xl">
+                            <p className="mx-auto mb-12 mt-12 p-4 text-center text-xl font-normal tracking-normal text-pipelines-gray-100/80 md:max-w-3xl">
                                 Pipelines focuses on the core of what LinkedIn
                                 was meant to be: a place to share your career
                                 journey with others.

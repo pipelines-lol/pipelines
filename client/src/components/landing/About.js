@@ -16,9 +16,8 @@ export default function About() {
             opacity: 1,
             y: 0,
             transition: {
-                duration: 0.8,
+                duration: 0.5,
                 ease: 'easeInOut',
-                delay: 0.3,
             },
         },
     }
@@ -44,7 +43,7 @@ export default function About() {
                         <Timeline>
                             <div className="left-timeline mb-8 flex w-full flex-row-reverse items-center justify-between">
                                 <div className="order-1"></div>
-                                <div className="order-1 hidden py-4  text-center text-4xl md:flex">
+                                <div className="order-1 hidden py-4 text-left text-4xl md:flex">
                                     <p>
                                         Think of a pipeline as a roadmap of
                                         internships, jobs, and other
@@ -66,7 +65,7 @@ export default function About() {
                     ref={ref}
                     className="flex h-full w-full flex-col items-start justify-center"
                 >
-                    <p className="mx-20 max-w-xl text-left text-xl font-light leading-7 text-pipelines-gray-100 md:text-xl lg:text-2xl xl:text-3xl">
+                    <p className="ml-56 w-1/2 text-left text-xl font-normal text-pipelines-gray-100 md:text-xl lg:text-2xl xl:text-4xl">
                         With{' '}
                         <span className="font-semibold text-pipeline-blue-200">
                             pipelines.lol

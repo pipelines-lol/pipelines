@@ -33,7 +33,7 @@ export default function Timeline({ children }) {
                                                 May 2023 - September 2023
                                             </p>
                                             <h4 className="text-md mb-3 font-bold md:text-2xl">
-                                                Google
+                                                Microsoft
                                             </h4>
                                             <h4 className="mb-3 text-lg font-light md:text-2xl">
                                                 Software Engineering Intern
@@ -47,7 +47,7 @@ export default function Timeline({ children }) {
                                                 May 2022 - August 2022
                                             </p>
                                             <h4 className="mb-3 text-lg font-bold md:text-2xl">
-                                                Meta
+                                                Salesforce
                                             </h4>
                                             <h4 className="mb-3 text-lg font-light md:text-2xl">
                                                 Software Engineering Intern
@@ -61,7 +61,7 @@ export default function Timeline({ children }) {
                                                 May 2021 - August 2021
                                             </p>
                                             <h4 className="mb-3 text-lg font-bold md:text-2xl">
-                                                Meta University
+                                                DocuSign
                                             </h4>
                                             <h4 className="mb-3 text-lg font-light md:text-2xl">
                                                 Software Engineering Intern
@@ -77,10 +77,10 @@ export default function Timeline({ children }) {
                                                 May 2020 - August 2020
                                             </p>
                                             <h4 className="mb-3 text-left  text-lg font-bold md:text-2xl">
-                                                Google CSSI
+                                                Lockheed Martin
                                             </h4>
                                             <h4 className="mb-3 text-left text-lg font-light md:text-2xl">
-                                                Student
+                                                Software Engineer Intern
                                             </h4>
                                         </div>
                                     </div>
