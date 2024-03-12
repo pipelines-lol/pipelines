@@ -3,11 +3,11 @@ export default function Timeline({ children }) {
         <>
             <section>
                 <div className="bg-black text-white">
-                    <div className="container mx-auto my-12 flex flex-col items-start md:my-24 md:flex-row">
+                    <div className="justfiy-evenly container mx-auto my-12 flex flex-col items-start md:my-24 md:flex-row">
                         <div className="sticky mt-2 flex w-full translate-y-14 transform flex-col px-8 md:top-36 md:mt-24 lg:w-1/3">
                             {children}
                         </div>
-                        <div className="sticky ml-0 md:ml-12 lg:w-2/3">
+                        <div className="sticky ml-0 md:ml-52 lg:w-2/3">
                             <div className="container mx-auto h-full w-full">
                                 <div className="wrap relative h-full overflow-hidden p-10">
                                     <div

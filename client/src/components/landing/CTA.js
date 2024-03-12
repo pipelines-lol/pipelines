@@ -19,14 +19,14 @@ export default function CTA() {
     return (
         <>
             <section
-                className="flex h-[95vh] w-full flex-col items-center justify-center gap-4 py-12"
+                className="flex h-[100vh] w-full flex-col items-center justify-center gap-4 py-12"
                 style={{
                     backgroundImage: 'url("CTA.png")',
                     backgroundSize: 'cover',
                     backgroundPosition: 'center',
                 }}
             >
-                <div className="mt-12 flex h-full w-full flex-col items-center justify-center space-y-8 text-center">
+                <div className="mb-20 mt-20 flex h-full w-full flex-col items-center justify-center space-y-8 text-center">
                     <p className="xs:text-3xl mx-20 text-3xl font-light text-pipelines-gray-100 md:max-w-2xl md:text-4xl  lg:text-4xl xl:text-5xl">
                         What are you waiting for? <br />
                         <br />

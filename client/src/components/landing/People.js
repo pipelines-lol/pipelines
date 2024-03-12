@@ -9,7 +9,7 @@ export default function People() {
     const navigate = useNavigate()
 
     const generateProfiles = async () => {
-        const size = 3
+        const size = 5
         setLoading(true)
 
         fetch(`${HOST}/api/pipeline/random/${size}`, {
@@ -68,10 +68,12 @@ export default function People() {
                         are Sharing Their Pipelines
                     </h1>
 
-                    <div className="flex h-full w-full flex-row flex-wrap items-center justify-center gap-4">
+                    <div className="mt-10 flex h-full w-full flex-row flex-wrap items-center justify-evenly p-5">
                         {profiles.map((profile) => (
-                            <div key={`profile_${profile._id}`}>
-                                <div className="py-5"></div>
+                            <div
+                                key={`profile_${profile._id}`}
+                                className="mb-10 rounded-md bg-zinc-800 p-7"
+                            >
                                 <PipelineCard
                                     key={`pipeline_${profile._id}`}
                                     profileId={profile._id}

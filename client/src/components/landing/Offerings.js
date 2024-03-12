@@ -88,7 +88,7 @@ const Offering = (props) => {
                 </div>
             </div>
             <div className="ml-4">
-                <dt className="text-lg font-semibold leading-6 text-pipeline-blue-200">
+                <dt className="text-xl font-semibold leading-6 text-sky-600">
                     {props.title}
                 </dt>
                 <div className="mr-8 mt-2 text-sm text-pipelines-gray-100/50 md:text-lg">
