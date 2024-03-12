@@ -16,9 +16,8 @@ export default function About() {
             opacity: 1,
             y: 0,
             transition: {
-                duration: 0.8,
+                duration: 0.5,
                 ease: 'easeInOut',
-                delay: 0.3,
             },
         },
     }
@@ -44,7 +43,7 @@ export default function About() {
                         <Timeline>
                             <div className="left-timeline mb-8 flex w-full flex-row-reverse items-center justify-between">
                                 <div className="order-1"></div>
-                                <div className="order-1 hidden py-4  text-center text-4xl md:flex">
+                                <div className="order-1 hidden py-4 text-left text-4xl md:flex">
                                     <p>
                                         Think of a pipeline as a roadmap of
                                         internships, jobs, and other
@@ -58,15 +57,15 @@ export default function About() {
                 </div>
             </section>
 
-            <section className="flex h-full w-full flex-row flex-wrap items-center justify-center -space-x-32 py-24 lg:flex-nowrap">
+            <section className="flex h-full w-full flex-row flex-wrap items-center justify-evenly -space-x-32 py-24 lg:flex-nowrap">
                 <motion.div
                     variants={parent}
                     initial="hidden"
                     animate={inView ? 'visible' : 'hidden'}
                     ref={ref}
-                    className="flex h-full w-full flex-col items-start justify-center"
+                    className="mb-12 flex h-full w-full flex-col items-start justify-center sm:mb-0"
                 >
-                    <p className="mx-20 max-w-xl text-left text-xl font-light leading-7 text-pipelines-gray-100 md:text-xl lg:text-2xl xl:text-3xl">
+                    <p className="relative left-[13%] w-3/4 text-center text-xl font-normal text-pipelines-gray-100 sm:left-[22%] sm:w-1/2 sm:text-left md:text-xl lg:text-2xl xl:text-4xl">
                         With{' '}
                         <span className="font-semibold text-pipeline-blue-200">
                             pipelines.lol
@@ -77,9 +76,9 @@ export default function About() {
                     </p>
                 </motion.div>
 
-                <div className="flex h-full w-full items-center justify-center">
+                <div className="relative left-[15%] flex h-full w-full items-center justify-center sm:left-[-5%]">
                     <img
-                        className="h-[50vh] w-full object-contain"
+                        className="h-[25vh] w-full object-contain sm:h-[35vh]"
                         src={'Hero.svg'}
                         alt={'Hero'}
                     />

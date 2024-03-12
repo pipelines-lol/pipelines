@@ -12,10 +12,11 @@ export const CustomNavLink = ({ to, children, ...props }) => (
         to={to}
         className={({ isActive }) =>
             isActive
-                ? `${isActive && !props.hovering ? 'underline-force highlight' : ''} relative flex h-full cursor-default items-center justify-center px-12 text-center font-light uppercase text-white transition-colors duration-300 hover:text-pipeline-blue-200`
-                : 'underline-hover relative flex h-full items-center justify-center px-12 text-center font-light uppercase text-white transition-colors duration-300 hover:text-pipeline-blue-200'
+                ? `${isActive && !props.hovering ? 'underline-force highlight' : ''} relative flex h-full cursor-default items-center justify-center px-12 text-center uppercase text-white transition-colors duration-300 hover:text-pipeline-blue-200`
+                : 'underline-hover relative flex h-full items-center justify-center px-12 text-center uppercase text-white transition-colors duration-300 hover:text-pipeline-blue-200'
         }
         {...props}
+        style={{ fontWeight: '600' }}
     >
         {children}
         <span className="absolute bottom-0 left-0 h-1 w-0 bg-white transition-all duration-300 ease-in-out hover:w-full"></span>
@@ -80,7 +81,7 @@ export default function NonMobileNavbar({
                         <>
                             <NavLink
                                 to={linkedinRedirectUrl}
-                                className="relative flex h-full items-center justify-center rounded-lg px-8 py-2 font-normal uppercase text-white shadow-md transition-colors duration-300 hover:bg-white/10"
+                                className="relative flex h-full items-center justify-center rounded-lg px-8 py-2 font-medium uppercase text-white shadow-md transition-colors duration-300 hover:bg-white/10"
                             >
                                 Login
                                 <span className="absolute bottom-0 left-0 h-1 w-0 bg-white transition-all duration-300 ease-in-out hover:w-full"></span>

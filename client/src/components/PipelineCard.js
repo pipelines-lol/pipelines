@@ -147,10 +147,10 @@ export const ExperienceCard = ({ experience }) => {
                 <h1 className="text-2xl font-semibold text-pipelines-gray-100">
                     {capitalize(experience.companyName)}
                 </h1>
-                <h1 className="text-xl font-thin italic text-pipelines-gray-100">
+                <h1 className="text-x font-thin text-pipelines-gray-100">
                     {experience.title}
                 </h1>
-                <h1 className="text-xl font-light text-pipelines-gray-100 opacity-60">
+                <h1 className="text-s font-light text-pipelines-gray-100 opacity-60">
                     {formatDateToMMYY(experience.startDate)} -{' '}
                     {!experience.isIndefinite
                         ? formatDateToMMYY(experience.endDate)
