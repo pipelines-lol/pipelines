@@ -25,13 +25,11 @@ const getProfile = async (req, res) => {
 
   // check if profile is anonymous
   if (profile.anonymous) {
-    // do not send sensitive information
-    profile.linkedin = "";
-    profile.pfp = "";
-    profile.location = "";
-
-    profile.firstName = "Anonymous";
-    profile.lastName = "";
+    const { linkedin, pfp, location, lastName, ...anonymousProfile } = profile;
+    profile = {
+      ...anonymousProfile,
+      firstName: "Anonymous",
+    };
   }
 
   res.status(200).json(profile);
