@@ -23,6 +23,17 @@ const getProfile = async (req, res) => {
     return res.status(404).json({ error: "No such Profile." });
   }
 
+  // check if profile is anonymous
+  if (profile.anonymous) {
+    // do not send sensitive information
+    profile.linkedin = "";
+    profile.pfp = "";
+    profile.location = "";
+
+    profile.firstName = "Anonymous";
+    profile.lastName = "";
+  }
+
   res.status(200).json(profile);
 };
 
