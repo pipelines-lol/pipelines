@@ -488,15 +488,15 @@ function Profile() {
                     </div>
                 </div>
             ) : (
-                <div className="bg-pipeline-blue-100/20 flex h-full min-h-[90vh] w-full flex-col items-center justify-center gap-10 p-16 md:flex-row">
+                <div className="flex h-full min-h-[90vh] w-full flex-col items-center justify-center gap-10 bg-pipelines-gray-100/10 p-16 md:flex-row">
                     {/* Profile picture + few fields */}
-                    <div className="flex h-full w-full min-w-96 flex-col items-center justify-center gap-5 bg-white p-10 shadow-md md:w-1/3">
+                    <div className="flex h-full w-full min-w-96 flex-col items-center justify-center gap-5 shadow-md md:w-1/3">
                         {admin ? (
                             <ProfilePicture profile={profile} setPfp={setPfp} />
                         ) : (
                             <img
                                 src={'/avatar.png'}
-                                className="h-96 w-96 rounded-full object-cover"
+                                className="h-48 w-48 rounded-full object-cover"
                                 alt={`${profile._id}_avatar`}
                             />
                         )}
@@ -549,12 +549,12 @@ function Profile() {
                             </div>
                         ) : (
                             <div className="flex flex-col items-center justify-center gap-3">
-                                <label className="font-medium text-black">
+                                <label className="font-medium text-white">
                                     Username
                                 </label>
                                 <h1>Anonymous</h1>
 
-                                <label className="font-medium text-black">
+                                <label className="font-medium text-white">
                                     Linkedin
                                 </label>
                                 <h1>Anonymous</h1>
@@ -564,7 +564,7 @@ function Profile() {
 
                     {/* Name + job info */}
                     <div className="flex h-full w-full flex-col items-center justify-center gap-3 md:w-1/3 md:items-start">
-                        <h1 className="text-2xl font-semibold text-black">
+                        <h1 className="text-2xl font-semibold text-white">
                             Anonymous
                         </h1>
 
@@ -594,7 +594,7 @@ function Profile() {
                     </div>
 
                     {/* Pipeline */}
-                    <div className="flex h-full w-full flex-col items-center justify-center gap-3 bg-white p-10 pt-20 md:w-1/3">
+                    <div className="flex h-full w-full flex-col items-center justify-center gap-3 p-10 pt-20 md:w-1/3">
                         {profile.pipeline &&
                             profile.pipeline.map((experience, i) => (
                                 <div
