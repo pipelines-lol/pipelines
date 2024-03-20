@@ -569,12 +569,12 @@ function Profile() {
                         </h1>
 
                         {currentExperienceInfo && (
-                            <h1 className="text-center md:text-start">
-                                {currentExperienceInfo[0] +
-                                    currentExperienceInfo[1].title}{' '}
+                            <h1 className="text-center text-white md:text-start">
+                                {currentExperienceInfo.time +
+                                    currentExperienceInfo.title}{' '}
                                 at{' '}
                                 <span className="font-medium">
-                                    {currentExperienceInfo[1].company}
+                                    {currentExperienceInfo.company}
                                 </span>
                             </h1>
                         )}
