@@ -28,15 +28,12 @@ export const SchoolQuerySearch = ({ value, handleSearch }) => {
         if (query === '') return
 
         try {
-            const response = await fetch(
-                `${HOST}/api/search?name=${query}`,
-                {
-                    method: 'GET',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                }
-            )
+            const response = await fetch(`${HOST}/api/search?name=${query}`, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+            })
 
             if (!response.ok) {
                 // Check if the response has JSON content
