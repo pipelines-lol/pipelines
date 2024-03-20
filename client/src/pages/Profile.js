@@ -356,7 +356,7 @@ function Profile() {
             {profile && !profile.anonymous ? (
                 <div className="flex h-full min-h-[90vh] w-full flex-col items-center justify-center gap-10 bg-pipelines-gray-100/10 p-16 md:flex-row">
                     {/* Profile picture + few fields */}
-                    <div className="min-w-96 flex h-full w-full flex-col items-center justify-center gap-5 shadow-md md:w-1/3">
+                    <div className="flex h-full w-full min-w-96 flex-col items-center justify-center gap-5 shadow-md md:w-1/3">
                         {admin ? (
                             <ProfilePicture profile={profile} setPfp={setPfp} />
                         ) : (
@@ -479,7 +479,7 @@ function Profile() {
             ) : (
                 <div className="flex h-full min-h-[90vh] w-full flex-col items-center justify-center gap-10 bg-pipelines-gray-100/10 p-16 md:flex-row">
                     {/* Profile picture + few fields */}
-                    <div className="min-w-96 flex h-full w-full flex-col items-center justify-center gap-5 shadow-md md:w-1/3">
+                    <div className="flex h-full w-full min-w-96 flex-col items-center justify-center gap-5 shadow-md md:w-1/3">
                         <img
                             src={'/avatar.png'}
                             className="h-48 w-48 rounded-full object-cover"
