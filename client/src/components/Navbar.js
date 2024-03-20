@@ -2,7 +2,7 @@ import { useNavigate } from 'react-router-dom'
 import { useAuthContext } from '../hooks/useAuthContext'
 
 import { HOMEPAGE, HOST } from '../util/apiRoutes'
-import { CLIENT_ID, SCOPE } from '../util/linkedinKeys'
+import { CLIENT_ID, SCOPE } from '../util/linkedinUtils'
 
 import { useEffect, useState } from 'react'
 import MobileNavigationBar from './nav/Mobile'
@@ -77,15 +77,15 @@ const Navbar = () => {
             return
         }
 
-        const { givenName, familyName, locale, picture, vanityName } =
+        const { given_name, family_name, locale, picture, vanity_name } =
             linkedinUserInfo
 
         const profile = {
-            firstName: givenName,
-            lastName: familyName,
+            firstName: given_name,
+            lastName: family_name,
             location: locale.country,
             pfp: picture,
-            linkedin: `https://linkedin.com/in/${vanityName}`,
+            linkedin: `https://linkedin.com/in/${vanity_name}`,
             created: true,
         }
 

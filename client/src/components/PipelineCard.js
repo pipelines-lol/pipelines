@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
-import { companies } from '../data/companyData'
 
+import { capitalizeCompanyTitle } from '../util/companyUtils'
 import { HOST } from '../util/apiRoutes'
 import { ConditionalLink } from './ConditionalLink'
 
@@ -102,27 +102,6 @@ export const ExperienceCard = ({ experience }) => {
         return date.toLocaleDateString(undefined, options)
     }
 
-    function capitalize(str) {
-        // shoutout bobdagoat
-        if (typeof str !== 'string' || str.trim() === '') {
-            // bad input
-            return str
-        }
-
-        const formattedCompany = companies.find(
-            (company) => company.name.toLowerCase() === str.toLowerCase()
-        )
-
-        if (formattedCompany) {
-            return formattedCompany.name
-        }
-
-        return str
-            .split(' ')
-            .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
-            .join(' ')
-    }
-
     const navigate = useNavigate()
 
     return (
@@ -139,13 +118,13 @@ export const ExperienceCard = ({ experience }) => {
                 <img
                     className="h-24 w-24 rounded-md object-contain"
                     src={experience.logo}
-                    alt={`${capitalize(experience.companyName)}_logo`}
+                    alt={`${capitalizeCompanyTitle(experience.companyName)}_logo`}
                 />
                 <div className="absolute left-2 top-5 h-24 w-24 animate-blob rounded-full bg-pipelines-gray-100/20 opacity-70 mix-blend-multiply blur-xl filter" />
             </div>
             <div className="flex flex-col items-center justify-center">
                 <h1 className="text-2xl font-semibold text-pipelines-gray-100">
-                    {capitalize(experience.companyName)}
+                    {capitalizeCompanyTitle(experience.companyName)}
                 </h1>
                 <h1 className="text-x font-thin text-pipelines-gray-100">
                     {experience.title}

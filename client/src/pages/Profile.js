@@ -2,7 +2,8 @@ import { useEffect, useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import { useAuthContext } from '../hooks/useAuthContext'
 import { HOST } from '../util/apiRoutes'
-import { isMongoDBId } from '../util/isMongodbId'
+import { capitalizeCompanyTitle } from '../util/companyUtils'
+import { isMongoDBId } from '../util/mongoUtils'
 
 import Loading from './Loading'
 
@@ -67,6 +68,8 @@ function Profile() {
                 const data = await response.json()
                 setProfile(data)
 
+                console.log(data)
+
                 setUsername(data.username)
                 setLinkedin(extractLinkedinUsername(data.linkedin))
                 setLocation(data.location)
@@ -117,37 +120,6 @@ function Profile() {
     }
 
     const getCurrentExperience = () => {
-        /*function splitDateString(dateString) {
-            const dateParts = dateString.split(' - ')
-            const startDate = parseDateString(dateParts[0])
-            const endDate = parseDateString(dateParts[1])
-
-            return [startDate, endDate]
-        }*/
-
-        /*function parseDateString(dateString) {
-            const months = [
-                'January',
-                'February',
-                'March',
-                'April',
-                'May',
-                'June',
-                'July',
-                'August',
-                'September',
-                'October',
-                'November',
-                'December',
-            ]
-
-            const [month, year] = dateString.split(' ')
-            const monthIndex = months.indexOf(month)
-            const parsedDate = new Date(year, monthIndex)
-
-            return parsedDate
-        }*/
-
         if (!profile || !profile.pipeline) return
 
         // compare experience dates to todays date
@@ -161,7 +133,14 @@ function Profile() {
                 startDate.getTime() <= currentDate.getTime() &&
                 currentDate.getTime() <= endDate.getTime()
             ) {
-                return ['Current ', profile.pipeline[index]]
+                const experience = profile.pipeline[index]
+                const title = experience.title
+                const companyName = experience.companyName
+                return {
+                    time: 'Currently ',
+                    title: title,
+                    company: capitalizeCompanyTitle(companyName),
+                }
             }
 
             // check if current experience is in the future compared to current date
@@ -169,11 +148,25 @@ function Profile() {
                 startDate.getTime() >= currentDate.getTime() &&
                 endDate.getTime() >= currentDate.getTime()
             ) {
-                return ['Incoming ', profile.pipeline[index]]
+                const experience = profile.pipeline[index]
+                const title = experience.title
+                const companyName = experience.companyName
+                return {
+                    time: 'Incoming ',
+                    title: title,
+                    company: capitalizeCompanyTitle(companyName),
+                }
             }
         }
 
-        return ['Previous ', profile.pipeline[profile.pipeline.length - 1]]
+        const experience = profile.pipeline[profile.pipeline.length - 1]
+        const title = experience.title
+        const companyName = experience.companyName
+        return {
+            time: 'Previously ',
+            title: title,
+            company: capitalizeCompanyTitle(companyName),
+        }
     }
 
     const validateUsername = async (username) => {
@@ -360,7 +353,7 @@ function Profile() {
 
     const admin = user && (user.profileId === id || user.username === id)
 
-    const currentExperienceInfo =
+    const currentExperienceInfo = // {'Incoming / Currently / Previously', Work Title, Company Name}
         profile && profile.pipeline && profile.pipeline.length > 0
             ? getCurrentExperience()
             : null
@@ -451,11 +444,11 @@ function Profile() {
 
                         {currentExperienceInfo && (
                             <h1 className="text-center text-white md:text-start">
-                                {currentExperienceInfo[0] +
-                                    currentExperienceInfo[1].title}{' '}
+                                {currentExperienceInfo.time +
+                                    currentExperienceInfo.title}{' '}
                                 at{' '}
                                 <span className="font-medium">
-                                    {currentExperienceInfo[1].company}
+                                    {currentExperienceInfo.company}
                                 </span>
                             </h1>
                         )}
@@ -495,15 +488,15 @@ function Profile() {
                     </div>
                 </div>
             ) : (
-                <div className="bg-pipeline-blue-100/20 flex h-full min-h-[90vh] w-full flex-col items-center justify-center gap-10 p-16 md:flex-row">
+                <div className="flex h-full min-h-[90vh] w-full flex-col items-center justify-center gap-10 bg-pipelines-gray-100/10 p-16 md:flex-row">
                     {/* Profile picture + few fields */}
-                    <div className="flex h-full w-full min-w-96 flex-col items-center justify-center gap-5 bg-white p-10 shadow-md md:w-1/3">
+                    <div className="flex h-full w-full min-w-96 flex-col items-center justify-center gap-5 shadow-md md:w-1/3">
                         {admin ? (
                             <ProfilePicture profile={profile} setPfp={setPfp} />
                         ) : (
                             <img
                                 src={'/avatar.png'}
-                                className="h-96 w-96 rounded-full object-cover"
+                                className="h-48 w-48 rounded-full object-cover"
                                 alt={`${profile._id}_avatar`}
                             />
                         )}
@@ -556,12 +549,12 @@ function Profile() {
                             </div>
                         ) : (
                             <div className="flex flex-col items-center justify-center gap-3">
-                                <label className="font-medium text-black">
+                                <label className="font-medium text-white">
                                     Username
                                 </label>
                                 <h1>Anonymous</h1>
 
-                                <label className="font-medium text-black">
+                                <label className="font-medium text-white">
                                     Linkedin
                                 </label>
                                 <h1>Anonymous</h1>
@@ -571,17 +564,17 @@ function Profile() {
 
                     {/* Name + job info */}
                     <div className="flex h-full w-full flex-col items-center justify-center gap-3 md:w-1/3 md:items-start">
-                        <h1 className="text-2xl font-semibold text-black">
+                        <h1 className="text-2xl font-semibold text-white">
                             Anonymous
                         </h1>
 
                         {currentExperienceInfo && (
-                            <h1 className="text-center md:text-start">
-                                {currentExperienceInfo[0] +
-                                    currentExperienceInfo[1].title}{' '}
+                            <h1 className="text-center text-white md:text-start">
+                                {currentExperienceInfo.time +
+                                    currentExperienceInfo.title}{' '}
                                 at{' '}
                                 <span className="font-medium">
-                                    {currentExperienceInfo[1].company}
+                                    {currentExperienceInfo.company}
                                 </span>
                             </h1>
                         )}
@@ -601,7 +594,7 @@ function Profile() {
                     </div>
 
                     {/* Pipeline */}
-                    <div className="flex h-full w-full flex-col items-center justify-center gap-3 bg-white p-10 pt-20 md:w-1/3">
+                    <div className="flex h-full w-full flex-col items-center justify-center gap-3 p-10 pt-20 md:w-1/3">
                         {profile.pipeline &&
                             profile.pipeline.map((experience, i) => (
                                 <div

@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+import { HOST } from '../util/apiRoutes'
 
 export const SchoolQuerySearch = ({ value, handleSearch }) => {
     const [query, setQuery] = useState('')
@@ -6,7 +7,7 @@ export const SchoolQuerySearch = ({ value, handleSearch }) => {
     const hasResults = results.length > 0 && query !== ''
 
     const [timerId, setTimerId] = useState(null)
-    const TIMER_DELAY = 100 // milliseconds
+    const TIMER_DELAY = 75 // milliseconds
 
     useEffect(() => {
         // Cleanup the timer on component unmount
@@ -27,15 +28,12 @@ export const SchoolQuerySearch = ({ value, handleSearch }) => {
         if (query === '') return
 
         try {
-            const response = await fetch(
-                `http://universities.hipolabs.com/search?name=${query}`,
-                {
-                    method: 'GET',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                }
-            )
+            const response = await fetch(`${HOST}/api/search?name=${query}`, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+            })
 
             if (!response.ok) {
                 // Check if the response has JSON content
