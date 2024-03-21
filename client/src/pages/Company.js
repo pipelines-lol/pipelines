@@ -139,7 +139,7 @@ const Company = () => {
     const tableElem = (rank, company) => {
         if (company.name === null || employeeCount < 5) {
             return (
-                <tr className="h-20">
+                <tr className="h-20 divide-y divide-gray-200 border-b border-t border-gray-200">
                     <div className="avatar"></div>
                     <td>{'No data available.'}</td>
                 </tr>
@@ -167,15 +167,15 @@ const Company = () => {
     const previousTable = () => {
         return (
             <div className="overflow-x-auto">
-                <table className="table">
+                <table className="table min-w-full divide-y divide-gray-300">
                     <thead>
-                        <tr>
+                        <tr className="border-b border-gray-200">
                             <th></th>
                             <th>Company Name</th>
                         </tr>
                     </thead>
 
-                    <tbody>
+                    <tbody className="divide-y divide-gray-200 border-b border-t border-gray-200">
                         {prevCompanies.map((elem, idx) => {
                             return tableElem(idx, elem)
                         })}
@@ -188,14 +188,15 @@ const Company = () => {
     const nextTable = () => {
         return (
             <div className="overflow-x-auto">
-                <table className="table">
+                <table className="table min-w-full divide-y divide-gray-300">
                     <thead>
-                        <tr>
+                        <tr className="border-b border-gray-200">
                             <th></th>
                             <th>Company Name</th>
                         </tr>
                     </thead>
-                    <tbody>
+
+                    <tbody className="divide-y divide-gray-200 border-b border-t border-gray-200">
                         {postCompanies.map((elem, idx) => {
                             return tableElem(idx, elem)
                         })}
