@@ -17,7 +17,7 @@ const getProfile = async (req, res) => {
     return res.status(404).json({ error: "No such Profile." });
   }
 
-  let profile = await Profile.findById(id);
+  const profile = await Profile.findById(id);
 
   if (!profile) {
     return res.status(404).json({ error: "No such Profile." });
@@ -25,11 +25,25 @@ const getProfile = async (req, res) => {
 
   // check if profile is anonymous
   if (profile.anonymous) {
-    const { linkedin, pfp, location, lastName, ...anonymousProfile } = profile;
-    profile = {
-      ...anonymousProfile,
+    // convert the Mongoose document to a plain JavaScript object
+    let anonymousProfile = profile.toObject();
+
+    // use object destructuring to exclude certain properties
+    const { linkedin, pfp, location, lastName, ...rest } = anonymousProfile;
+
+    // create a new profile object with the properties you want to retain and modify
+    anonymousProfile = {
+      ...rest,
       firstName: "Anonymous",
+
+      // set unwanted properties an empty string
+      linkedin: "",
+      pfp: "",
+      location: "",
+      lastName: "",
     };
+
+    return res.status(200).json(anonymousProfile);
   }
 
   res.status(200).json(profile);
