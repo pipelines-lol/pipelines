@@ -259,17 +259,6 @@ function Profile() {
         setUsername(value)
     }
 
-    const handleLinkedinChange = async (e) => {
-        // change -> saveable progress
-        setSaveable(true)
-
-        // remove previous errors
-        setLinkedinErrorMessage('')
-
-        const value = e.target.value
-        setLinkedin(value)
-    }
-
     const handleLocationChange = async (e) => {
         // change -> saveable progress
         setSaveable(true)
@@ -491,15 +480,11 @@ function Profile() {
                 <div className="flex h-full min-h-[90vh] w-full flex-col items-center justify-center gap-10 bg-pipelines-gray-100/10 p-16 md:flex-row">
                     {/* Profile picture + few fields */}
                     <div className="flex h-full w-full min-w-96 flex-col items-center justify-center gap-5 shadow-md md:w-1/3">
-                        {admin ? (
-                            <ProfilePicture profile={profile} setPfp={setPfp} />
-                        ) : (
-                            <img
-                                src={'/avatar.png'}
-                                className="h-48 w-48 rounded-full object-cover"
-                                alt={`${profile._id}_avatar`}
-                            />
-                        )}
+                        <img
+                            src={'/avatar.png'}
+                            className="h-48 w-48 rounded-full object-cover"
+                            alt={`${profile._id}_avatar`}
+                        />
 
                         {admin ? (
                             <div className="flex flex-col items-center justify-center gap-3">
@@ -515,20 +500,10 @@ function Profile() {
                                     </h1>
                                 )}
 
-                                <label>Linkedin</label>
-                                <div className="flex flex-row items-center justify-center gap-2">
-                                    <h1>linkedin.com/in/</h1>
-                                    <input
-                                        className="rounded-full bg-gray-100 p-3"
-                                        value={linkedin}
-                                        onChange={handleLinkedinChange}
-                                    />
-                                </div>
-                                {linkedinErrorMessage && (
-                                    <h1 className="text-red-400">
-                                        {linkedinErrorMessage}
-                                    </h1>
-                                )}
+                                <label className="font-medium text-white">
+                                    Linkedin
+                                </label>
+                                <h1>Anonymous</h1>
 
                                 <div className="h-4" />
 
@@ -581,15 +556,7 @@ function Profile() {
 
                         <div className="flex flex-row items-center justify-center gap-2">
                             <MapPin />
-                            {admin ? (
-                                <input
-                                    className="rounded-full bg-white p-3"
-                                    value={location}
-                                    onChange={handleLocationChange}
-                                />
-                            ) : (
-                                <h1 className="italic">{location}</h1>
-                            )}
+                            <h1 className="italic">Somewhere</h1>
                         </div>
                     </div>
 
