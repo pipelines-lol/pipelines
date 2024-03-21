@@ -17,7 +17,7 @@ const getProfile = async (req, res) => {
     return res.status(404).json({ error: "No such Profile." });
   }
 
-  const profile = await Profile.findById(id);
+  let profile = await Profile.findById(id);
 
   if (!profile) {
     return res.status(404).json({ error: "No such Profile." });
