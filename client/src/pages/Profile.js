@@ -363,7 +363,7 @@ function Profile() {
                 }}
             >
                 <div className="min-h-4/5 min-w-1/4 flex flex-col gap-5 rounded-2xl border-2 border-transparent bg-pipeline-blue-200/20 px-24 py-12 text-pipelines-gray-100">
-                    {admin ? (
+                    {admin && !profile.anonymous ? (
                         <ProfilePicture profile={profile} setPfp={setPfp} />
                     ) : (
                         <img
@@ -373,7 +373,7 @@ function Profile() {
                         />
                     )}
 
-                    {admin ? (
+                    {admin && !profile.anonymous ? (
                         <div className="flex flex-col items-center justify-center gap-3">
                             <label className="text-white">Username</label>
                             <input
@@ -392,7 +392,11 @@ function Profile() {
                             <label className="font-medium text-white">
                                 Username
                             </label>
-                            <h1 className="text-white">{username}</h1>
+                            <h1 className="text-white">
+                                {profile && profile.anonymous
+                                    ? 'Anonymous'
+                                    : username}
+                            </h1>
                         </div>
                     )}
 
@@ -400,7 +404,9 @@ function Profile() {
                     <label className="font-medium text-white">Linkedin</label>
                     <Link to={buildLinkedinUrl(linkedin)} target="_blank">
                         <h1 className="text-white hover:underline">
-                            {linkedin}
+                            {profile && profile.anonymous
+                                ? 'Anonymous'
+                                : linkedin}
                         </h1>
                     </Link>
 
@@ -424,7 +430,11 @@ function Profile() {
                     <div className="flex h-full w-full flex-col items-center justify-center gap-5 p-10">
                         <div className="flex w-full flex-row items-center justify-center gap-5">
                             <GraduationCap color="white" />
-                            <h1 className="text-white">{profile.school}</h1>
+                            <h1 className="text-white">
+                                {profile && profile.anonymous
+                                    ? 'Anonymous'
+                                    : profile.school}
+                            </h1>
                         </div>
                     </div>
                 </div>
@@ -448,14 +458,18 @@ function Profile() {
 
                     <div className="flex flex-row items-center justify-center gap-2">
                         <MapPin />
-                        {admin ? (
+                        {admin && !profile.anonymous ? (
                             <input
                                 className="rounded-full bg-pipelines-gray-100/10 p-3 text-white"
                                 value={location}
                                 onChange={handleLocationChange}
                             />
                         ) : (
-                            <h1 className="italic text-white">{location}</h1>
+                            <h1 className="italic text-white">
+                                {profile && profile.anonymous
+                                    ? 'Somewhere'
+                                    : location}
+                            </h1>
                         )}
                     </div>
                 </div>
