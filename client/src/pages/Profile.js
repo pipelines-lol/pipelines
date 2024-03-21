@@ -362,7 +362,7 @@ function Profile() {
                     paddingBottom: '10vh',
                 }}
             >
-                <div className="min-h-4/5 min-w-1/4 flex flex-col gap-5 rounded-2xl border-2 border-transparent bg-pipeline-blue-200/20 px-24 py-12 text-pipelines-gray-100">
+                <div className="min-h-4/5 min-w-1/4 flex flex-col items-center gap-5 rounded-2xl border-2 border-transparent bg-pipeline-blue-200/20 px-24 py-12 text-pipelines-gray-100">
                     {admin && !profile.anonymous ? (
                         <ProfilePicture profile={profile} setPfp={setPfp} />
                     ) : (
