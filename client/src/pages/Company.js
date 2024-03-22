@@ -139,7 +139,7 @@ const Company = () => {
     const tableElem = (rank, company) => {
         if (company.name === null || employeeCount < 5) {
             return (
-                <tr className="h-20">
+                <tr className="h-20 divide-y divide-gray-200 border-b border-t border-gray-200">
                     <div className="avatar"></div>
                     <td>{'No data available.'}</td>
                 </tr>
@@ -167,15 +167,15 @@ const Company = () => {
     const previousTable = () => {
         return (
             <div className="overflow-x-auto">
-                <table className="table">
+                <table className="table min-w-full divide-y divide-gray-300">
                     <thead>
-                        <tr>
+                        <tr className="border-b border-gray-200">
                             <th></th>
                             <th>Company Name</th>
                         </tr>
                     </thead>
 
-                    <tbody>
+                    <tbody className="divide-y divide-gray-200 border-b border-t border-gray-200">
                         {prevCompanies.map((elem, idx) => {
                             return tableElem(idx, elem)
                         })}
@@ -188,14 +188,15 @@ const Company = () => {
     const nextTable = () => {
         return (
             <div className="overflow-x-auto">
-                <table className="table">
+                <table className="table min-w-full divide-y divide-gray-300">
                     <thead>
-                        <tr>
+                        <tr className="border-b border-gray-200">
                             <th></th>
                             <th>Company Name</th>
                         </tr>
                     </thead>
-                    <tbody>
+
+                    <tbody className="divide-y divide-gray-200 border-b border-t border-gray-200">
                         {postCompanies.map((elem, idx) => {
                             return tableElem(idx, elem)
                         })}
@@ -209,19 +210,19 @@ const Company = () => {
         return (
             <div className="flex-col p-8">
                 <div className="hero-content flex-col rounded-lg bg-opacity-0 lg:flex-row">
-                    <div className="card w-min flex-row bg-sky-900 object-center p-4 shadow-2xl">
-                        <div className="card flex-col">
+                    <div className="min-h-4/5 min-w-1/4 mt-24 flex flex-col gap-5 rounded-2xl border-2 border-transparent bg-pipeline-blue-200/20 p-8 py-5 text-pipelines-gray-100 md:flex-row md:px-16 md:py-10 lg:mt-0 ">
+                        <div className="card flex-col items-center justify-center md:items-start md:justify-start">
                             <img
                                 src={logo}
-                                className="shadow-2x h-64 w-64 max-w-sm rounded-lg bg-slate-100 object-contain"
+                                className="shadow-2x h-32 w-32 max-w-sm rounded-lg bg-slate-100 object-contain md:h-64 md:w-64"
                             />
-                            <div className="flex-row bg-sky-900 object-center">
+                            <div className="flex-row object-center">
                                 <h1 className="p-6 text-5xl font-bold text-slate-200">
                                     {name}
                                 </h1>
                             </div>
                         </div>
-                        <div className="ml-4 w-min flex-col bg-sky-900 object-center p-2">
+                        <div className="ml-4 w-min flex-col object-center p-2">
                             <p className="mb-2 w-72 p-2 text-lg">{info}</p>
                             {rating !== null ? (
                                 <div className="card w-min flex-row	bg-gray-900 bg-opacity-60 p-3 shadow-xl">
@@ -249,7 +250,7 @@ const Company = () => {
                             )}
                         </div>
                     </div>
-                    <div className="card w-full bg-sky-900 object-center shadow-xl">
+                    <div className="card w-full object-center shadow-xl">
                         <div className="card-body">
                             <h2 className="card-title text-xl text-slate-200">
                                 Prior Companies
@@ -257,7 +258,7 @@ const Company = () => {
                             {previousTable()}
                         </div>
                     </div>
-                    <div className="card w-full bg-sky-900 shadow-xl">
+                    <div className="card w-full shadow-xl">
                         <div className="card-body">
                             <h2 className="card-title text-xl text-slate-200">
                                 Next Companies

@@ -352,234 +352,150 @@ function Profile() {
     }
 
     return (
-        <>
-            {profile && !profile.anonymous ? (
-                <div className="flex h-full min-h-[90vh] w-full flex-col items-center justify-center gap-10 bg-pipelines-gray-100/10 p-16 md:flex-row">
-                    {/* Profile picture + few fields */}
-                    <div className="flex h-full w-full min-w-96 flex-col items-center justify-center gap-5 shadow-md md:w-1/3">
-                        {admin ? (
-                            <ProfilePicture profile={profile} setPfp={setPfp} />
-                        ) : (
-                            <img
-                                src={pfp || '/avatar.png'}
-                                className="h-48 w-48 rounded-full object-cover"
-                                alt={`${profile._id}_avatar`}
-                            />
-                        )}
-
-                        {admin ? (
-                            <div className="flex flex-col items-center justify-center gap-3">
-                                <label className="text-white">Username</label>
-                                <input
-                                    className="rounded-full bg-pipelines-gray-100/10 p-3 text-white"
-                                    value={username}
-                                    onChange={handleUsernameChange}
-                                />
-                                {usernameErrorMessage && (
-                                    <h1 className="text-red-400">
-                                        {usernameErrorMessage}
-                                    </h1>
-                                )}
-                            </div>
-                        ) : (
-                            <div className="flex flex-col items-center justify-center gap-3">
-                                <label className="font-medium text-white">
-                                    Username
-                                </label>
-                                <h1 className="text-white">{username}</h1>
-                            </div>
-                        )}
-
-                        {/* Linkedin Section */}
-                        <label className="font-medium text-white">
-                            Linkedin
-                        </label>
-                        <Link to={buildLinkedinUrl(linkedin)} target="_blank">
-                            <h1 className="text-white hover:underline">
-                                {linkedin}
-                            </h1>
-                        </Link>
-
-                        {/* Save Button */}
-                        {admin && saveable && !hasError ? (
-                            <button
-                                className={
-                                    'rounded-full bg-black px-12 py-1 text-white'
-                                }
-                                onClick={handleEditProfile}
-                            >
-                                <h1 className="font-normal uppercase text-white">
-                                    Save
-                                </h1>
-                            </button>
-                        ) : (
-                            <></>
-                        )}
-
-                        {/* Education */}
-                        <div className="flex h-full w-full flex-col items-center justify-center gap-5 p-10">
-                            <div className="flex w-full flex-row items-center justify-center gap-5">
-                                <GraduationCap color="white" />
-                                <h1 className="text-white">{profile.school}</h1>
-                            </div>
-                        </div>
-                    </div>
-
-                    {/* Name + job info */}
-                    <div className="flex h-full w-full flex-col items-center justify-center gap-3 md:w-1/3 md:items-start">
-                        <h1 className="text-2xl font-semibold text-white">
-                            {profile.firstName} {profile.lastName}
-                        </h1>
-
-                        {currentExperienceInfo && (
-                            <h1 className="text-center text-white md:text-start">
-                                {currentExperienceInfo.time +
-                                    currentExperienceInfo.title}{' '}
-                                at{' '}
-                                <span className="font-medium">
-                                    {currentExperienceInfo.company}
-                                </span>
-                            </h1>
-                        )}
-
-                        <div className="flex flex-row items-center justify-center gap-2">
-                            <MapPin />
-                            {admin ? (
-                                <input
-                                    className="rounded-full bg-pipelines-gray-100/10 p-3 text-white"
-                                    value={location}
-                                    onChange={handleLocationChange}
-                                />
-                            ) : (
-                                <h1 className="italic text-white">
-                                    {location}
-                                </h1>
-                            )}
-                        </div>
-                    </div>
-
-                    {/* Pipeline */}
-                    <div className="flex h-full w-full flex-col items-center justify-center gap-3 p-10 pt-20 md:w-1/3">
-                        {profile.pipeline &&
-                            profile.pipeline.map((experience, i) => (
-                                <div
-                                    className="flex flex-col items-center justify-center gap-3"
-                                    key={experience._id}
-                                >
-                                    <ExperienceCard experience={experience} />
-                                    {i !== profile.pipeline.length - 1 ? (
-                                        <h1>--</h1>
-                                    ) : (
-                                        <></>
-                                    )}
-                                </div>
-                            ))}
-                    </div>
-                </div>
-            ) : (
-                <div className="flex h-full min-h-[90vh] w-full flex-col items-center justify-center gap-10 bg-pipelines-gray-100/10 p-16 md:flex-row">
-                    {/* Profile picture + few fields */}
-                    <div className="flex h-full w-full min-w-96 flex-col items-center justify-center gap-5 py-12 shadow-md md:w-1/3">
+        <div className="flex h-full min-h-[90vh] w-full items-center justify-center pt-24">
+            <div
+                className="flex h-full w-full flex-col items-center justify-center gap-10 bg-pipelines-gray-100/20 text-center md:flex-row"
+                style={{
+                    backgroundImage: 'url("/hero.png")',
+                    backgroundSize: 'cover',
+                    backgroundPosition: 'center',
+                    backgroundRepeat: 'no-repeat',
+                    borderBottom: '1px solid rgba(2, 101, 172, 0.2)',
+                    borderTop: '1px solid rgba(2, 101, 172, 0.3)',
+                    paddingBottom: '10vh',
+                }}
+            >
+                <div className="min-h-4/5 min-w-1/4 flex flex-col items-center gap-5 rounded-2xl border-2 border-transparent bg-pipeline-blue-200/20 px-24 py-12 text-pipelines-gray-100">
+                    {admin && !profile.anonymous ? (
+                        <ProfilePicture profile={profile} setPfp={setPfp} />
+                    ) : (
                         <img
-                            src={'/avatar.png'}
+                            src={pfp || '/avatar.png'}
                             className="h-48 w-48 rounded-full object-cover"
                             alt={`${profile._id}_avatar`}
                         />
+                    )}
 
-                        {admin ? (
-                            <div className="flex flex-col items-center justify-center gap-3">
-                                <label>Username</label>
-                                <input
-                                    className="rounded-full bg-gray-100 p-3 text-white"
-                                    value={username}
-                                    onChange={handleUsernameChange}
-                                />
-                                {usernameErrorMessage && (
-                                    <h1 className="text-red-400">
-                                        {usernameErrorMessage}
-                                    </h1>
-                                )}
-
-                                <label className="font-medium text-white">
-                                    Linkedin
-                                </label>
-                                <h1>Anonymous</h1>
-
-                                <div className="h-4" />
-
-                                {saveable && !hasError ? (
-                                    <button
-                                        className={
-                                            'rounded-full bg-black px-12 py-1'
-                                        }
-                                        onClick={handleEditProfile}
-                                    >
-                                        <h1 className="font-normal uppercase text-white">
-                                            Save
-                                        </h1>
-                                    </button>
-                                ) : (
-                                    <div className="h-8" />
-                                )}
-                            </div>
-                        ) : (
-                            <div className="flex flex-col items-center justify-center gap-3">
-                                <label className="font-medium text-white">
-                                    Username
-                                </label>
-                                <h1>Anonymous</h1>
-
-                                <label className="font-medium text-white">
-                                    Linkedin
-                                </label>
-                                <h1>Anonymous</h1>
-                            </div>
-                        )}
-                    </div>
-
-                    {/* Name + job info */}
-                    <div className="flex h-full w-full flex-col items-center justify-center gap-3 md:w-1/3 md:items-start">
-                        <h1 className="text-2xl font-semibold text-white">
-                            Anonymous
-                        </h1>
-
-                        {currentExperienceInfo && (
-                            <h1 className="text-center text-white md:text-start">
-                                {currentExperienceInfo.time +
-                                    currentExperienceInfo.title}{' '}
-                                at{' '}
-                                <span className="font-medium">
-                                    {currentExperienceInfo.company}
-                                </span>
+                    {admin && !profile.anonymous ? (
+                        <div className="flex flex-col items-center justify-center gap-3">
+                            <label className="text-white">Username</label>
+                            <input
+                                className="rounded-full bg-pipelines-gray-100/10 p-3 text-white"
+                                value={username}
+                                onChange={handleUsernameChange}
+                            />
+                            {usernameErrorMessage && (
+                                <h1 className="text-red-400">
+                                    {usernameErrorMessage}
+                                </h1>
+                            )}
+                        </div>
+                    ) : (
+                        <div className="flex flex-col items-center justify-center gap-3">
+                            <label className="font-medium text-white">
+                                Username
+                            </label>
+                            <h1 className="text-white">
+                                {profile && profile.anonymous
+                                    ? 'Anonymous'
+                                    : username}
                             </h1>
-                        )}
+                        </div>
+                    )}
 
-                        <div className="flex flex-row items-center justify-center gap-2">
-                            <MapPin />
-                            <h1 className="italic">Somewhere</h1>
+                    {/* Linkedin Section */}
+                    <label className="font-medium text-white">Linkedin</label>
+                    <Link to={buildLinkedinUrl(linkedin)} target="_blank">
+                        <h1 className="text-white hover:underline">
+                            {profile && profile.anonymous
+                                ? 'Anonymous'
+                                : linkedin}
+                        </h1>
+                    </Link>
+
+                    {/* Save Button */}
+                    {admin && saveable && !hasError ? (
+                        <button
+                            className={
+                                'rounded-full bg-black px-12 py-1 text-white'
+                            }
+                            onClick={handleEditProfile}
+                        >
+                            <h1 className="font-normal uppercase text-white">
+                                Save
+                            </h1>
+                        </button>
+                    ) : (
+                        <></>
+                    )}
+
+                    {/* Education */}
+                    <div className="flex h-full w-full flex-col items-center justify-center gap-5 p-10">
+                        <div className="flex w-full flex-row items-center justify-center gap-5">
+                            <GraduationCap color="white" />
+                            <h1 className="text-white">
+                                {profile && profile.anonymous
+                                    ? 'Anonymous'
+                                    : profile.school}
+                            </h1>
                         </div>
                     </div>
+                </div>
 
-                    {/* Pipeline */}
-                    <div className="flex h-full w-full flex-col items-center justify-center gap-3 p-10 pt-20 md:w-1/3">
-                        {profile.pipeline &&
-                            profile.pipeline.map((experience, i) => (
-                                <div
-                                    className="flex flex-col items-center justify-center gap-3"
-                                    key={experience._id}
-                                >
-                                    <ExperienceCard experience={experience} />
-                                    {i !== profile.pipeline.length - 1 ? (
-                                        <h1>--</h1>
-                                    ) : (
-                                        <></>
-                                    )}
-                                </div>
-                            ))}
+                {/* Center text (location / position) */}
+                <div className="flex h-full w-1/4 flex-col items-center justify-center gap-3 md:w-1/3 md:items-start">
+                    <h1 className="text-2xl font-semibold text-white">
+                        {profile.firstName} {profile.lastName}
+                    </h1>
+
+                    {currentExperienceInfo && (
+                        <h1 className="text-center text-white md:text-start">
+                            {currentExperienceInfo.time +
+                                currentExperienceInfo.title}{' '}
+                            at{' '}
+                            <span className="font-medium">
+                                {currentExperienceInfo.company}
+                            </span>
+                        </h1>
+                    )}
+
+                    <div className="flex flex-row items-center justify-center gap-2">
+                        <MapPin />
+                        {admin && !profile.anonymous ? (
+                            <input
+                                className="rounded-full bg-pipelines-gray-100/10 p-3 text-white"
+                                value={location}
+                                onChange={handleLocationChange}
+                            />
+                        ) : (
+                            <h1 className="italic text-white">
+                                {profile && profile.anonymous
+                                    ? 'Somewhere'
+                                    : location}
+                            </h1>
+                        )}
                     </div>
                 </div>
-            )}
-        </>
+
+                {/* Pipeline */}
+                <div className="flex h-4/5 w-4/5 flex-col items-center justify-center gap-3 rounded-2xl border-2 border-transparent bg-pipeline-blue-200/20 py-8 text-pipelines-gray-100 md:w-1/4">
+                    {profile.pipeline &&
+                        profile.pipeline.map((experience, i) => (
+                            <div
+                                className="flex flex-col items-center justify-center gap-3"
+                                key={experience._id}
+                            >
+                                <ExperienceCard experience={experience} />
+                                {i !== profile.pipeline.length - 1 ? (
+                                    <h1>--</h1>
+                                ) : (
+                                    <></>
+                                )}
+                            </div>
+                        ))}
+                </div>
+            </div>
+        </div>
     )
 }
 
