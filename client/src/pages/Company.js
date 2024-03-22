@@ -47,7 +47,7 @@ const Company = () => {
             setLoading(false)
             return
         }
-        setEmployeeCount(data.Employees.length)
+        setEmployeeCount(data.Employees.length + data.interns.length)
         setName(data.displayName)
         setLogo(data.logo)
         setInfo(data.description)
@@ -147,7 +147,7 @@ const Company = () => {
         }
         return (
             <tr
-                className="w-full transition duration-500 hover:cursor-pointer hover:bg-pipeline-blue-200"
+                className="w-full divide-y divide-gray-200 border-b border-t border-gray-200 transition duration-500 hover:cursor-pointer hover:bg-pipeline-blue-200"
                 onClick={() => {
                     navigate(`/company/${company.name}`)
                 }}
