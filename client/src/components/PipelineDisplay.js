@@ -122,14 +122,12 @@ export const ExperienceCard = ({ experience }) => {
                     className="h-24 w-24 rounded-md object-contain"
                     src={experience.logo}
                     alt={`${experience.displayName}_logo`}
-
                 />
                 <div className="absolute left-2 top-5 h-24 w-24 animate-blob rounded-full bg-pipelines-gray-100/20 opacity-70 mix-blend-multiply blur-xl filter" />
             </div>
             <div className="flex flex-col items-center justify-center">
                 <h1 className="text-2xl font-semibold text-pipelines-gray-100">
                     {experience.displayName}
-
                 </h1>
                 <h1 className="text-x font-thin text-pipelines-gray-100">
                     {experience.title}
