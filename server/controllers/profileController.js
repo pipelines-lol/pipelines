@@ -1,4 +1,5 @@
 const User = require("../models/userModel");
+const Company = require("../models/companyModel");
 const Profile = require("../models/profileModel");
 const mongoose = require("mongoose");
 
@@ -69,19 +70,31 @@ const deleteProfile = async (req, res) => {
 // UPDATE a poll
 const updateProfile = async (req, res) => {
   const { id } = req.params;
+  console.log("profile: ", req.body);
 
   if (!mongoose.Types.ObjectId.isValid(id)) {
     return res.status(404).json({ error: "No such Profile." });
   }
 
   try {
-    const profile = await Profile.findOneAndUpdate({ _id: id }, req.body, {
-      new: true,
-    });
+    const profile = await Profile.findById(id);
 
     if (!profile) {
       return res.status(404).json({ error: "No such Profile." });
     }
+
+    for (let i = 0; i < profile.pipeline.length; i++) {
+      const query_name = profile.pipeline[i].companyName;
+      const company = await Company.findOne({ name: query_name });
+
+      if (company) {
+        const new_display_name = company.displayName;
+        // Update the experience document in the profile collection
+        profile.pipeline[i].displayName = new_display_name;
+      }
+    }
+
+    await profile.save();
 
     res.status(200).json(profile);
   } catch (error) {

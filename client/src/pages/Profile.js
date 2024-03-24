@@ -2,7 +2,6 @@ import { useEffect, useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import { useAuthContext } from '../hooks/useAuthContext'
 import { HOST } from '../util/apiRoutes'
-import { capitalizeCompanyTitle } from '../util/companyUtils'
 import { isMongoDBId } from '../util/mongoUtils'
 
 import Loading from './Loading'
@@ -135,11 +134,11 @@ function Profile() {
             ) {
                 const experience = profile.pipeline[index]
                 const title = experience.title
-                const companyName = experience.companyName
+                const companyName = experience.displayName
                 return {
                     time: 'Currently ',
                     title: title,
-                    company: capitalizeCompanyTitle(companyName),
+                    company: companyName,
                 }
             }
 
@@ -150,22 +149,22 @@ function Profile() {
             ) {
                 const experience = profile.pipeline[index]
                 const title = experience.title
-                const companyName = experience.companyName
+                const companyName = experience.displayName
                 return {
                     time: 'Incoming ',
                     title: title,
-                    company: capitalizeCompanyTitle(companyName),
+                    company: companyName,
                 }
             }
         }
 
         const experience = profile.pipeline[profile.pipeline.length - 1]
         const title = experience.title
-        const companyName = experience.companyName
+        const companyName = experience.displayName
         return {
             time: 'Previously ',
             title: title,
-            company: capitalizeCompanyTitle(companyName),
+            company: companyName,
         }
     }
 
