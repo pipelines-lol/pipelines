@@ -5,12 +5,15 @@ import App from './App'
 
 // context
 import { AuthContextProvider } from './context/AuthContext'
+import { AdminContextProvider } from './context/AdminContext'
 
 const root = ReactDOM.createRoot(document.getElementById('root'))
 root.render(
     <React.StrictMode>
         <AuthContextProvider>
-            <App />
+            <AdminContextProvider>
+                <App />
+            </AdminContextProvider>
         </AuthContextProvider>
     </React.StrictMode>
 )
