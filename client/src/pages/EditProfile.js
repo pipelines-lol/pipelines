@@ -625,7 +625,7 @@ function EditProfile() {
         }
 
         if (!checkDuplicates(pipeline)) {
-            setErrorMessage('Duplicate Companies(Keep most recent)')
+            setErrorMessage('Duplicate Companies (See Guidelines)')
             return
         }
 
