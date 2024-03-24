@@ -6,6 +6,7 @@ import App from './App'
 // context
 import { AuthContextProvider } from './context/AuthContext'
 import { EarlyAccessContextProvider } from './context/EarlyAccessContext'
+import { AdminContextProvider } from './context/AdminContext'
 
 // store contexts here
 const contextProviders = [
