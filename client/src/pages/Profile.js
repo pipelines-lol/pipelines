@@ -67,8 +67,6 @@ function Profile() {
                 const data = await response.json()
                 setProfile(data)
 
-                console.log(data)
-
                 setUsername(data.username)
                 setLinkedin(extractLinkedinUsername(data.linkedin))
                 setLocation(data.location)
