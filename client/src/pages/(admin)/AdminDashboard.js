@@ -79,6 +79,42 @@ function AdminDashboard() {
         fetchCompanies(searchQuery) // Fetch companies based on the search term
     }
 
+    // Handler for deleting a company
+    const handleDelete = async (company) => {
+        const { name, displayName } = company
+
+        // confirm before deleting
+        if (
+            window.confirm(
+                `Are you sure you want to delete the company: "${displayName}"?`
+            )
+        ) {
+            try {
+                const response = await fetch(
+                    `${HOST}/api/company/delete/${name}`,
+                    {
+                        method: 'DELETE',
+                    }
+                )
+                if (!response.ok)
+                    throw new Error('Failed to delete the company')
+
+                // Remove the company from the local state to update the UI
+                setCompanies(
+                    companies.filter((company) => company.name !== name)
+                )
+            } catch (error) {
+                console.error('Error deleting company:', error)
+            }
+        }
+    }
+
+    // Handler for editing a company
+    const handleEdit = async (company) => {
+        // TODO: functionality for this
+        console.log(company)
+    }
+
     return (
         <div
             className="flex min-h-screen flex-row items-center justify-center bg-gray-100"
