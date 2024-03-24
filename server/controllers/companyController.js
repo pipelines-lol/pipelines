@@ -4,6 +4,7 @@ const router = require("../routes/profiles");
 const mongoose = require("mongoose");
 
 const createCompany = async (req, res) => {
+  const { displayName, logo, description } = req.body;
   const name = req.body.name.toLowerCase();
 
   try {
@@ -19,6 +20,9 @@ const createCompany = async (req, res) => {
     // Create a new company instance
     const newCompany = new Company({
       name: name,
+      displayName: displayName,
+      logo: logo || "",
+      description: description || "",
       rating: 0,
       prevCompanies: {},
       postCompanies: {},
@@ -40,6 +44,13 @@ const createCompany = async (req, res) => {
 
 const getCompany = async (req, res) => {
   const { name } = req.params;
+
+  // special case because of getCompanies
+  // call looks like: /api/company/get/companies/
+  if (name === "companies" || name === "companies/") {
+    const companies = await Company.find({});
+    return res.status(200).json(companies);
+  }
 
   try {
     // Find the company by name in the database
