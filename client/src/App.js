@@ -1,5 +1,10 @@
 // App.js
-import { Route, BrowserRouter as Router, Routes } from 'react-router-dom'
+import {
+    Route,
+    BrowserRouter as Router,
+    Routes,
+    useLocation,
+} from 'react-router-dom'
 import './App.css'
 
 // Components
@@ -16,6 +21,7 @@ import Search from './pages/Search'
 import Signup from './pages/Signup'
 import Suggestions from './pages/Suggestions'
 import Company from './pages/Company'
+import Admin from './pages/(admin)/Admin'
 
 // Context
 import { useAuthContext } from './hooks/useAuthContext'
@@ -46,6 +52,7 @@ function AppRoutes({ user }) {
         { path: '/user/:id', element: <Profile /> },
         { path: '/company/:id', element: <Company /> },
         { path: '/Suggestions', element: <Suggestions /> },
+        { path: '/admin/*', element: <Admin /> },
         {
             path: '/*',
             element: error404("We couldn't find the page you are looking for."),
@@ -61,6 +68,20 @@ function AppRoutes({ user }) {
     )
 }
 
+// Wrapper for Navbar and Footer
+const NavigationWrapper = ({ children }) => {
+    const location = useLocation()
+    const isAdminRoute = location.pathname.startsWith('/admin/')
+
+    return (
+        <div className="flex min-h-screen w-full flex-col">
+            {!isAdminRoute && <AppNavbar />}
+            {children}
+            {!isAdminRoute && <AppFooter />}
+        </div>
+    )
+}
+
 // Main App Component
 function App() {
     const { user } = useAuthContext()
@@ -68,9 +89,9 @@ function App() {
     return (
         <Router>
             <div className="flex min-h-screen w-full flex-col">
-                <AppNavbar />
-                <AppRoutes user={user} />
-                <AppFooter />
+                <NavigationWrapper>
+                    <AppRoutes user={user} />
+                </NavigationWrapper>
             </div>
         </Router>
     )
