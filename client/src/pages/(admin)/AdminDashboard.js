@@ -40,6 +40,42 @@ function AdminDashboard() {
         fetchCompanies(searchQuery) // Fetch companies based on the search term
     }
 
+    // Handler for deleting a company
+    const handleDelete = async (company) => {
+        const { name, displayName } = company
+
+        // confirm before deleting
+        if (
+            window.confirm(
+                `Are you sure you want to delete the company: "${displayName}"?`
+            )
+        ) {
+            try {
+                const response = await fetch(
+                    `${HOST}/api/company/delete/${name}`,
+                    {
+                        method: 'DELETE',
+                    }
+                )
+                if (!response.ok)
+                    throw new Error('Failed to delete the company')
+
+                // Remove the company from the local state to update the UI
+                setCompanies(
+                    companies.filter((company) => company.name !== name)
+                )
+            } catch (error) {
+                console.error('Error deleting company:', error)
+            }
+        }
+    }
+
+    // Handler for editing a company
+    const handleEdit = async (company) => {
+        // TODO: functionality for this
+        console.log(company)
+    }
+
     return (
         <div
             className="flex min-h-screen flex-row items-center justify-center bg-gray-100"
@@ -120,6 +156,8 @@ function AdminDashboard() {
                                     <th scope="col" className="px-6 py-3">
                                         Tenure
                                     </th>
+                                    <th scope="col" className="px-6 py-3"></th>
+                                    <th scope="col" className="px-6 py-3"></th>
                                 </tr>
                             </thead>
 
@@ -131,7 +169,7 @@ function AdminDashboard() {
                                 {/* Add company row */}
                                 <tr className="bg-white">
                                     <td
-                                        colSpan="6"
+                                        colSpan="8"
                                         className="px-6 py-4 text-right"
                                     >
                                         {/* Adjust colSpan based on the number of columns */}
@@ -174,6 +212,30 @@ function AdminDashboard() {
                                         </td>
                                         <td className="px-6 py-4">
                                             {company.tenure}
+                                        </td>
+
+                                        {/* Edit Button */}
+                                        <td className="px-6 py-4">
+                                            <button
+                                                onClick={() =>
+                                                    handleEdit(company)
+                                                }
+                                                className="focus:shadow-outline rounded bg-blue-500 px-4 py-2 text-white hover:bg-blue-600 focus:outline-none"
+                                            >
+                                                Edit
+                                            </button>
+                                        </td>
+
+                                        {/* Delete Button */}
+                                        <td className="px-6 py-4">
+                                            <button
+                                                onClick={() =>
+                                                    handleDelete(company)
+                                                }
+                                                className="focus:shadow-outline rounded bg-red-500 px-4 py-2 text-white hover:bg-red-600 focus:outline-none"
+                                            >
+                                                Delete
+                                            </button>
                                         </td>
                                     </tr>
                                 ))}
