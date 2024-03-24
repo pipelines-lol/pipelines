@@ -8,13 +8,14 @@ const bodyParser = require("body-parser");
 // route imports
 const authRoutes = require("./routes/auth");
 const profileRoutes = require("./routes/profiles");
-const schoolRoutes = require("./routes/school")
+const schoolRoutes = require("./routes/school");
 const companyRoutes = require("./routes/companies");
 const pipelineRoutes = require("./routes/pipelines");
 const mongodbIdRoutes = require("./routes/mongodbId");
 const offerRoutes = require("./routes/offers");
 const pfpRoutes = require("./routes/pfps");
 const imageModerationRoutes = require("./routes/imageModeration");
+const adminRoutes = require("./routes/admin");
 
 dotenv.config();
 
@@ -68,6 +69,7 @@ app.use("/api/mongodbId", mongodbIdRoutes);
 app.use("/api/pfp", pfpRoutes);
 app.use("/api/imageModeration", imageModerationRoutes);
 app.use("/api/offer", offerRoutes);
+app.use("/api/admin", adminRoutes);
 
 const server = app.listen(PORT, () => console.log("Server is running."));
 
