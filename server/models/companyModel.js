@@ -6,6 +6,7 @@ const companySchema = new Schema({
     type: String,
     required: true,
   },
+  displayName: String,
   rating: Number,
   prevCompanies: {
     type: Map,
