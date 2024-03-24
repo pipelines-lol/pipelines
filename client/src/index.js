@@ -6,13 +6,16 @@ import App from './App'
 // context
 import { AuthContextProvider } from './context/AuthContext'
 import { EarlyAccessContextProvider } from './context/EarlyAccessContext'
+import { AdminContextProvider } from './context/AdminContext'
 
 const root = ReactDOM.createRoot(document.getElementById('root'))
 root.render(
     <React.StrictMode>
         <EarlyAccessContextProvider>
             <AuthContextProvider>
-                <App />
+                <AdminContextProvider>
+                    <App />
+                </AdminContextProvider>
             </AuthContextProvider>
         </EarlyAccessContextProvider>
     </React.StrictMode>
