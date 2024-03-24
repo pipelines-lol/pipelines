@@ -21,6 +21,7 @@ const imageModerationRoutes = require("./routes/imageModeration");
 const emailRoutes = require("./routes/emails");
 const earlyAccessRoutes = require("./routes/earlyAccess");
 const tokenRoutes = require("./routes/token");
+const adminRoutes = require("./routes/admin");
 
 dotenv.config();
 
@@ -90,6 +91,10 @@ const routes = [
     middleware: [verifyToken],
     handler: earlyAccessRoutes,
   },
+
+  // admin routes
+  { path: "/api/admin", middleware: [verifyToken], handler: adminRoutes },
+
   { path: "/api/token", handler: tokenRoutes }, // no verification, this is needed for verification
 ];
 
