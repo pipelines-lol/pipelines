@@ -70,7 +70,6 @@ const deleteProfile = async (req, res) => {
 // UPDATE a poll
 const updateProfile = async (req, res) => {
   const { id } = req.params;
-  console.log("profile: ", req.body);
 
   if (!mongoose.Types.ObjectId.isValid(id)) {
     return res.status(404).json({ error: "No such Profile." });
