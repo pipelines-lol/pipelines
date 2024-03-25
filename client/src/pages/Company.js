@@ -76,16 +76,22 @@ const Company = () => {
                     name: 'No data!',
                 })
             } else {
-                const res = await fetch(
-                    `${HOST}/api/company/get/${prevEntries[i][0].toLowerCase()}`,
-                    {
-                        method: 'GET',
-                        headers: {
-                            'Content-Type': 'application/json', // Specify the content type as JSON
-                        },
-                    }
-                )
-                top5Prev.push(await res.json())
+                if (prevEntries[i][1] <= 0) {
+                    top5Prev.push({
+                        name: 'No data!',
+                    })
+                } else {
+                    const res = await fetch(
+                        `${HOST}/api/company/get/${prevEntries[i][0].toLowerCase()}`,
+                        {
+                            method: 'GET',
+                            headers: {
+                                'Content-Type': 'application/json', // Specify the content type as JSON
+                            },
+                        }
+                    )
+                    top5Prev.push(await res.json())
+                }
             }
         }
         const top5Post = []
@@ -95,16 +101,22 @@ const Company = () => {
                     name: 'No data!',
                 })
             } else {
-                const res = await fetch(
-                    `${HOST}/api/company/get/${postEntries[i][0].toLowerCase()}`,
-                    {
-                        method: 'GET',
-                        headers: {
-                            'Content-Type': 'application/json', // Specify the content type as JSON
-                        },
-                    }
-                )
-                top5Post.push(await res.json())
+                if (postEntries[i][1] <= 0) {
+                    top5Post.push({
+                        name: 'No data!',
+                    })
+                } else {
+                    const res = await fetch(
+                        `${HOST}/api/company/get/${postEntries[i][0].toLowerCase()}`,
+                        {
+                            method: 'GET',
+                            headers: {
+                                'Content-Type': 'application/json', // Specify the content type as JSON
+                            },
+                        }
+                    )
+                    top5Post.push(await res.json())
+                }
             }
         }
         setPrevCompanies([...top5Prev])
