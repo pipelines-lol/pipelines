@@ -69,16 +69,16 @@ const Company = () => {
                 return entry2[1] - entry1[1]
             }
         )
-        const top5Prev = []
+        const top3Prev = []
         for (let i = 0; i < 3; i++) {
             if (i >= prevEntries.length) {
-                top5Prev.push({
-                    name: 'No data!',
+                top3Prev.push({
+                    name: null,
                 })
             } else {
                 if (prevEntries[i][1] <= 0) {
-                    top5Prev.push({
-                        name: 'No data!',
+                    top3Prev.push({
+                        name: null,
                     })
                 } else {
                     const res = await fetch(
@@ -90,20 +90,20 @@ const Company = () => {
                             },
                         }
                     )
-                    top5Prev.push(await res.json())
+                    top3Prev.push(await res.json())
                 }
             }
         }
-        const top5Post = []
+        const top3Post = []
         for (let i = 0; i < 3; i++) {
             if (i >= postEntries.length) {
-                top5Post.push({
-                    name: 'No data!',
+                top3Post.push({
+                    name: null,
                 })
             } else {
                 if (postEntries[i][1] <= 0) {
-                    top5Post.push({
-                        name: 'No data!',
+                    top3Post.push({
+                        name: null,
                     })
                 } else {
                     const res = await fetch(
@@ -115,12 +115,12 @@ const Company = () => {
                             },
                         }
                     )
-                    top5Post.push(await res.json())
+                    top3Post.push(await res.json())
                 }
             }
         }
-        setPrevCompanies([...top5Prev])
-        setPostCompanies([...top5Post])
+        setPrevCompanies([...top3Prev])
+        setPostCompanies([...top3Post])
         setLoading(false)
     }
 
@@ -149,7 +149,7 @@ const Company = () => {
     const navigate = useNavigate()
 
     const tableElem = (rank, company) => {
-        if (company.name === null || employeeCount < 5) {
+        if (company.name === null || employeeCount < 4) {
             return (
                 <tr className="h-20 divide-y divide-gray-200 border-b border-t border-gray-200">
                     <div className="avatar"></div>
