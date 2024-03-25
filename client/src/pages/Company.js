@@ -149,7 +149,7 @@ const Company = () => {
     const navigate = useNavigate()
 
     const tableElem = (rank, company) => {
-        if (company.name === null || employeeCount < 4) {
+        if (company.name === null || employeeCount < 5) {
             return (
                 <tr className="h-20 divide-y divide-gray-200 border-b border-t border-gray-200">
                     <div className="avatar"></div>
