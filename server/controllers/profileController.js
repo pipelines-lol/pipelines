@@ -76,7 +76,7 @@ const updateProfile = async (req, res) => {
   }
 
   try {
-    const profile = await Profile.findById(id);
+    const profile = req.body;
 
     if (!profile) {
       return res.status(404).json({ error: "No such Profile." });
@@ -93,7 +93,14 @@ const updateProfile = async (req, res) => {
       }
     }
 
-    await profile.save();
+    // Update the profile with the req body
+    const updatedProfile = await Profile.findByIdAndUpdate(id, profile, {
+      new: true,
+    });
+
+    if (!updatedProfile) {
+      return res.status(404).json({ error: "No such Profile." });
+    }
 
     res.status(200).json(profile);
   } catch (error) {
