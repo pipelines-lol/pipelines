@@ -7,7 +7,7 @@ export const SchoolQuerySearch = ({ value, handleSearch }) => {
     const hasResults = results.length > 0 && query !== ''
 
     const [timerId, setTimerId] = useState(null)
-    const TIMER_DELAY = 75 // milliseconds
+    const TIMER_DELAY = 100 // milliseconds
 
     useEffect(() => {
         // Cleanup the timer on component unmount
@@ -28,7 +28,7 @@ export const SchoolQuerySearch = ({ value, handleSearch }) => {
         if (query === '') return
 
         try {
-            const response = await fetch(`${HOST}/api/search?name=${query}`, {
+            const response = await fetch(`${HOST}/api/school?name=${query}`, {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json',

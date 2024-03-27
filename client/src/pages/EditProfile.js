@@ -577,8 +577,8 @@ function EditProfile() {
         if (!firstName || firstName === '' || !lastName || lastName === '')
             return false
 
-        // check the education isnt blank
-        if (school === '') return false
+        // // check the education isnt blank
+        // if (school === '') return false
 
         // check none of the fields in the pipeline are blank
         if (!checkPipelineForEmptyFields(pipeline)) return false
@@ -605,6 +605,8 @@ function EditProfile() {
             anonymous,
             pipeline,
         }
+
+        console.log(profile)
 
         function isValidDate(arr) {
             for (const valid of arr) {
