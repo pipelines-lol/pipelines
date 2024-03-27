@@ -577,12 +577,23 @@ function EditProfile() {
         if (!firstName || firstName === '' || !lastName || lastName === '')
             return false
 
-        // check the education isnt blank
-        if (school === '') return false
+        // // check the education isnt blank
+        // if (school === '') return false
 
         // check none of the fields in the pipeline are blank
         if (!checkPipelineForEmptyFields(pipeline)) return false
 
+        return true
+    }
+
+    const checkDuplicates = (companies) => {
+        for (let i = 0; i < companies.length; i++) {
+            for (let j = i + 1; j < companies.length; j++) {
+                if (companies[i].companyName === companies[j].companyName) {
+                    return false
+                }
+            }
+        }
         return true
     }
 
@@ -594,6 +605,8 @@ function EditProfile() {
             anonymous,
             pipeline,
         }
+
+        console.log(profile)
 
         function isValidDate(arr) {
             for (const valid of arr) {
@@ -610,6 +623,11 @@ function EditProfile() {
 
         if (!isValidDate(dateValidity)) {
             setErrorMessage('Invalid Date')
+            return
+        }
+
+        if (!checkDuplicates(pipeline)) {
+            setErrorMessage('Duplicate Companies (See Guidelines)')
             return
         }
 
