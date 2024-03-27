@@ -111,8 +111,8 @@ function AdminDashboard() {
 
     // Handler for editing a company
     const handleEdit = async (company) => {
-        // TODO: functionality for this
-        console.log(company)
+        setIsModalOpen(true)
+        setModalCompanyInfo(company)
     }
 
     return (
