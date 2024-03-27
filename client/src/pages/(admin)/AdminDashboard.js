@@ -6,6 +6,7 @@ function AdminDashboard() {
     const [searchQuery, setSearchQuery] = useState('')
 
     const [isModalOpen, setIsModalOpen] = useState(false)
+    const [modalCompanyInfo, setModalCompanyInfo] = useState({})
 
     // Function to fetch companies based on the search term
     const fetchCompanies = async (query) => {
@@ -72,8 +73,8 @@ function AdminDashboard() {
 
     // Handler for editing a company
     const handleEdit = async (company) => {
-        // TODO: functionality for this
-        console.log(company)
+        setIsModalOpen(true)
+        setModalCompanyInfo(company)
     }
 
     return (
@@ -185,7 +186,13 @@ function AdminDashboard() {
 
                                 <CompanyModal
                                     isOpen={isModalOpen}
-                                    onClose={() => setIsModalOpen(false)}
+                                    onClose={() => {
+                                        setIsModalOpen(false)
+                                        setModalCompanyInfo({})
+
+                                        fetchCompanies()
+                                    }}
+                                    companyData={modalCompanyInfo}
                                 />
 
                                 {/* Existing company rows */}
@@ -248,22 +255,61 @@ function AdminDashboard() {
     )
 }
 
-function CompanyModal({ isOpen, onClose }) {
+function CompanyModal({ isOpen, onClose, companyData: initialCompanyData }) {
+    const [id, setId] = useState('')
+    const [name, setName] = useState('')
+    const [displayName, setDisplayName] = useState('')
+    const [logo, setLogo] = useState('')
+    const [description, setDescription] = useState('')
+
     const [errorMessage, setErrorMessage] = useState('')
+
+    // Reset form states when opening modal to add a new company
+    // Populate for when initial company exists
+    useEffect(() => {
+        if (isOpen) {
+            if (!initialCompanyData?._id) {
+                resetForm()
+            } else {
+                populateForm()
+            }
+        }
+    }, [isOpen, initialCompanyData])
+
+    const resetForm = () => {
+        setId('')
+        setName('')
+        setDisplayName('')
+        setLogo('')
+        setDescription('')
+        setErrorMessage('')
+    }
+
+    const populateForm = () => {
+        setId(initialCompanyData?._id)
+        setName(initialCompanyData?.name)
+        setDisplayName(initialCompanyData?.displayName)
+        setLogo(initialCompanyData?.logo)
+        setDescription(initialCompanyData?.description)
+    }
 
     if (!isOpen) return null
 
     const handleSubmit = async (e) => {
         e.preventDefault()
-        const formData = new FormData(e.target)
-        const companyData = Object.fromEntries(formData)
 
-        console.log(companyData)
+        const companyData = { name, displayName, logo, description }
 
-        // API call to submit the company data
+        // Determine the endpoint and method based on the presence of an ID
+        const endpoint = id
+            ? `${HOST}/api/company/update/${name}`
+            : `${HOST}/api/company/create`
+        const method = id ? 'PATCH' : 'POST'
+
         try {
-            const response = await fetch(`${HOST}/api/company/create`, {
-                method: 'POST',
+            console.log(companyData)
+            const response = await fetch(endpoint, {
+                method,
                 headers: {
                     'Content-Type': 'application/json',
                 },
@@ -273,14 +319,13 @@ function CompanyModal({ isOpen, onClose }) {
             if (response.ok) {
                 const data = await response.json()
                 console.log(data)
-                onClose() // Close the modal upon successful submission
+                resetForm()
+                onClose() // Close the modal upon successful operation
             } else {
-                throw new Error('Failed add company')
+                throw new Error('Failed to process company information')
             }
         } catch (error) {
             setErrorMessage(error.message)
-        } finally {
-            setErrorMessage('')
         }
     }
 
@@ -288,14 +333,17 @@ function CompanyModal({ isOpen, onClose }) {
         <div className="bg-smoke-light fixed inset-0 z-50 flex overflow-auto">
             <div className="relative m-auto flex w-full max-w-md flex-col rounded-lg bg-white p-8">
                 <form onSubmit={handleSubmit} className="space-y-4">
-                    <h1>Add Company</h1>
+                    <h1>{id ? 'Update' : 'Add'} Company</h1>
                     <div>
                         <label className="block">Name</label>
                         <input
                             name="name"
                             type="text"
                             required
-                            className="w-full bg-gray-200 px-4 py-2"
+                            className="w-full bg-gray-200 px-4 py-2 disabled:select-none disabled:bg-gray-400"
+                            value={name}
+                            onChange={(e) => setName(e.target.value)}
+                            disabled={id !== null}
                         />
                     </div>
                     <div>
@@ -305,6 +353,8 @@ function CompanyModal({ isOpen, onClose }) {
                             type="text"
                             required
                             className="w-full bg-gray-200 px-4 py-2"
+                            value={displayName}
+                            onChange={(e) => setDisplayName(e.target.value)}
                         />
                     </div>
                     <div>
@@ -313,6 +363,8 @@ function CompanyModal({ isOpen, onClose }) {
                             name="logo"
                             type="url"
                             className="w-full bg-gray-200 px-4 py-2"
+                            value={logo}
+                            onChange={(e) => setLogo(e.target.value)}
                         />
                     </div>
                     <div>
@@ -320,17 +372,19 @@ function CompanyModal({ isOpen, onClose }) {
                         <textarea
                             name="description"
                             className="w-full bg-gray-200 px-4 py-2"
+                            value={description}
+                            onChange={(e) => setDescription(e.target.value)}
                         ></textarea>
                     </div>
                     {errorMessage && (
-                        <h1 className="text-red">{errorMessage}</h1>
+                        <div className="text-red-500">{errorMessage}</div>
                     )}
                     <div className="flex justify-between">
                         <button
                             type="submit"
                             className="rounded bg-blue-500 px-4 py-2 text-white"
                         >
-                            Submit
+                            {id ? 'Update' : 'Submit'}
                         </button>
                         <button
                             type="button"
