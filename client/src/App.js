@@ -19,7 +19,10 @@ import Company from './pages/Company'
 
 // Context
 import { useAuthContext } from './hooks/useAuthContext'
+import { useEarlyAccess } from './hooks/useEarlyAccess'
 import { error404 } from './components/Error404'
+import Newsletter from './pages/Newsletter'
+import Code from './pages/Code'
 
 // Navbar Component
 function AppNavbar() {
@@ -45,19 +48,49 @@ function AppRoutes({ user }) {
         },
         { path: '/user/:id', element: <Profile /> },
         { path: '/company/:id', element: <Company /> },
-        { path: '/Suggestions', element: <Suggestions /> },
+        { path: '/suggestions', element: <Suggestions /> },
         {
             path: '/*',
             element: error404("We couldn't find the page you are looking for."),
         },
     ]
 
+    const { earlyAccess } = useEarlyAccess()
+
     return (
         <Routes>
-            {routes.map(({ path, element }, index) => (
-                <Route key={index} path={path} element={element} />
-            ))}
+            {earlyAccess ? (
+                routes.map(({ path, element }, index) => (
+                    <Route key={index} path={path} element={element} />
+                ))
+            ) : (
+                <>
+                    <Route key={'code'} path={'/code'} element={<Code />} />
+                    {routes.map(({ path }, index) => (
+                        <Route
+                            key={index}
+                            path={path}
+                            element={<Newsletter />}
+                        />
+                    ))}
+                </>
+            )}
         </Routes>
+    )
+}
+
+// Wrapper for Navbar and Footer
+const NavigationWrapper = ({ children }) => {
+    // const location = useLocation()
+    // const isAdminRoute = location.pathname.startsWith('/admin/')
+    const { earlyAccess } = useEarlyAccess()
+
+    return (
+        <div className="flex min-h-screen w-full flex-col">
+            {earlyAccess && <AppNavbar />}
+            {children}
+            {earlyAccess && <AppFooter />}
+        </div>
     )
 }
 
@@ -68,9 +101,9 @@ function App() {
     return (
         <Router>
             <div className="flex min-h-screen w-full flex-col">
-                <AppNavbar />
-                <AppRoutes user={user} />
-                <AppFooter />
+                <NavigationWrapper>
+                    <AppRoutes user={user} />
+                </NavigationWrapper>
             </div>
         </Router>
     )
