@@ -20,7 +20,7 @@ export const AdminContextProvider = ({ children }) => {
 
     useEffect(() => {
         // Example: retrieve admin status from localStorage
-        const isAdmin = localStorage.getItem('admin') === 'true'
+        const isAdmin = localStorage.getItem('admin') === true
         dispatch({ type: 'SET_ADMIN', payload: isAdmin })
     }, [])
 
