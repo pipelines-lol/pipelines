@@ -82,14 +82,19 @@ const updateProfile = async (req, res) => {
       return res.status(404).json({ error: "No such Profile." });
     }
 
-    for (let i = 0; i < profile.pipeline.length; i++) {
-      const query_name = profile.pipeline[i].companyName;
-      const company = await Company.findOne({ name: query_name });
+    // check if a pipeline change is within the req.body
+    if (profile.pipeline) {
+      // if there is a pipeline change
+      // make sure display names are added vs. raw names
+      for (let i = 0; i < profile.pipeline.length; i++) {
+        const query_name = profile.pipeline[i].companyName;
+        const company = await Company.findOne({ name: query_name });
 
-      if (company) {
-        const new_display_name = company.displayName;
-        // Update the experience document in the profile collection
-        profile.pipeline[i].displayName = new_display_name;
+        if (company) {
+          const new_display_name = company.displayName;
+          // Update the experience document in the profile collection
+          profile.pipeline[i].displayName = new_display_name;
+        }
       }
     }
 
