@@ -1,10 +1,15 @@
 import { useState, useCallback } from 'react'
+import Cookies from 'js-cookie'
 
-import { PipelineCard } from '../components/PipelineCard'
-import { QuerySearchInput } from '../components/QuerySearchInput'
 import { HOST } from '../util/apiRoutes'
+
+// components
 import Loading from './Loading'
 import { PipelineDisplay } from '../components/PipelineDisplay'
+import { PipelineCard } from '../components/PipelineCard'
+import { QuerySearchInput } from '../components/QuerySearchInput'
+
+// assets
 import { LayoutGrid, Rows3 } from 'lucide-react'
 
 function Search() {
@@ -27,6 +32,7 @@ function Search() {
                         method: 'GET',
                         headers: {
                             'Content-Type': 'application/json',
+                            Authorization: `Bearer ${Cookies.get('sessionId')}`,
                         },
                     }
                 )

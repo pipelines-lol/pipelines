@@ -1,5 +1,9 @@
 import { useEffect, useState } from 'react'
+import Cookies from 'js-cookie'
+
 import { HOST } from '../util/apiRoutes'
+
+// components
 import { ConditionalLink } from './ConditionalLink'
 
 export const PipelineDisplay = ({
@@ -20,6 +24,7 @@ export const PipelineDisplay = ({
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json',
+                    Authorization: `Bearer ${Cookies.get('sessionId')}`,
                 },
             })
 

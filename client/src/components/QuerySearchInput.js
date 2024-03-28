@@ -1,4 +1,6 @@
 import { useState } from 'react'
+import Cookies from 'js-cookie'
+
 import { HOST } from '../util/apiRoutes'
 
 export const QuerySearchInput = ({ handleSearch }) => {
@@ -19,6 +21,7 @@ export const QuerySearchInput = ({ handleSearch }) => {
                     method: 'GET',
                     headers: {
                         'Content-Type': 'application/json',
+                        Authorization: `Bearer ${Cookies.get('sessionId')}`,
                     },
                 }
             )
