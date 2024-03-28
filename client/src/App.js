@@ -25,7 +25,10 @@ import Admin from './pages/(admin)/Admin'
 
 // Context
 import { useAuthContext } from './hooks/useAuthContext'
+import { useEarlyAccess } from './hooks/useEarlyAccess'
 import { error404 } from './components/Error404'
+import Newsletter from './pages/Newsletter'
+import Code from './pages/Code'
 
 // Navbar Component
 function AppNavbar() {
@@ -51,7 +54,7 @@ function AppRoutes({ user }) {
         },
         { path: '/user/:id', element: <Profile /> },
         { path: '/company/:id', element: <Company /> },
-        { path: '/Suggestions', element: <Suggestions /> },
+        { path: '/suggestions', element: <Suggestions /> },
         { path: '/admin/*', element: <Admin /> },
         {
             path: '/*',
@@ -59,11 +62,26 @@ function AppRoutes({ user }) {
         },
     ]
 
+    const { earlyAccess } = useEarlyAccess()
+
     return (
         <Routes>
-            {routes.map(({ path, element }, index) => (
-                <Route key={index} path={path} element={element} />
-            ))}
+            {earlyAccess ? (
+                routes.map(({ path, element }, index) => (
+                    <Route key={index} path={path} element={element} />
+                ))
+            ) : (
+                <>
+                    <Route key={'code'} path={'/code'} element={<Code />} />
+                    {routes.map(({ path }, index) => (
+                        <Route
+                            key={index}
+                            path={path}
+                            element={<Newsletter />}
+                        />
+                    ))}
+                </>
+            )}
         </Routes>
     )
 }
@@ -72,12 +90,14 @@ function AppRoutes({ user }) {
 const NavigationWrapper = ({ children }) => {
     const location = useLocation()
     const isAdminRoute = location.pathname.startsWith('/admin/')
+    
+    const { earlyAccess } = useEarlyAccess()
 
     return (
         <div className="flex min-h-screen w-full flex-col">
-            {!isAdminRoute && <AppNavbar />}
+            {earlyAccess && !isAdminRoute && <AppNavbar />}
             {children}
-            {!isAdminRoute && <AppFooter />}
+            {earlyAccess && !isAdminRoute && <AppFooter />}
         </div>
     )
 }

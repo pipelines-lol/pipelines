@@ -402,13 +402,15 @@ function Profile() {
 
                     {/* Linkedin Section */}
                     <label className="font-medium text-white">Linkedin</label>
-                    <Link to={buildLinkedinUrl(linkedin)} target="_blank">
-                        <h1 className="text-white hover:underline">
-                            {profile && profile.anonymous
-                                ? 'Anonymous'
-                                : linkedin}
-                        </h1>
-                    </Link>
+                    {profile && profile.anonymous ? (
+                        <h1 className="text-white">Anonymous</h1>
+                    ) : (
+                        <Link to={buildLinkedinUrl(linkedin)} target="_blank">
+                            <h1 className="text-white hover:underline">
+                                {profile && linkedin}
+                            </h1>
+                        </Link>
+                    )}
 
                     {/* Save Button */}
                     {admin && saveable && !hasError ? (

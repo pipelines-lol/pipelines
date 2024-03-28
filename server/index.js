@@ -16,6 +16,8 @@ const offerRoutes = require("./routes/offers");
 const pfpRoutes = require("./routes/pfps");
 const imageModerationRoutes = require("./routes/imageModeration");
 const adminRoutes = require("./routes/admin");
+const emailRoutes = require("./routes/emails");
+const earlyAccessRoutes = require("./routes/earlyAccess");
 
 dotenv.config();
 
@@ -70,6 +72,8 @@ app.use("/api/pfp", pfpRoutes);
 app.use("/api/imageModeration", imageModerationRoutes);
 app.use("/api/offer", offerRoutes);
 app.use("/api/admin", adminRoutes);
+app.use("/api/email", emailRoutes);
+app.use("/api/earlyAccess", earlyAccessRoutes);
 
 const server = app.listen(PORT, () => console.log("Server is running."));
 
