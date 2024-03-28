@@ -5,6 +5,9 @@ const mongoose = require("mongoose");
 const cors = require("cors");
 const bodyParser = require("body-parser");
 
+// middleware
+const { verifyToken } = require("./middleware/token");
+
 // route imports
 const authRoutes = require("./routes/auth");
 const profileRoutes = require("./routes/profiles");
@@ -17,6 +20,7 @@ const pfpRoutes = require("./routes/pfps");
 const imageModerationRoutes = require("./routes/imageModeration");
 const emailRoutes = require("./routes/emails");
 const earlyAccessRoutes = require("./routes/earlyAccess");
+const tokenRoutes = require("./routes/token");
 
 dotenv.config();
 
@@ -62,17 +66,18 @@ app.get("/", (req, res) => {
 });
 
 // routes
-app.use("/api/user", authRoutes);
-app.use("/api/profile", profileRoutes);
-app.use("/api/school", schoolRoutes);
-app.use("/api/company", companyRoutes);
-app.use("/api/pipeline", pipelineRoutes);
-app.use("/api/mongodbId", mongodbIdRoutes);
-app.use("/api/pfp", pfpRoutes);
-app.use("/api/imageModeration", imageModerationRoutes);
-app.use("/api/offer", offerRoutes);
-app.use("/api/email", emailRoutes);
-app.use("/api/earlyAccess", earlyAccessRoutes);
+app.use("/api/user", verifyToken, authRoutes);
+app.use("/api/profile", verifyToken, profileRoutes);
+app.use("/api/school", verifyToken, schoolRoutes);
+app.use("/api/company", verifyToken, companyRoutes);
+app.use("/api/pipeline", verifyToken, pipelineRoutes);
+app.use("/api/mongodbId", verifyToken, mongodbIdRoutes);
+app.use("/api/pfp", verifyToken, pfpRoutes);
+app.use("/api/imageModeration", verifyToken, imageModerationRoutes);
+app.use("/api/offer", verifyToken, offerRoutes);
+app.use("/api/email", verifyToken, emailRoutes);
+app.use("/api/earlyAccess", verifyToken, earlyAccessRoutes);
+app.use("/api/token", tokenRoutes); // no verification, this is needed for verification
 
 const server = app.listen(PORT, () => console.log("Server is running."));
 
