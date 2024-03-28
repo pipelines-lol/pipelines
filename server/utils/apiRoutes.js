@@ -1,13 +1,13 @@
-const dotenv = require("dotenv")
+const dotenv = require("dotenv");
 
-dotenv.config()
+dotenv.config();
 
 const config = {
   HOST:
     process.env.NODE_ENV === "DEV"
       ? "http://localhost:4000"
       : process.env.NODE_ENV === "PROD"
-      ? "https://pipelines-backend.onrender.com"
+      ? process.env.API_URL
       : (console.error("Unknown mode:", process.env.MODE), null),
 
   HOMEPAGE:
@@ -15,7 +15,7 @@ const config = {
       ? "http://localhost:3000"
       : process.env.NODE_ENV === "PROD"
       ? "https://pipelines.lol"
-      : (console.error("Unknown mode:", process.env.MODE), null)
+      : (console.error("Unknown mode:", process.env.MODE), null),
 };
 
 module.exports = config;
