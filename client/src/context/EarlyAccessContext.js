@@ -20,7 +20,7 @@ export const EarlyAccessContextProvider = ({ children }) => {
 
     useEffect(() => {
         // retrieve earlyAccess status from localStorage
-        const isEarlyAccess = localStorage.getItem('earlyAccess')
+        const isEarlyAccess = localStorage.getItem('earlyAccess') === true
         dispatch({ type: 'SET_EARLYACCESS', payload: isEarlyAccess })
     }, [])
 
