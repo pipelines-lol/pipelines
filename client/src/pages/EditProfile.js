@@ -115,6 +115,7 @@ function EditProfile() {
     const generateCompanies = (pipeline) => {
         for (let i = 0; i < pipeline.length; i++) {
             const company = pipeline[i]
+            const lowerTitle = company.title.toLowerCase()
             let found = -1
             for (let j = 0; j < origCompanies.length; j++) {
                 let comp = origCompanies[j]
@@ -125,6 +126,7 @@ function EditProfile() {
             }
 
             if (found !== -1) {
+                const origLowerTitle = origCompanies[found].title.toLowerCase()
                 let prevCompanies = []
                 let postCompanies = []
                 let prevRemoveCompanies = []
@@ -233,19 +235,14 @@ function EditProfile() {
                 }
 
                 if (
-                    origCompanies[found].title
-                        .toLowerCase()
-                        .includes('intern') &&
-                    !company.title.toLowerCase().includes('intern')
+                    origLowerTitle.includes('intern') &&
+                    lowerTitle.includes('intern')
                 ) {
                     employeeData.removeInterns.push(user.profileId)
                 }
 
                 // Check if employee rated the company
-                if (
-                    company.rating === 0 &&
-                    company.title.toLowerCase().includes('intern')
-                ) {
+                if (company.rating === 0 && lowerTitle.includes('intern')) {
                     companyJson = {
                         name: company.companyName,
                         rating: company.rating - origCompanies[found].rating,
@@ -260,7 +257,7 @@ function EditProfile() {
                     }
                 } else if (
                     company.rating === 0 &&
-                    !company.title.toLowerCase().includes('intern')
+                    !lowerTitle.includes('intern')
                 ) {
                     companyJson = {
                         name: company.companyName,
@@ -277,7 +274,7 @@ function EditProfile() {
                     }
                 } else if (
                     company.rating > 0 &&
-                    company.title.toLowerCase().includes('intern')
+                    lowerTitle.includes('intern')
                 ) {
                     companyJson = {
                         name: company.companyName,
@@ -293,7 +290,7 @@ function EditProfile() {
                     }
                 } else if (
                     company.rating > 0 &&
-                    !company.title.toLowerCase().includes('intern')
+                    !lowerTitle.includes('intern')
                 ) {
                     companyJson = {
                         name: company.companyName,
@@ -347,22 +344,19 @@ function EditProfile() {
                     )
                 }
 
-                if (
-                    company.rating === 0 &&
-                    company.title.toLowerCase().includes('intern')
-                ) {
+                if (company.rating === 0 && lowerTitle.includes('intern')) {
                     companyJson = {
                         name: company.companyName,
                         rating: company.rating,
                         prevCompanies: prevCompanies || [],
                         postCompanies: postCompanies || [],
-                        Employees: [user.profileId],
+                        Employees: [],
                         ratedEmployees: [],
-                        interns: [],
+                        interns: [user.profileId],
                     }
                 } else if (
                     company.rating === 0 &&
-                    !company.title.toLowerCase().includes('intern')
+                    !lowerTitle.includes('intern')
                 ) {
                     companyJson = {
                         name: company.companyName,
@@ -376,7 +370,7 @@ function EditProfile() {
                     }
                 } else if (
                     company.rating > 0 &&
-                    company.title.toLowerCase().includes('intern')
+                    lowerTitle.includes('intern')
                 ) {
                     companyJson = {
                         name: company.companyName,
@@ -389,7 +383,7 @@ function EditProfile() {
                     }
                 } else if (
                     company.rating > 0 &&
-                    !company.title.toLowerCase().includes('intern')
+                    !lowerTitle.includes('intern')
                 ) {
                     companyJson = {
                         name: company.companyName,
@@ -634,6 +628,7 @@ function EditProfile() {
         setLoading(true)
         sortByDate(pipeline)
         generateCompanies(pipeline)
+        console.log('Companies: ', companies)
 
         // update companies
         const response = await fetch(`${HOST}/api/company/update`, {
