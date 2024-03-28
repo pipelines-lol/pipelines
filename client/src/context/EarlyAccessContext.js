@@ -1,36 +1,27 @@
-import { createContext, useReducer, useEffect } from 'react'
+import { createContext, useEffect, useState } from 'react'
+import Cookies from 'js-cookie' // Import js-cookie
 
 export const EarlyAccessContext = createContext()
 
-export const earlyAccessReducer = (state, action) => {
-    switch (action.type) {
-        case 'SET_EARLYACCESS':
-            return { earlyAccess: action.payload } // action.payload should be a boolean
-        case 'LOGOUT':
-            return { earlyAccess: false }
-        default:
-            return state
-    }
-}
-
 export const EarlyAccessContextProvider = ({ children }) => {
-    const [state, dispatch] = useReducer(earlyAccessReducer, {
-        earlyAccess: false, // default to no early access
-    })
+    const [earlyAccess, setEarlyAccess] = useState(false)
 
     useEffect(() => {
-        // retrieve earlyAccess status from localStorage
-        const isEarlyAccess = localStorage.getItem('earlyAccess') === true
-        dispatch({ type: 'SET_EARLYACCESS', payload: isEarlyAccess })
+        // check if user originally had early access
+        const access = Cookies.get('earlyAccess')
+        console.log(access)
+        if (access === 'true') {
+            setEarlyAccess(true)
+        }
     }, [])
 
-    useEffect(() => {
-        // persist state changes to localStorage
-        localStorage.setItem('earlyAccess', state.earlyAccess)
-    }, [state.earlyAccess])
+    const setAccess = (access) => {
+        setEarlyAccess(access)
+        Cookies.set('earlyAccess', access.toString())
+    }
 
     return (
-        <EarlyAccessContext.Provider value={{ ...state, dispatch }}>
+        <EarlyAccessContext.Provider value={{ earlyAccess, setAccess }}>
             {children}
         </EarlyAccessContext.Provider>
     )
