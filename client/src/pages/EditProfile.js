@@ -561,6 +561,9 @@ function EditProfile() {
                             }
                             return false
                         }
+
+                        if (key === 'companyName' && !experience[key])
+                            return false
                     }
                 }
             }
@@ -600,8 +603,6 @@ function EditProfile() {
             pipeline,
         }
 
-        console.log(profile)
-
         function isValidDate(arr) {
             for (const valid of arr) {
                 if (!valid) return false
@@ -628,7 +629,6 @@ function EditProfile() {
         setLoading(true)
         sortByDate(pipeline)
         generateCompanies(pipeline)
-        console.log('Companies: ', companies)
 
         // update companies
         const response = await fetch(`${HOST}/api/company/update`, {
