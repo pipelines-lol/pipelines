@@ -9,7 +9,7 @@ function Code() {
     const [errorMessage, setErrorMessage] = useState('')
 
     const navigate = useNavigate()
-    const { dispatch } = useEarlyAccess()
+    const { setAccess } = useEarlyAccess()
 
     const handleSubmit = async (e) => {
         e.preventDefault()
@@ -25,7 +25,7 @@ function Code() {
 
             if (response.ok) {
                 // update early access state
-                dispatch({ type: 'SET_EARLYACCESS', payload: true })
+                setAccess(true)
 
                 // navigate to home
                 navigate('/')
@@ -34,7 +34,7 @@ function Code() {
             }
         } catch (error) {
             setErrorMessage(error.message)
-            dispatch({ type: 'SET_EARLYACCESS', payload: false })
+            setAccess(false)
         }
     }
 
