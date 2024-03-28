@@ -5,6 +5,7 @@ import App from './App'
 
 // context
 import { AuthContextProvider } from './context/AuthContext'
+import { AdminContextProvider } from './context/AdminContext'
 import { EarlyAccessContextProvider } from './context/EarlyAccessContext'
 
 const root = ReactDOM.createRoot(document.getElementById('root'))
@@ -12,7 +13,9 @@ root.render(
     <React.StrictMode>
         <EarlyAccessContextProvider>
             <AuthContextProvider>
-                <App />
+                <AdminContextProvider>
+                    <App />
+                </AdminContextProvider>
             </AuthContextProvider>
         </EarlyAccessContextProvider>
     </React.StrictMode>

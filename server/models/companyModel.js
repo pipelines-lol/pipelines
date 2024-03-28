@@ -6,7 +6,12 @@ const companySchema = new Schema({
     type: String,
     required: true,
   },
-  displayName: String,
+  displayName: {
+    type: String,
+    required: true,
+  },
+  logo: String,
+  description: String,
   rating: Number,
   prevCompanies: {
     type: Map,

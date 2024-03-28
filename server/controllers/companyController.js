@@ -4,6 +4,7 @@ const router = require("../routes/profiles");
 const mongoose = require("mongoose");
 
 const createCompany = async (req, res) => {
+  const { displayName, logo, description } = req.body;
   const name = req.body.name.toLowerCase();
 
   try {
@@ -19,6 +20,9 @@ const createCompany = async (req, res) => {
     // Create a new company instance
     const newCompany = new Company({
       name: name,
+      displayName: displayName,
+      logo: logo || "",
+      description: description || "",
       rating: 0,
       prevCompanies: {},
       postCompanies: {},
@@ -40,6 +44,13 @@ const createCompany = async (req, res) => {
 
 const getCompany = async (req, res) => {
   const { name } = req.params;
+
+  // special case because of getCompanies
+  // call looks like: /api/company/get/companies/
+  if (name === "companies" || name === "companies/") {
+    const companies = await Company.find({});
+    return res.status(200).json(companies);
+  }
 
   try {
     // Find the company by name in the database
@@ -77,6 +88,9 @@ const updateCompany = async (req, res) => {
   //update company on user registration
   const name = req.params.name;
   const {
+    displayName,
+    logo,
+    description,
     rating,
     prevCompanies,
     postCompanies,
@@ -95,6 +109,7 @@ const updateCompany = async (req, res) => {
   } = req.body;
   const lowercaseCompanyName = name.toLowerCase();
 
+  //! THERE HAS TO BE A WAY TO SIMPLIFY THIS LOGIC HOLY FUUUUUUUUUCCCKKK
   try {
     if (Employees && Employees.length > 0) {
       for (const employee of Employees) {
@@ -197,7 +212,7 @@ const updateCompany = async (req, res) => {
     }
 
     //Increment list of postCompanies
-    if (postCompanies && postCompanies.lenth > 0) {
+    if (postCompanies && postCompanies.length > 0) {
       for (const companyName of postCompanies) {
         const updateData = {
           $inc: {},
@@ -307,6 +322,32 @@ const updateCompany = async (req, res) => {
           return;
         }
       }
+    }
+
+    // Build the update object dynamically
+    let updateFields = {};
+    if (displayName !== null && displayName !== undefined)
+      updateFields.displayName = displayName;
+    if (logo !== null && logo !== undefined) updateFields.logo = logo;
+    if (description !== null && description !== undefined)
+      updateFields.description = description;
+
+    console.log(updateFields);
+
+    try {
+      const lowercaseCompanyName = name.toLowerCase();
+      const updatedCompany = await Company.findOneAndUpdate(
+        { name: lowercaseCompanyName },
+        { $set: updateFields },
+        { new: true }
+      );
+
+      if (!updatedCompany) {
+        res.status(404).send("Company not found");
+      }
+    } catch (error) {
+      console.error("Error updating company:", error);
+      res.status(500).send("Error updating company");
     }
 
     res.status(200).json({ message: "success" });
