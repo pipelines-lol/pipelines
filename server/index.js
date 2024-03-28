@@ -22,13 +22,14 @@ dotenv.config();
 
 const app = express();
 const PORT = process.env.PORT || 4000;
+const API_URL = process.env.API_URL;
 
 // cors
 const corsOptions = {
   origin: [
     "http://localhost:3000",
-    "https://pipelines-backend.onrender.com",
-    "https://pipelinesfyi.netlify.app",
+    API_URL,
+    "https://pipelineslol.netlify.app",
     "https://pipelines.lol",
     "https://www.pipelines.lol",
     "https://linkedin.com",

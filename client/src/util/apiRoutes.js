@@ -2,7 +2,7 @@ const HOST =
     process.env.REACT_APP_NODE_ENV === 'DEV'
         ? 'http://localhost:4000'
         : process.env.REACT_APP_NODE_ENV === 'PROD'
-          ? 'https://pipelines-backend.onrender.com'
+          ? process.env.REACT_APP_API_URL
           : (console.error('Unknown mode:', process.env.MODE), null)
 
 const HOMEPAGE =
