@@ -109,7 +109,6 @@ function EditProfile() {
         const newPipeline = [...pipeline]
 
         newPipeline.splice(index, 1, experience)
-        console.log('newPipeline: ', newPipeline)
         setPipeline(newPipeline)
     }
 
@@ -536,7 +535,6 @@ function EditProfile() {
             for (const experience of pipeline) {
                 for (const key in experience) {
                     if (experience.hasOwnProperty(key)) {
-                        console.log('Key: ', key)
                         // validate date
                         if (
                             (key === 'startDate' &&
@@ -605,8 +603,6 @@ function EditProfile() {
             pipeline,
         }
 
-        console.log(profile)
-
         function isValidDate(arr) {
             for (const valid of arr) {
                 if (!valid) return false
@@ -633,7 +629,6 @@ function EditProfile() {
         setLoading(true)
         sortByDate(pipeline)
         generateCompanies(pipeline)
-        console.log('Companies: ', companies)
 
         // update companies
         const response = await fetch(`${HOST}/api/company/update`, {
