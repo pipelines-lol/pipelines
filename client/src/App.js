@@ -90,7 +90,7 @@ function AppRoutes({ user }) {
 const NavigationWrapper = ({ children }) => {
     const location = useLocation()
     const isAdminRoute = location.pathname.startsWith('/admin/')
-    
+
     const { earlyAccess } = useEarlyAccess()
 
     return (

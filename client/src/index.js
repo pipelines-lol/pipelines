@@ -13,9 +13,9 @@ root.render(
     <React.StrictMode>
         <EarlyAccessContextProvider>
             <AuthContextProvider>
-              <AdminContextProvider>
-                <App />
-              </AdminContextProvider>
+                <AdminContextProvider>
+                    <App />
+                </AdminContextProvider>
             </AuthContextProvider>
         </EarlyAccessContextProvider>
     </React.StrictMode>
