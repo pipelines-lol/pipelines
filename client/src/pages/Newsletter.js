@@ -1,6 +1,10 @@
-import { useNavigate } from 'react-router-dom'
-import { HOST } from '../util/apiRoutes'
 import { useState } from 'react'
+import { useNavigate } from 'react-router-dom'
+import Cookies from 'js-cookie'
+
+import { HOST } from '../util/apiRoutes'
+
+// assets
 import { Check, Loader2 } from 'lucide-react'
 
 function Newsletter() {
@@ -23,6 +27,7 @@ function Newsletter() {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
+                    Authorization: `Bearer ${Cookies.get('sessionId')}`,
                 },
                 body: JSON.stringify({ email }),
             })

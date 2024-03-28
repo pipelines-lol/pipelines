@@ -1,5 +1,6 @@
 import { useNavigate } from 'react-router-dom'
 import { useAuthContext } from '../hooks/useAuthContext'
+import Cookies from 'js-cookie'
 
 import { HOMEPAGE, HOST } from '../util/apiRoutes'
 import { CLIENT_ID, SCOPE } from '../util/linkedinUtils'
@@ -26,6 +27,7 @@ const Navbar = () => {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
+                    Authorization: `Bearer ${Cookies.get('sessionId')}`,
                 },
                 body: JSON.stringify({ email }),
             })
@@ -94,6 +96,7 @@ const Navbar = () => {
                 method: 'PATCH',
                 headers: {
                     'Content-Type': 'application/json', // Specify the content type as JSON
+                    Authorization: `Bearer ${Cookies.get('sessionId')}`,
                 },
                 body: JSON.stringify(profile),
             })
@@ -134,6 +137,7 @@ const Navbar = () => {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json',
+                    Authorization: `Bearer ${Cookies.get('sessionId')}`,
                 },
             })
 
@@ -173,6 +177,7 @@ const Navbar = () => {
                             method: 'GET',
                             headers: {
                                 auth_code: codeMatch[1],
+                                Authorization: `Bearer ${Cookies.get('sessionId')}`,
                             },
                         }
                     )

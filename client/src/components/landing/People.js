@@ -1,8 +1,13 @@
 import { useEffect, useState } from 'react'
-import Loading from '../../pages/Loading'
-import { HOST } from '../../util/apiRoutes'
-import { PipelineCard } from '../PipelineCard'
 import { useNavigate } from 'react-router-dom'
+import Cookies from 'js-cookie'
+
+import { HOST } from '../../util/apiRoutes'
+
+// components
+import Loading from '../../pages/Loading'
+import { PipelineCard } from '../PipelineCard'
+
 export default function People() {
     const [profiles, setProfiles] = useState([])
     const [loading, setLoading] = useState(false)
@@ -16,6 +21,7 @@ export default function People() {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json', // Specify the content type as JSON
+                Authorization: `Bearer ${Cookies.get('sessionId')}`,
             },
         })
             .then((res) => {

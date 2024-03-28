@@ -1,15 +1,18 @@
 import { useEffect, useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import { useAuthContext } from '../hooks/useAuthContext'
+import Cookies from 'js-cookie'
+
 import { HOST } from '../util/apiRoutes'
 import { isMongoDBId } from '../util/mongoUtils'
 
+// components
 import Loading from './Loading'
-
 import { ExperienceCard } from '../components/PipelineCard'
-
-import { GraduationCap, MapPin } from 'lucide-react'
 import { ProfilePicture } from '../components/ProfilePicture'
+
+// assets
+import { GraduationCap, MapPin } from 'lucide-react'
 
 function Profile() {
     const { id } = useParams()
@@ -45,6 +48,7 @@ function Profile() {
                     method: 'GET',
                     headers: {
                         'Content-Type': 'application/json',
+                        Authorization: `Bearer ${Cookies.get('sessionId')}`,
                     },
                 })
 
@@ -86,6 +90,7 @@ function Profile() {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json', // Specify the content type as JSON
+                Authorization: `Bearer ${Cookies.get('sessionId')}`,
             },
         })
             .then((res) => {
@@ -303,6 +308,7 @@ function Profile() {
                     method: 'PATCH',
                     headers: {
                         'Content-Type': 'application/json', // Specify the content type as JSON
+                        Authorization: `Bearer ${Cookies.get('sessionId')}`,
                     },
                     body: JSON.stringify(updatedProfile),
                 }

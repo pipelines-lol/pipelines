@@ -1,11 +1,15 @@
 import { useEffect, useState } from 'react'
-import { useParams } from 'react-router-dom'
-import { HOST } from '../util/apiRoutes'
-import { HOMEPAGE } from '../util/apiRoutes'
-import { error404 } from '../components/Error404'
+import { useNavigate, useParams } from 'react-router-dom'
+import Cookies from 'js-cookie'
+
+import { HOST, HOMEPAGE } from '../util/apiRoutes'
 import { companies } from '../data/companyData'
+
+// components
+import { error404 } from '../components/Error404'
 import Loading from './Loading'
-import { useNavigate } from 'react-router-dom'
+
+// assets
 import BigSmiley from '../static/ratings/BigSmiley.png'
 import smiley from '../static/ratings/smiley.png'
 import neutral from '../static/ratings/neutral.png'
@@ -39,6 +43,7 @@ const Company = () => {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json', // Specify the content type as JSON
+                Authorization: `Bearer ${Cookies.get('sessionId')}`,
             },
         })
         const data = await res.json()
@@ -87,6 +92,7 @@ const Company = () => {
                             method: 'GET',
                             headers: {
                                 'Content-Type': 'application/json', // Specify the content type as JSON
+                                Authorization: `Bearer ${Cookies.get('sessionId')}`,
                             },
                         }
                     )
@@ -112,6 +118,7 @@ const Company = () => {
                             method: 'GET',
                             headers: {
                                 'Content-Type': 'application/json', // Specify the content type as JSON
+                                Authorization: `Bearer ${Cookies.get('sessionId')}`,
                             },
                         }
                     )

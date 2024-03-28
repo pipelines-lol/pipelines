@@ -1,6 +1,8 @@
 import { useNavigate } from 'react-router-dom'
 import { useEarlyAccess } from '../hooks/useEarlyAccess'
 import { useState } from 'react'
+import Cookies from 'js-cookie'
+
 import { HOST } from '../util/apiRoutes'
 
 function Code() {
@@ -19,6 +21,7 @@ function Code() {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
+                    Authorization: `Bearer ${Cookies.get('sessionId')}`,
                 },
                 body: JSON.stringify({ code: code }),
             })

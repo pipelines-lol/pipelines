@@ -1,5 +1,9 @@
 import { useEffect, useState } from 'react'
+import Cookies from 'js-cookie'
+
 import { HOST } from '../util/apiRoutes'
+
+// components
 import { ConditionalLink } from './ConditionalLink'
 
 export const PipelineCard = ({ profileId, name, pfp, anonymous, pipeline }) => {
@@ -14,6 +18,7 @@ export const PipelineCard = ({ profileId, name, pfp, anonymous, pipeline }) => {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json',
+                    Authorization: `Bearer ${Cookies.get('sessionId')}`,
                 },
             })
 

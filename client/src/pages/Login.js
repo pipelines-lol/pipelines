@@ -1,6 +1,8 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useAuthContext } from '../hooks/useAuthContext'
+import Cookies from 'js-cookie'
+
 import { HOST } from '../util/apiRoutes'
 
 function Login() {
@@ -26,6 +28,7 @@ function Login() {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json', // Specify the content type as JSON
+                Authorization: `Bearer ${Cookies.get('sessionId')}`,
             },
             body: JSON.stringify(user),
         })

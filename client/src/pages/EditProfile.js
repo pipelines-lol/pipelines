@@ -1,12 +1,18 @@
-import { useAutoAnimate } from '@formkit/auto-animate/react'
-import { PlusCircle } from 'lucide-react'
 import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { useAuthContext } from '../hooks/useAuthContext'
+import { useAutoAnimate } from '@formkit/auto-animate/react'
+import Cookies from 'js-cookie'
+
+import { HOST } from '../util/apiRoutes'
+
+// components
+import Loading from './Loading'
 import { ExperienceForm } from '../components/ExperienceForm'
 import { SchoolQuerySearch } from '../components/SchoolQuerySearch'
-import { useAuthContext } from '../hooks/useAuthContext'
-import { HOST } from '../util/apiRoutes'
-import Loading from './Loading'
+
+// assets
+import { PlusCircle } from 'lucide-react'
 
 function EditProfile() {
     const [firstName, setFirstName] = useState('')
@@ -34,6 +40,7 @@ function EditProfile() {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json', // Specify the content type as JSON
+                    Authorization: `Bearer ${Cookies.get('sessionId')}`,
                 },
             })
 
@@ -458,6 +465,7 @@ function EditProfile() {
                     method: `PATCH`,
                     headers: {
                         'Content-Type': 'application/json',
+                        Authorization: `Bearer ${Cookies.get('sessionId')}`,
                     },
                     body: JSON.stringify(comp),
                 }
@@ -479,6 +487,7 @@ function EditProfile() {
                 method: 'PATCH',
                 headers: {
                     'Content-Type': 'application/json', // Specify the content type as JSON
+                    Authorization: `Bearer ${Cookies.get('sessionId')}`,
                 },
                 body: JSON.stringify(profile),
             })
@@ -635,6 +644,7 @@ function EditProfile() {
             method: `PATCH`,
             headers: {
                 'Content-Type': 'application/json',
+                Authorization: `Bearer ${Cookies.get('sessionId')}`,
             },
             body: JSON.stringify(companies),
         })
@@ -647,6 +657,7 @@ function EditProfile() {
             method: 'PATCH',
             headers: {
                 'Content-Type': 'application/json', // Specify the content type as JSON
+                Authorization: `Bearer ${Cookies.get('sessionId')}`,
             },
             body: JSON.stringify(profile),
         })
