@@ -109,6 +109,7 @@ function EditProfile() {
         const newPipeline = [...pipeline]
 
         newPipeline.splice(index, 1, experience)
+        console.log('newPipeline: ', newPipeline)
         setPipeline(newPipeline)
     }
 
@@ -535,6 +536,7 @@ function EditProfile() {
             for (const experience of pipeline) {
                 for (const key in experience) {
                     if (experience.hasOwnProperty(key)) {
+                        console.log('Key: ', key)
                         // validate date
                         if (
                             (key === 'startDate' &&
@@ -561,6 +563,9 @@ function EditProfile() {
                             }
                             return false
                         }
+
+                        if (key === 'companyName' && !experience[key])
+                            return false
                     }
                 }
             }
