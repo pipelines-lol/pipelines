@@ -1,5 +1,4 @@
 import Cookies from 'js-cookie'
-import { useSession } from '../hooks/useSessionContext'
 
 export const fetchWithAuth = async ({
     url,
@@ -7,8 +6,6 @@ export const fetchWithAuth = async ({
     data = {},
     headers = {},
 }) => {
-    const { generateToken } = useSession()
-
     // Default headers including Authorization
     const defaultHeaders = {
         'Content-Type': 'application/json',
@@ -31,9 +28,6 @@ export const fetchWithAuth = async ({
 
     // Check for a 400 Unauthorized status code to detect invalid token
     if (response.status === 400) {
-        // refresh token and throw error
-        generateToken()
-
         throw new Error('Invalid token. Please try again.')
     }
 
