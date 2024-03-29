@@ -15,37 +15,18 @@ function Discover() {
         const size = 24
         setLoading(true)
 
-        fetch(`${HOST}/api/pipeline/random/${size}`, {
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json', // Specify the content type as JSON
-                Authorization: `Bearer ${Cookies.get('sessionId')}`,
-            },
-        })
-            .then((res) => {
-                if (!res.ok) {
-                    // Check if the response has JSON content
-                    if (
-                        res.headers
-                            .get('content-type')
-                            ?.includes('application/json')
-                    ) {
-                        return res.json().then((errorData) => {
-                            throw new Error(`${errorData.error}`)
-                        })
-                    } else {
-                        throw new Error(`HTTP error! Status: ${res.status}`)
-                    }
-                }
-                return res.json()
+        try {
+            const data = await fetchWithAuth({
+                url: `${HOST}/api/pipeline/random/${size}`,
+                method: 'GET',
             })
-            .then((data) => {
-                setProfiles([...data])
-                setLoading(false)
-            })
-            .catch((error) => {
-                console.error(error.message)
-            })
+
+            setProfiles([...data])
+        } catch (error) {
+            console.error('Error:', error.message)
+        } finally {
+            setLoading(false)
+        }
     }
 
     useEffect(() => {
@@ -92,7 +73,7 @@ function Discover() {
                         </svg>
                     </div>
                 </div>
-                <div className="grid min-h-96 w-full grid-cols-1 overflow-y-scroll border-b-[0.5px] border-pipeline-blue-200 bg-pipelines-gray-100/10 bg-opacity-95 pb-12  pt-10 sm:grid-cols-2 sm:gap-2 md:grid-cols-3 md:gap-4 lg:grid-cols-4">
+                <div className="min-h-96 grid w-full grid-cols-1 overflow-y-scroll border-b-[0.5px] border-pipeline-blue-200 bg-pipelines-gray-100/10 bg-opacity-95 pb-12  pt-10 sm:grid-cols-2 sm:gap-2 md:grid-cols-3 md:gap-4 lg:grid-cols-4">
                     {profiles.map((profile) => (
                         <div
                             key={`profile_${profile._id}`}

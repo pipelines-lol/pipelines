@@ -14,29 +14,11 @@ export const PipelineCard = ({ profileId, name, pfp, anonymous, pipeline }) => {
         if (!pfp || pfp === '') return
 
         try {
-            const response = await fetch(`${HOST}/api/pfp/${profileId}`, {
+            const data = await fetchWithAuth({
+                url: `${HOST}/api/pfp/${profileId}`,
                 method: 'GET',
-                headers: {
-                    'Content-Type': 'application/json',
-                    Authorization: `Bearer ${Cookies.get('sessionId')}`,
-                },
             })
 
-            if (!response.ok) {
-                // Check if the response has JSON content
-                if (
-                    response.headers
-                        .get('content-type')
-                        ?.includes('application/json')
-                ) {
-                    const errorData = await response.json()
-                    throw new Error(`${errorData.error}`)
-                } else {
-                    throw new Error(`HTTP error! Status: ${response.status}`)
-                }
-            }
-
-            const data = await response.json()
             setPfpUrl(data.pfp)
         } catch (error) {
             console.error(error.message)

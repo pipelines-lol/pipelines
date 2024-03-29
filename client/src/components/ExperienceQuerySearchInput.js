@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
-import Cookies from 'js-cookie'
 
 import { HOST } from '../util/apiRoutes'
+import { fetchWithAuth } from '../util/fetchUtils'
 
 export const ExperienceQuerySearchInput = ({ value, handleSearch }) => {
     const [query, setQuery] = useState('')
@@ -26,19 +26,15 @@ export const ExperienceQuerySearchInput = ({ value, handleSearch }) => {
 
         // make sure theres an input before querying
         if (inputValue.length > 0) {
-            // query the backend
-            const response = await fetch(
-                `${HOST}/api/company/get/companies/${inputValue.toLowerCase()}`,
-                {
+            try {
+                const data = await fetchWithAuth({
+                    url: `${HOST}/api/company/get/companies/${inputValue.toLowerCase()}`,
                     method: 'GET',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        Authorization: `Bearer ${Cookies.get('sessionId')}`,
-                    },
-                }
-            )
-            const data = await response.json()
-            setResults(data)
+                })
+                setResults(data)
+            } catch (error) {
+                console.error(error.message)
+            }
         } else {
             setResults([])
 
