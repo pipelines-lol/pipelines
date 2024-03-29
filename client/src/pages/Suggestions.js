@@ -81,7 +81,8 @@ const Suggestions = () => {
                                 />
                             )}
                             <div className="mx-auto flex w-1/3 flex-col whitespace-nowrap pt-2 hover:cursor-pointer">
-                                <a
+                                <button
+                                    type="submit"
                                     onClick={() =>
                                         console.log('submitting suggestion')
                                     }
@@ -92,7 +93,7 @@ const Suggestions = () => {
                                     <span className="relative">
                                         Submit Suggestion
                                     </span>
-                                </a>
+                                </button>
                             </div>
                         </form>
                     </div>

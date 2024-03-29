@@ -570,6 +570,9 @@ function EditProfile() {
                             }
                             return false
                         }
+
+                        if (key === 'companyName' && !experience[key])
+                            return false
                     }
                 }
             }
@@ -609,9 +612,12 @@ function EditProfile() {
             pipeline,
         }
 
-        console.log(profile)
-
-        // Validation functions remain unchanged
+        function isValidDate(arr) {
+            for (const valid of arr) {
+                if (!valid) return false
+            }
+            return true
+        }
 
         // Check input fields
         if (!validateSubmission()) {
@@ -634,7 +640,6 @@ function EditProfile() {
         setLoading(true)
         sortByDate(pipeline)
         generateCompanies(pipeline)
-        console.log('Companies: ', companies)
 
         // Update companies
         try {
