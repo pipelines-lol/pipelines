@@ -6,7 +6,7 @@ const cors = require("cors");
 const bodyParser = require("body-parser");
 
 // middleware
-const { middleware: [verifyToken] } = require("./middleware/token");
+const { verifyToken } = require("./middleware/token");
 
 // route imports
 const authRoutes = require("./routes/auth");
@@ -20,7 +20,6 @@ const pfpRoutes = require("./routes/pfps");
 const imageModerationRoutes = require("./routes/imageModeration");
 const emailRoutes = require("./routes/emails");
 const earlyAccessRoutes = require("./routes/earlyAccess");
-const tokenRoutes = require("./routes/token");
 
 dotenv.config();
 
@@ -41,16 +40,16 @@ const corsOptions = {
   methods: ["POST", "PATCH", "DELETE", "GET"],
   credentials: true,
 };
-{ cors(corsOptions));
+app.use(cors(corsOptions));
 
 // body parser
-{ 
+app.use(
   bodyParser.urlencoded({
     extended: true,
   })
 );
 
-{ bodyParser.json());
+app.use(bodyParser.json());
 
 // database
 mongoose
@@ -58,7 +57,7 @@ mongoose
   .then(() => console.log("Successfully connected to database."))
   .catch((err) => console.log(err));
 
-{ express.json());
+app.use(express.json());
 
 // testing
 app.get("/", (req, res) => {
@@ -72,12 +71,24 @@ const routes = [
   { path: "/api/school", middleware: [verifyToken], handler: schoolRoutes },
   { path: "/api/company", middleware: [verifyToken], handler: companyRoutes },
   { path: "/api/pipeline", middleware: [verifyToken], handler: pipelineRoutes },
-  { path: "/api/mongodbId", middleware: [verifyToken], handler: mongodbIdRoutes },
+  {
+    path: "/api/mongodbId",
+    middleware: [verifyToken],
+    handler: mongodbIdRoutes,
+  },
   { path: "/api/pfp", middleware: [verifyToken], handler: pfpRoutes },
-  { path: "/api/imageModeration", middleware: [verifyToken], handler: imageModerationRoutes },
+  {
+    path: "/api/imageModeration",
+    middleware: [verifyToken],
+    handler: imageModerationRoutes,
+  },
   { path: "/api/offer", middleware: [verifyToken], handler: offerRoutes },
   { path: "/api/email", middleware: [verifyToken], handler: emailRoutes },
-  { path: "/api/earlyAccess", middleware: [verifyToken], handler: earlyAccessRoutes },
+  {
+    path: "/api/earlyAccess",
+    middleware: [verifyToken],
+    handler: earlyAccessRoutes,
+  },
   { path: "/api/token", tokenRoutes }, // no verification, this is needed for verification
 ];
 
