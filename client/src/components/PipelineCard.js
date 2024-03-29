@@ -1,7 +1,8 @@
 import { useEffect, useState } from 'react'
-import Cookies from 'js-cookie'
+import { useNavigate } from 'react-router-dom'
 
 import { HOST } from '../util/apiRoutes'
+import { fetchWithAuth } from '../util/fetchUtils'
 
 // components
 import { ConditionalLink } from './ConditionalLink'
@@ -71,7 +72,6 @@ export const PipelineCard = ({ profileId, name, pfp, anonymous, pipeline }) => {
         </div>
     )
 }
-import { useNavigate } from 'react-router-dom'
 
 export const ExperienceCard = ({ experience }) => {
     const current = new Date(experience.startDate) > new Date()

@@ -1,7 +1,7 @@
 import { useState } from 'react'
-import Cookies from 'js-cookie'
 
 import { HOST } from '../util/apiRoutes'
+import { fetchWithAuth } from '../util/fetchUtils'
 
 export const QuerySearchInput = ({ handleSearch }) => {
     const [query, setQuery] = useState('')

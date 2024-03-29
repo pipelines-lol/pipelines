@@ -1,9 +1,9 @@
 import { useNavigate } from 'react-router-dom'
 import { useEarlyAccess } from '../hooks/useEarlyAccess'
 import { useState } from 'react'
-import Cookies from 'js-cookie'
 
 import { HOST } from '../util/apiRoutes'
+import { fetchWithAuth } from '../util/fetchUtils'
 
 function Code() {
     const [code, setCode] = useState()

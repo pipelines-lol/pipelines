@@ -2,9 +2,9 @@ import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useAuthContext } from '../hooks/useAuthContext'
 import { useAutoAnimate } from '@formkit/auto-animate/react'
-import Cookies from 'js-cookie'
 
 import { HOST } from '../util/apiRoutes'
+import { fetchWithAuth } from '../util/fetchUtils'
 
 // components
 import Loading from './Loading'
@@ -36,34 +36,18 @@ function EditProfile() {
         setLoading(true)
 
         try {
-            const res = await fetch(`${HOST}/api/profile/${user.profileId}`, {
+            // Use fetchWithAuth to perform the request
+            const data = await fetchWithAuth({
+                url: `${HOST}/api/profile/${user.profileId}`, // Adjust HOST and user.profileId as needed
                 method: 'GET',
-                headers: {
-                    'Content-Type': 'application/json', // Specify the content type as JSON
-                    Authorization: `Bearer ${Cookies.get('sessionId')}`,
-                },
             })
 
-            if (!res.ok) {
-                // Check if the response has JSON content
-                if (
-                    res.headers
-                        .get('content-type')
-                        ?.includes('application/json')
-                ) {
-                    const errorData = await res.json()
-                    throw new Error(`${errorData.error}`)
-                } else {
-                    throw new Error(`HTTP error! Status: ${res.status}`)
-                }
-            }
-
-            const data = await res.json()
+            // Use the response data to update the UI state
             updateUIState(data)
         } catch (error) {
-            console.error(error.message)
+            console.error(error.message) // Error handling is simplified as fetchWithAuth should handle HTTP errors and token issues
         } finally {
-            setLoading(false)
+            setLoading(false) // Reset the loading state
         }
     }
 
@@ -459,57 +443,30 @@ function EditProfile() {
                 prevRemoveOtherCompanies: postRemoveCompanies,
                 postRemoveOtherCompanies: prevRemoveCompanies,
             }
-            const response = await fetch(
-                `${HOST}/api/company/update/${comp.name}`,
-                {
-                    method: `PATCH`,
-                    headers: {
-                        'Content-Type': 'application/json',
-                        Authorization: `Bearer ${Cookies.get('sessionId')}`,
-                    },
-                    body: JSON.stringify(comp),
+
+            try {
+                await fetchWithAuth({
+                    url: `${HOST}/api/company/update/${comp.name}`,
+                    method: 'PATCH',
+                    body: comp,
+                })
+
+                const profile = {
+                    firstName,
+                    lastName,
+                    school,
+                    anonymous,
+                    pipeline: tempOrig,
                 }
-            )
 
-            if (!response.ok) {
-                console.log(response.status)
-            }
-
-            const profile = {
-                firstName,
-                lastName,
-                school,
-                anonymous,
-                pipeline: tempOrig,
-            }
-
-            fetch(`${HOST}/api/profile/${user.profileId}`, {
-                method: 'PATCH',
-                headers: {
-                    'Content-Type': 'application/json', // Specify the content type as JSON
-                    Authorization: `Bearer ${Cookies.get('sessionId')}`,
-                },
-                body: JSON.stringify(profile),
-            })
-                .then((res) => {
-                    if (!res.ok) {
-                        // Check if the response has JSON content
-                        if (
-                            res.headers
-                                .get('content-type')
-                                ?.includes('application/json')
-                        ) {
-                            return res.json().then((errorData) => {
-                                throw new Error(`${errorData.error}`)
-                            })
-                        } else {
-                            throw new Error(`HTTP error! Status: ${res.status}`)
-                        }
-                    }
+                await fetchWithAuth({
+                    url: `${HOST}/api/profile/${user.profileId}`,
+                    method: 'PATCH',
+                    body: profile,
                 })
-                .catch((error) => {
-                    console.err(error.message)
-                })
+            } catch (error) {
+                console.error(error.message)
+            }
         }
 
         setOrigCompanies(tempOrig)

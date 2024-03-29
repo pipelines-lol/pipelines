@@ -1,7 +1,7 @@
 import { useState, useCallback } from 'react'
-import Cookies from 'js-cookie'
 
 import { HOST } from '../util/apiRoutes'
+import { fetchWithAuth } from '../util/fetchUtils'
 
 // components
 import Loading from './Loading'
@@ -42,11 +42,6 @@ function Search() {
                 // Handle specific conditions like 404 Not Found
                 if (error.message.includes('404')) {
                     setNoneFound(true)
-                } else {
-                    // Handle other errors generically
-                    setErrorMessage(
-                        error.message || 'An error occurred during the search.'
-                    )
                 }
             } finally {
                 setLoading(false)

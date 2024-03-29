@@ -1,10 +1,10 @@
 import { useEffect, useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import { useAuthContext } from '../hooks/useAuthContext'
-import Cookies from 'js-cookie'
 
 import { HOST } from '../util/apiRoutes'
 import { isMongoDBId } from '../util/mongoUtils'
+import { fetchWithAuth } from '../util/fetchUtils'
 
 // components
 import Loading from './Loading'
