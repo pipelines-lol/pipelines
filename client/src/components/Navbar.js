@@ -3,6 +3,7 @@ import { useAuthContext } from '../hooks/useAuthContext'
 
 import { HOMEPAGE, HOST } from '../util/apiRoutes'
 import { CLIENT_ID, SCOPE } from '../util/linkedinUtils'
+import { fetchWithAuth } from '../util/fetchUtils'
 
 import { useEffect, useState } from 'react'
 import MobileNavigationBar from './nav/Mobile'
@@ -22,41 +23,23 @@ const Navbar = () => {
 
     const login = async (email) => {
         try {
-            const response = await fetch(`${HOST}/api/user/login`, {
+            const user = await fetchWithAuth({
+                url: `${HOST}/api/user/login`,
                 method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ email }),
+                data: { email },
             })
-
-            if (!response.ok) {
-                // Check if the response has JSON content
-                if (
-                    response.headers
-                        .get('content-type')
-                        ?.includes('application/json')
-                ) {
-                    const errorData = await response.json()
-                    throw new Error(`${errorData.error}`)
-                } else {
-                    throw new Error(`HTTP error! Status: ${response.status}`)
-                }
-            }
-
-            const user = await response.json()
 
             localStorage.setItem('user', JSON.stringify(user))
 
-            // update AuthContext
+            // Update AuthContext
             dispatch({ type: 'LOGIN', payload: user })
 
-            // SPECIAL CASE: first time user logged in
+            // SPECIAL CASE: First-time user logged in
             if (!user.profileCreated) {
                 await createProfile(user.profileId)
             }
 
-            // redirect to home
+            // Redirect to home
             navigate('/')
         } catch (error) {
             console.error(error.message)
@@ -90,36 +73,21 @@ const Navbar = () => {
         }
 
         try {
-            const response = await fetch(`${HOST}/api/profile/${profileId}`, {
+            await fetchWithAuth({
+                url: `${HOST}/api/profile/${profileId}`,
                 method: 'PATCH',
-                headers: {
-                    'Content-Type': 'application/json', // Specify the content type as JSON
-                },
-                body: JSON.stringify(profile),
+                data: profile, // This is the profile data to be updated
             })
 
-            if (!response.ok) {
-                // Check if the response has JSON content
-                if (
-                    response.headers
-                        .get('content-type')
-                        ?.includes('application/json')
-                ) {
-                    const errorData = await response.json()
-                    throw new Error(`${errorData.error}`)
-                } else {
-                    throw new Error(`HTTP error! Status: ${response.status}`)
-                }
-            }
-
-            // set user data
+            // Set user data
             dispatch({ type: 'CREATED' })
 
-            // set new user in local storage (with profile created)
+            // Set new user in local storage (with profile created)
             const storedUser = JSON.parse(localStorage.getItem('user'))
             storedUser.profileCreated = true
             localStorage.setItem('user', JSON.stringify(storedUser))
 
+            // Navigate to home or another page
             navigate('/')
         } catch (error) {
             console.error(error.message)
@@ -130,28 +98,11 @@ const Navbar = () => {
         if (!user || !user.profileCreated) return
 
         try {
-            const response = await fetch(`${HOST}/api/pfp/${user.profileId}`, {
+            const data = await fetchWithAuth({
+                url: `${HOST}/api/pfp/${user.profileId}`,
                 method: 'GET',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
             })
 
-            if (!response.ok) {
-                // Check if the response has JSON content
-                if (
-                    response.headers
-                        .get('content-type')
-                        ?.includes('application/json')
-                ) {
-                    const errorData = await response.json()
-                    throw new Error(`${errorData.error}`)
-                } else {
-                    throw new Error(`HTTP error! Status: ${response.status}`)
-                }
-            }
-
-            const data = await response.json()
             setPfp(data.pfp)
         } catch (error) {
             console.error(error.message)
@@ -167,24 +118,23 @@ const Navbar = () => {
                 const codeMatch = windowUrl.match(/code=([a-zA-Z0-9_-]+)/)
 
                 try {
-                    const response = await fetch(
-                        `${HOST}/api/user/linkedin/userinfo`,
-                        {
-                            method: 'GET',
-                            headers: {
-                                auth_code: codeMatch[1],
-                            },
-                        }
-                    )
+                    // Assuming codeMatch[1] contains the auth_code you wish to include in the request
+                    const authCode = codeMatch[1] // Ensure this variable is correctly defined in your context
 
-                    if (!response.ok) {
-                        throw new Error(
-                            `HTTP error! Status: ${response.status}`
-                        )
+                    // Prepare the URL and headers for the fetchWithAuth call
+                    const url = `${HOST}/api/user/linkedin/userinfo`
+                    const headers = {
+                        auth_code: authCode, // Since fetchWithAuth handles the Authorization header, we only need to include additional headers
                     }
 
-                    const data = await response.json()
+                    // Call fetchWithAuth to perform the request
+                    const data = await fetchWithAuth({
+                        url,
+                        method: 'GET',
+                        headers,
+                    })
 
+                    // Use the response data as needed
                     setUserLinkedinInfo(data)
                 } catch (error) {
                     console.error(error.message)

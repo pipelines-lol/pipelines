@@ -1,12 +1,18 @@
-import { useAutoAnimate } from '@formkit/auto-animate/react'
-import { PlusCircle } from 'lucide-react'
 import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { useAuthContext } from '../hooks/useAuthContext'
+import { useAutoAnimate } from '@formkit/auto-animate/react'
+
+import { HOST } from '../util/apiRoutes'
+import { fetchWithAuth } from '../util/fetchUtils'
+
+// components
+import Loading from './Loading'
 import { ExperienceForm } from '../components/ExperienceForm'
 import { SchoolQuerySearch } from '../components/SchoolQuerySearch'
-import { useAuthContext } from '../hooks/useAuthContext'
-import { HOST } from '../util/apiRoutes'
-import Loading from './Loading'
+
+// assets
+import { PlusCircle } from 'lucide-react'
 
 function EditProfile() {
     const [firstName, setFirstName] = useState('')
@@ -30,33 +36,18 @@ function EditProfile() {
         setLoading(true)
 
         try {
-            const res = await fetch(`${HOST}/api/profile/${user.profileId}`, {
+            // Use fetchWithAuth to perform the request
+            const data = await fetchWithAuth({
+                url: `${HOST}/api/profile/${user.profileId}`, // Adjust HOST and user.profileId as needed
                 method: 'GET',
-                headers: {
-                    'Content-Type': 'application/json', // Specify the content type as JSON
-                },
             })
 
-            if (!res.ok) {
-                // Check if the response has JSON content
-                if (
-                    res.headers
-                        .get('content-type')
-                        ?.includes('application/json')
-                ) {
-                    const errorData = await res.json()
-                    throw new Error(`${errorData.error}`)
-                } else {
-                    throw new Error(`HTTP error! Status: ${res.status}`)
-                }
-            }
-
-            const data = await res.json()
+            // Use the response data to update the UI state
             updateUIState(data)
         } catch (error) {
-            console.error(error.message)
+            console.error(error.message) // Error handling is simplified as fetchWithAuth should handle HTTP errors and token issues
         } finally {
-            setLoading(false)
+            setLoading(false) // Reset the loading state
         }
     }
 
@@ -452,55 +443,30 @@ function EditProfile() {
                 prevRemoveOtherCompanies: postRemoveCompanies,
                 postRemoveOtherCompanies: prevRemoveCompanies,
             }
-            const response = await fetch(
-                `${HOST}/api/company/update/${comp.name}`,
-                {
-                    method: `PATCH`,
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify(comp),
+
+            try {
+                await fetchWithAuth({
+                    url: `${HOST}/api/company/update/${comp.name}`,
+                    method: 'PATCH',
+                    body: comp,
+                })
+
+                const profile = {
+                    firstName,
+                    lastName,
+                    school,
+                    anonymous,
+                    pipeline: tempOrig,
                 }
-            )
 
-            if (!response.ok) {
-                console.log(response.status)
-            }
-
-            const profile = {
-                firstName,
-                lastName,
-                school,
-                anonymous,
-                pipeline: tempOrig,
-            }
-
-            fetch(`${HOST}/api/profile/${user.profileId}`, {
-                method: 'PATCH',
-                headers: {
-                    'Content-Type': 'application/json', // Specify the content type as JSON
-                },
-                body: JSON.stringify(profile),
-            })
-                .then((res) => {
-                    if (!res.ok) {
-                        // Check if the response has JSON content
-                        if (
-                            res.headers
-                                .get('content-type')
-                                ?.includes('application/json')
-                        ) {
-                            return res.json().then((errorData) => {
-                                throw new Error(`${errorData.error}`)
-                            })
-                        } else {
-                            throw new Error(`HTTP error! Status: ${res.status}`)
-                        }
-                    }
+                await fetchWithAuth({
+                    url: `${HOST}/api/profile/${user.profileId}`,
+                    method: 'PATCH',
+                    body: profile,
                 })
-                .catch((error) => {
-                    console.err(error.message)
-                })
+            } catch (error) {
+                console.error(error.message)
+            }
         }
 
         setOrigCompanies(tempOrig)
@@ -610,17 +576,19 @@ function EditProfile() {
             return true
         }
 
-        // make sure no input fields are blank
+        // Check input fields
         if (!validateSubmission()) {
             setErrorMessage('Must fill out all input fields.')
             return
         }
 
+        // Check date validity
         if (!isValidDate(dateValidity)) {
             setErrorMessage('Invalid Date')
             return
         }
 
+        // Check for duplicate companies
         if (!checkDuplicates(pipeline)) {
             setErrorMessage('Duplicate Companies (See Guidelines)')
             return
@@ -630,47 +598,27 @@ function EditProfile() {
         sortByDate(pipeline)
         generateCompanies(pipeline)
 
-        // update companies
-        const response = await fetch(`${HOST}/api/company/update`, {
-            method: `PATCH`,
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(companies),
-        })
+        // Update companies
+        try {
+            await fetchWithAuth({
+                url: `${HOST}/api/company/update`,
+                method: 'PATCH',
+                data: companies,
+            })
 
-        if (!response.ok) {
-            console.log(response.status)
+            // Update user profile
+            await fetchWithAuth({
+                url: `${HOST}/api/profile/${user.profileId}`,
+                method: 'PATCH',
+                data: profile,
+            })
+        } catch (error) {
+            console.error('Error:', error.message)
+            setErrorMessage('An error occurred while updating your profile.')
+        } finally {
+            setLoading(false)
+            navigate('/')
         }
-
-        fetch(`${HOST}/api/profile/${user.profileId}`, {
-            method: 'PATCH',
-            headers: {
-                'Content-Type': 'application/json', // Specify the content type as JSON
-            },
-            body: JSON.stringify(profile),
-        })
-            .then((res) => {
-                if (!res.ok) {
-                    // Check if the response has JSON content
-                    if (
-                        res.headers
-                            .get('content-type')
-                            ?.includes('application/json')
-                    ) {
-                        return res.json().then((errorData) => {
-                            throw new Error(`${errorData.error}`)
-                        })
-                    } else {
-                        throw new Error(`HTTP error! Status: ${res.status}`)
-                    }
-                }
-            })
-            .catch((error) => {
-                console.err(error.message)
-            })
-        setLoading(false)
-        navigate('/')
     }
 
     useEffect(() => {

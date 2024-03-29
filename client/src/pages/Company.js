@@ -1,11 +1,15 @@
 import { useEffect, useState } from 'react'
-import { useParams } from 'react-router-dom'
-import { HOST } from '../util/apiRoutes'
-import { HOMEPAGE } from '../util/apiRoutes'
-import { error404 } from '../components/Error404'
+import { useNavigate, useParams } from 'react-router-dom'
+
+import { HOST, HOMEPAGE } from '../util/apiRoutes'
 import { companies } from '../data/companyData'
+import { fetchWithAuth } from '../util/fetchUtils'
+
+// components
+import { error404 } from '../components/Error404'
 import Loading from './Loading'
-import { useNavigate } from 'react-router-dom'
+
+// assets
 import BigSmiley from '../static/ratings/BigSmiley.png'
 import smiley from '../static/ratings/smiley.png'
 import neutral from '../static/ratings/neutral.png'
@@ -35,26 +39,39 @@ const Company = () => {
     // get company data helper
     const getCompanyData = async (id) => {
         setLoading(true)
-        const res = await fetch(`${HOST}/api/company/get/${id}`, {
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json', // Specify the content type as JSON
-            },
-        })
-        const data = await res.json()
-        if (data.error) {
+        try {
+            const data = await fetchWithAuth({
+                url: `${HOST}/api/company/get/${id}`,
+                method: 'GET',
+            })
+
+            // Assuming data.error is a way the API indicates a logical error (not HTTP error)
+            if (data.error) {
+                setName(null)
+                setLoading(false)
+                return
+            }
+
+            setEmployeeCount(data.Employees.length + data.interns.length)
+            setName(data.displayName)
+            setLogo(data.logo)
+            setInfo(data.description)
+
+            if (data.rating) {
+                setRating(
+                    Math.floor(data.rating / data.ratedEmployees.length / 20)
+                )
+            }
+
+            await setPrevAndPost(data)
+        } catch (error) {
+            console.error('Error:', error.message)
+            // Handle fetch or logical errors
             setName(null)
             setLoading(false)
-            return
+        } finally {
+            setLoading(false)
         }
-        setEmployeeCount(data.Employees.length + data.interns.length)
-        setName(data.displayName)
-        setLogo(data.logo)
-        setInfo(data.description)
-        if (data.rating) {
-            setRating(Math.floor(data.rating / data.ratedEmployees.length / 20))
-        }
-        await setPrevAndPost(data)
     }
 
     // set previous and post companies w data fetched
@@ -81,16 +98,19 @@ const Company = () => {
                         name: null,
                     })
                 } else {
-                    const res = await fetch(
-                        `${HOST}/api/company/get/${prevEntries[i][0].toLowerCase()}`,
-                        {
+                    try {
+                        const url = `${HOST}/api/company/get/${prevEntries[i][0].toLowerCase()}`
+
+                        // Use fetchWithAuth for the request, specifying the URL and the method.
+                        const response = await fetchWithAuth({
+                            url,
                             method: 'GET',
-                            headers: {
-                                'Content-Type': 'application/json', // Specify the content type as JSON
-                            },
-                        }
-                    )
-                    top3Prev.push(await res.json())
+                        })
+
+                        top3Prev.push(response)
+                    } catch (error) {
+                        console.error(error.message)
+                    }
                 }
             }
         }
@@ -106,16 +126,15 @@ const Company = () => {
                         name: null,
                     })
                 } else {
-                    const res = await fetch(
-                        `${HOST}/api/company/get/${postEntries[i][0].toLowerCase()}`,
-                        {
+                    try {
+                        const data = await fetchWithAuth({
+                            url: `${HOST}/api/company/get/${prevEntries[i][0].toLowerCase()}`,
                             method: 'GET',
-                            headers: {
-                                'Content-Type': 'application/json', // Specify the content type as JSON
-                            },
-                        }
-                    )
-                    top3Post.push(await res.json())
+                        })
+                        top3Prev.push(data) // Add the fetched data to the top3Prev array
+                    } catch (error) {
+                        console.error('Error fetching data:', error)
+                    }
                 }
             }
         }
