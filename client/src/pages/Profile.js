@@ -1,18 +1,15 @@
 import { useEffect, useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import { useAuthContext } from '../hooks/useAuthContext'
-
 import { HOST } from '../util/apiRoutes'
 import { isMongoDBId } from '../util/mongoUtils'
-import { fetchWithAuth } from '../util/fetchUtils'
 
-// components
 import Loading from './Loading'
-import { ExperienceCard } from '../components/PipelineCard'
-import { ProfilePicture } from '../components/ProfilePicture'
 
-// assets
+import { ExperienceCard } from '../components/PipelineCard'
+
 import { GraduationCap, MapPin } from 'lucide-react'
+import { ProfilePicture } from '../components/ProfilePicture'
 
 function Profile() {
     const { id } = useParams()
@@ -43,46 +40,80 @@ function Profile() {
             setLoading(true)
             const isValidId = await isMongoDBId(id)
 
-            if (!isValidId) {
+            if (isValidId) {
+                const response = await fetch(`${HOST}/api/profile/${id}`, {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                })
+
+                if (!response.ok) {
+                    // Check if the response has JSON content
+                    if (
+                        response.headers
+                            .get('content-type')
+                            ?.includes('application/json')
+                    ) {
+                        const errorData = await response.json()
+                        throw new Error(`${errorData.error}`)
+                    } else {
+                        throw new Error(
+                            `HTTP error! Status: ${response.status}`
+                        )
+                    }
+                }
+
+                const data = await response.json()
+                setProfile(data)
+
+                setUsername(data.username)
+                setLinkedin(extractLinkedinUsername(data.linkedin))
+                setLocation(data.location)
+                setPfp(data.pfp)
+            } else {
                 setProfile(null)
-                throw new Error('Invalid MongoDB ID')
             }
-
-            const data = await fetchWithAuth({
-                url: `${HOST}/api/profile/${id}`,
-                method: 'GET',
-            })
-
-            // Successful fetch and data extraction
-            setProfile(data)
-            setUsername(data.username)
-            setLinkedin(extractLinkedinUsername(data.linkedin))
-            setLocation(data.location)
-            setPfp(data.pfp)
         } catch (error) {
-            console.error('Error:', error.message)
+            console.error(error.message)
             setProfile(null)
-        } finally {
             setLoading(false)
         }
     }
 
     const fetchProfiles = async () => {
-        setLoading(true)
+        fetch(`${HOST}/api/profile/`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json', // Specify the content type as JSON
+            },
+        })
+            .then((res) => {
+                if (!res.ok) {
+                    // Check if the response has JSON content
+                    if (
+                        res.headers
+                            .get('content-type')
+                            ?.includes('application/json')
+                    ) {
+                        return res.json().then((errorData) => {
+                            throw new Error(`${errorData.error}`)
+                        })
+                    } else {
+                        throw new Error(`HTTP error! Status: ${res.status}`)
+                    }
+                }
 
-        try {
-            const data = await fetchWithAuth({
-                url: `${HOST}/api/profile/`,
-                method: 'GET',
+                return res.json()
             })
+            .then((data) => {
+                setProfiles(data)
 
-            // If fetchWithAuth doesn't throw, it means the response was ok
-            setProfiles(data)
-        } catch (error) {
-            console.error('Error:', error.message)
-        } finally {
-            setLoading(false)
-        }
+                setLoading(false)
+            })
+            .catch((error) => {
+                console.error(error.message)
+            })
     }
 
     const getCurrentExperience = () => {
@@ -266,13 +297,32 @@ function Profile() {
         }
 
         try {
-            await fetchWithAuth({
-                url: `${HOST}/api/profile/${user.profileId}`,
-                method: 'PATCH',
-                data: updatedProfile,
-            })
+            const response = await fetch(
+                `${HOST}/api/profile/${user.profileId}`,
+                {
+                    method: 'PATCH',
+                    headers: {
+                        'Content-Type': 'application/json', // Specify the content type as JSON
+                    },
+                    body: JSON.stringify(updatedProfile),
+                }
+            )
+
+            if (!response.ok) {
+                // Check if the response has JSON content
+                if (
+                    response.headers
+                        .get('content-type')
+                        ?.includes('application/json')
+                ) {
+                    const errorData = await response.json()
+                    throw new Error(`${errorData.error}`)
+                } else {
+                    throw new Error(`HTTP error! Status: ${response.status}`)
+                }
+            }
         } catch (error) {
-            console.error('Error:', error.message)
+            console.error(error.message)
         }
 
         setSaveable(false)

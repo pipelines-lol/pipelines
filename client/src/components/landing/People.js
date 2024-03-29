@@ -1,31 +1,47 @@
 import { useEffect, useState } from 'react'
-import { useNavigate } from 'react-router-dom'
-
-import { HOST } from '../../util/apiRoutes'
-import { fetchWithAuth } from '../../util/fetchUtils'
-
-// components
 import Loading from '../../pages/Loading'
+import { HOST } from '../../util/apiRoutes'
 import { PipelineCard } from '../PipelineCard'
-
+import { useNavigate } from 'react-router-dom'
 export default function People() {
     const [profiles, setProfiles] = useState([])
     const [loading, setLoading] = useState(false)
     const navigate = useNavigate()
 
-    const generateProfiles = async (size = 5) => {
+    const generateProfiles = async () => {
+        const size = 5
         setLoading(true)
 
-        try {
-            const data = await fetchWithAuth({
-                url: `${HOST}/api/pipeline/random/${size}`,
-                method: 'GET',
+        fetch(`${HOST}/api/pipeline/random/${size}`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json', // Specify the content type as JSON
+            },
+        })
+            .then((res) => {
+                if (!res.ok) {
+                    // Check if the response has JSON content
+                    if (
+                        res.headers
+                            .get('content-type')
+                            ?.includes('application/json')
+                    ) {
+                        return res.json().then((errorData) => {
+                            throw new Error(`${errorData.error}`)
+                        })
+                    } else {
+                        throw new Error(`HTTP error! Status: ${res.status}`)
+                    }
+                }
+                return res.json()
             })
-            setProfiles([...data])
-            setLoading(false)
-        } catch (error) {
-            console.error(error.message)
-        }
+            .then((data) => {
+                setProfiles([...data])
+                setLoading(false)
+            })
+            .catch((error) => {
+                console.error(error.message)
+            })
     }
 
     const handleNavigation = () => {

@@ -1,10 +1,6 @@
-import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-
 import { HOST } from '../util/apiRoutes'
-import { fetchWithAuth } from '../util/fetchUtils'
-
-// assets
+import { useState } from 'react'
 import { Check, Loader2 } from 'lucide-react'
 
 function Newsletter() {
@@ -23,18 +19,25 @@ function Newsletter() {
 
         // email logic
         try {
-            await fetchWithAuth({
-                url: `${HOST}/api/email/send`,
+            const response = await fetch(`${HOST}/api/email/send`, {
                 method: 'POST',
-                data: { email },
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ email }),
             })
 
-            // If fetchWithAuth doesn't throw, it means the response was ok
-            setSuccess(true)
+            if (response.ok) {
+                setSuccess(true)
+            } else {
+                const errorResponse = await response.json()
+                throw new Error(
+                    errorResponse.message ||
+                        'Email failed to subscribe. Please try again.'
+                )
+            }
         } catch (error) {
-            setErrorMessage(
-                error.message || 'Email failed to subscribe. Please try again.'
-            )
+            setErrorMessage(error.message)
         } finally {
             setLoading(false)
         }

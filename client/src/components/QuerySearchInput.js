@@ -1,7 +1,5 @@
 import { useState } from 'react'
-
 import { HOST } from '../util/apiRoutes'
-import { fetchWithAuth } from '../util/fetchUtils'
 
 export const QuerySearchInput = ({ handleSearch }) => {
     const [query, setQuery] = useState('')
@@ -14,16 +12,18 @@ export const QuerySearchInput = ({ handleSearch }) => {
 
         // make sure theres an input before querying
         if (inputValue.length > 0) {
-            try {
-                const data = await fetchWithAuth({
-                    url: `${HOST}/api/company/get/companies/${inputValue.toLowerCase()}`,
+            // query the backend
+            const response = await fetch(
+                `${HOST}/api/company/get/companies/${inputValue.toLowerCase()}`,
+                {
                     method: 'GET',
-                })
-
-                setResults(data)
-            } catch (error) {
-                console.error(error.message)
-            }
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                }
+            )
+            const data = await response.json()
+            setResults(data)
         } else {
             setResults([])
         }

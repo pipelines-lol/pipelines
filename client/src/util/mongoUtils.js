@@ -1,5 +1,3 @@
-import Cookies from 'js-cookie'
-
 import { HOST } from './apiRoutes'
 
 export const isMongoDBId = async (id) => {
@@ -8,7 +6,6 @@ export const isMongoDBId = async (id) => {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
-                Authorization: `Bearer ${Cookies.get('sessionId')}`,
             },
         })
 

@@ -1,5 +1,4 @@
 import { useState } from 'react'
-import Cookies from 'js-cookie'
 
 const usePatchJson = async (url, dataToUpdate) => {
     // State to manage response data
@@ -14,7 +13,6 @@ const usePatchJson = async (url, dataToUpdate) => {
             method: 'PATCH',
             headers: {
                 'Content-Type': 'application/json',
-                Authorization: `Bearer ${Cookies.get('sessionId')}`,
             },
             body: JSON.stringify(dataToUpdate), // Assuming you have data to update
         })

@@ -20,7 +20,6 @@ const pfpRoutes = require("./routes/pfps");
 const imageModerationRoutes = require("./routes/imageModeration");
 const emailRoutes = require("./routes/emails");
 const earlyAccessRoutes = require("./routes/earlyAccess");
-const tokenRoutes = require("./routes/token");
 
 dotenv.config();
 
