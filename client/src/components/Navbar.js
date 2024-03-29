@@ -1,6 +1,5 @@
 import { useNavigate } from 'react-router-dom'
 import { useAuthContext } from '../hooks/useAuthContext'
-import Cookies from 'js-cookie'
 
 import { HOMEPAGE, HOST } from '../util/apiRoutes'
 import { CLIENT_ID, SCOPE } from '../util/linkedinUtils'
@@ -119,15 +118,26 @@ const Navbar = () => {
                 const codeMatch = windowUrl.match(/code=([a-zA-Z0-9_-]+)/)
 
                 try {
+                    // Assuming codeMatch[1] contains the auth_code you wish to include in the request
+                    const authCode = codeMatch[1] // Ensure this variable is correctly defined in your context
+
+                    // Prepare the URL and headers for the fetchWithAuth call
+                    const url = `${HOST}/api/user/linkedin/userinfo`
+                    const headers = {
+                        auth_code: authCode, // Since fetchWithAuth handles the Authorization header, we only need to include additional headers
+                    }
+
+                    // Call fetchWithAuth to perform the request
                     const data = await fetchWithAuth({
-                        url: `${HOST}/api/pfp/${profileId}`,
+                        url,
                         method: 'GET',
+                        headers,
                     })
 
-                    setPfpUrl(data.pfp)
+                    // Use the response data as needed
+                    setUserLinkedinInfo(data)
                 } catch (error) {
                     console.error(error.message)
-                    setPfpUrl(null)
                 }
             }
         }

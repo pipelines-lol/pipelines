@@ -1,8 +1,8 @@
 import { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
-import Cookies from 'js-cookie'
 
 import { HOST } from '../util/apiRoutes'
+import { fetchWithAuth } from '../util/fetchUtils'
 
 export const ProfilePicture = ({ profile, setPfp }) => {
     const { id } = useParams()

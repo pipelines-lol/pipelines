@@ -1,9 +1,9 @@
 import { useEffect, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
-import Cookies from 'js-cookie'
 
 import { HOST, HOMEPAGE } from '../util/apiRoutes'
 import { companies } from '../data/companyData'
+import { fetchWithAuth } from '../util/fetchUtils'
 
 // components
 import { error404 } from '../components/Error404'
@@ -98,17 +98,19 @@ const Company = () => {
                         name: null,
                     })
                 } else {
-                    const res = await fetch(
-                        `${HOST}/api/company/get/${prevEntries[i][0].toLowerCase()}`,
-                        {
+                    try {
+                        const url = `${HOST}/api/company/get/${prevEntries[i][0].toLowerCase()}`
+
+                        // Use fetchWithAuth for the request, specifying the URL and the method.
+                        const response = await fetchWithAuth({
+                            url,
                             method: 'GET',
-                            headers: {
-                                'Content-Type': 'application/json', // Specify the content type as JSON
-                                Authorization: `Bearer ${Cookies.get('sessionId')}`,
-                            },
-                        }
-                    )
-                    top3Prev.push(await res.json())
+                        })
+
+                        top3Prev.push(response)
+                    } catch (error) {
+                        console.error(error.message)
+                    }
                 }
             }
         }

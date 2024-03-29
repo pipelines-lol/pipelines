@@ -1,9 +1,9 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useAuthContext } from '../hooks/useAuthContext'
-import Cookies from 'js-cookie'
 
 import { HOST } from '../util/apiRoutes'
+import { fetchWithAuth } from '../util/fetchUtils'
 
 function Login() {
     const [email, setEmail] = useState('')
