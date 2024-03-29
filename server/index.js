@@ -6,7 +6,7 @@ const cors = require("cors");
 const bodyParser = require("body-parser");
 
 // middleware
-const { verifyToken } = require("./middleware/token");
+const { middleware: [verifyToken] } = require("./middleware/token");
 
 // route imports
 const authRoutes = require("./routes/auth");
@@ -41,16 +41,16 @@ const corsOptions = {
   methods: ["POST", "PATCH", "DELETE", "GET"],
   credentials: true,
 };
-app.use(cors(corsOptions));
+{ cors(corsOptions));
 
 // body parser
-app.use(
+{ 
   bodyParser.urlencoded({
     extended: true,
   })
 );
 
-app.use(bodyParser.json());
+{ bodyParser.json());
 
 // database
 mongoose
@@ -58,7 +58,7 @@ mongoose
   .then(() => console.log("Successfully connected to database."))
   .catch((err) => console.log(err));
 
-app.use(express.json());
+{ express.json());
 
 // testing
 app.get("/", (req, res) => {
@@ -66,18 +66,24 @@ app.get("/", (req, res) => {
 });
 
 // routes
-app.use("/api/user", verifyToken, authRoutes);
-app.use("/api/profile", verifyToken, profileRoutes);
-app.use("/api/school", verifyToken, schoolRoutes);
-app.use("/api/company", verifyToken, companyRoutes);
-app.use("/api/pipeline", verifyToken, pipelineRoutes);
-app.use("/api/mongodbId", verifyToken, mongodbIdRoutes);
-app.use("/api/pfp", verifyToken, pfpRoutes);
-app.use("/api/imageModeration", verifyToken, imageModerationRoutes);
-app.use("/api/offer", verifyToken, offerRoutes);
-app.use("/api/email", verifyToken, emailRoutes);
-app.use("/api/earlyAccess", verifyToken, earlyAccessRoutes);
-app.use("/api/token", tokenRoutes); // no verification, this is needed for verification
+const routes = [
+  { path: "/api/user", middleware: [verifyToken], handler: authRoutes },
+  { path: "/api/profile", middleware: [verifyToken], handler: profileRoutes },
+  { path: "/api/school", middleware: [verifyToken], handler: schoolRoutes },
+  { path: "/api/company", middleware: [verifyToken], handler: companyRoutes },
+  { path: "/api/pipeline", middleware: [verifyToken], handler: pipelineRoutes },
+  { path: "/api/mongodbId", middleware: [verifyToken], handler: mongodbIdRoutes },
+  { path: "/api/pfp", middleware: [verifyToken], handler: pfpRoutes },
+  { path: "/api/imageModeration", middleware: [verifyToken], handler: imageModerationRoutes },
+  { path: "/api/offer", middleware: [verifyToken], handler: offerRoutes },
+  { path: "/api/email", middleware: [verifyToken], handler: emailRoutes },
+  { path: "/api/earlyAccess", middleware: [verifyToken], handler: earlyAccessRoutes },
+  { path: "/api/token", tokenRoutes }, // no verification, this is needed for verification
+];
+
+routes.forEach(({ path, middleware, handler }) => {
+  app.use(path, middleware, handler);
+});
 
 const server = app.listen(PORT, () => console.log("Server is running."));
 
