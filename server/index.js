@@ -5,9 +5,6 @@ const mongoose = require("mongoose");
 const cors = require("cors");
 const bodyParser = require("body-parser");
 
-// middleware
-const { middleware: [verifyToken] } = require("./middleware/token");
-
 // route imports
 const authRoutes = require("./routes/auth");
 const profileRoutes = require("./routes/profiles");
@@ -20,7 +17,6 @@ const pfpRoutes = require("./routes/pfps");
 const imageModerationRoutes = require("./routes/imageModeration");
 const emailRoutes = require("./routes/emails");
 const earlyAccessRoutes = require("./routes/earlyAccess");
-const tokenRoutes = require("./routes/token");
 
 dotenv.config();
 
@@ -41,16 +37,16 @@ const corsOptions = {
   methods: ["POST", "PATCH", "DELETE", "GET"],
   credentials: true,
 };
-{ cors(corsOptions));
+app.use(cors(corsOptions));
 
 // body parser
-{ 
+app.use(
   bodyParser.urlencoded({
     extended: true,
   })
 );
 
-{ bodyParser.json());
+app.use(bodyParser.json());
 
 // database
 mongoose
@@ -58,7 +54,7 @@ mongoose
   .then(() => console.log("Successfully connected to database."))
   .catch((err) => console.log(err));
 
-{ express.json());
+app.use(express.json());
 
 // testing
 app.get("/", (req, res) => {
@@ -66,24 +62,17 @@ app.get("/", (req, res) => {
 });
 
 // routes
-const routes = [
-  { path: "/api/user", middleware: [verifyToken], handler: authRoutes },
-  { path: "/api/profile", middleware: [verifyToken], handler: profileRoutes },
-  { path: "/api/school", middleware: [verifyToken], handler: schoolRoutes },
-  { path: "/api/company", middleware: [verifyToken], handler: companyRoutes },
-  { path: "/api/pipeline", middleware: [verifyToken], handler: pipelineRoutes },
-  { path: "/api/mongodbId", middleware: [verifyToken], handler: mongodbIdRoutes },
-  { path: "/api/pfp", middleware: [verifyToken], handler: pfpRoutes },
-  { path: "/api/imageModeration", middleware: [verifyToken], handler: imageModerationRoutes },
-  { path: "/api/offer", middleware: [verifyToken], handler: offerRoutes },
-  { path: "/api/email", middleware: [verifyToken], handler: emailRoutes },
-  { path: "/api/earlyAccess", middleware: [verifyToken], handler: earlyAccessRoutes },
-  { path: "/api/token", tokenRoutes }, // no verification, this is needed for verification
-];
-
-routes.forEach(({ path, middleware, handler }) => {
-  app.use(path, middleware, handler);
-});
+app.use("/api/user", authRoutes);
+app.use("/api/profile", profileRoutes);
+app.use("/api/school", schoolRoutes);
+app.use("/api/company", companyRoutes);
+app.use("/api/pipeline", pipelineRoutes);
+app.use("/api/mongodbId", mongodbIdRoutes);
+app.use("/api/pfp", pfpRoutes);
+app.use("/api/imageModeration", imageModerationRoutes);
+app.use("/api/offer", offerRoutes);
+app.use("/api/email", emailRoutes);
+app.use("/api/earlyAccess", earlyAccessRoutes);
 
 const server = app.listen(PORT, () => console.log("Server is running."));
 

@@ -1,9 +1,7 @@
 import { useNavigate } from 'react-router-dom'
 import { useEarlyAccess } from '../hooks/useEarlyAccess'
 import { useState } from 'react'
-
 import { HOST } from '../util/apiRoutes'
-import { fetchWithAuth } from '../util/fetchUtils'
 
 function Code() {
     const [code, setCode] = useState()
@@ -15,19 +13,26 @@ function Code() {
 
     const handleSubmit = async (e) => {
         e.preventDefault()
-
-        // authentication
+        // authentication logic
         try {
-            await fetchWithAuth({
-                url: `${HOST}/api/earlyAccess/check`,
+            const response = await fetch(`${HOST}/api/earlyAccess/check`, {
                 method: 'POST',
-                data: { code },
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ code: code }),
             })
 
-            setAccess(true)
-            navigate('/')
+            if (response.ok) {
+                // update early access state
+                setAccess(true)
+
+                // navigate to home
+                navigate('/')
+            } else {
+                throw new Error('Invalid code.')
+            }
         } catch (error) {
-            console.error('Error:', error.message)
             setErrorMessage(error.message)
             setAccess(false)
         }
