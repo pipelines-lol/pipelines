@@ -1,7 +1,9 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useAuthContext } from '../hooks/useAuthContext'
+
 import { HOST } from '../util/apiRoutes'
+import { fetchWithAuth } from '../util/fetchUtils'
 
 function Signup() {
     const [email, setEmail] = useState('')
@@ -13,7 +15,7 @@ function Signup() {
 
     const navigate = useNavigate()
 
-    const signUp = (email, password) => {
+    const signUp = async (email, password) => {
         const _user = { email, password }
 
         // validation
@@ -22,43 +24,22 @@ function Signup() {
             return
         }
 
-        fetch(`${HOST}/api/user/signup`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json', // Specify the content type as JSON
-            },
-            body: JSON.stringify(_user),
-        })
-            .then((res) => {
-                if (!res.ok) {
-                    // Check if the response has JSON content
-                    if (
-                        res.headers
-                            .get('content-type')
-                            ?.includes('application/json')
-                    ) {
-                        return res.json().then((errorData) => {
-                            throw new Error(`${errorData.error}`)
-                        })
-                    } else {
-                        throw new Error(`HTTP error! Status: ${res.status}`)
-                    }
-                }
-
-                return res.json()
+        try {
+            // Using a variant of fetchWithAuth or ensuring fetchWithAuth can be used without automatically including Authorization header
+            const data = await fetchWithAuth({
+                url: `${HOST}/api/user/signup`,
+                method: 'POST',
+                data: _user,
             })
-            .then((data) => {
-                localStorage.setItem('user', JSON.stringify(data))
 
-                // update AuthContext
-                dispatch({ type: 'LOGIN', payload: data })
-
-                // redirect to home
-                navigate('/')
-            })
-            .catch((error) => {
-                setErrorMessage(error.message)
-            })
+            // On successful signup
+            localStorage.setItem('user', JSON.stringify(data))
+            dispatch({ type: 'LOGIN', payload: data }) // Update AuthContext
+            navigate('/') // Redirect to home or dashboard
+        } catch (error) {
+            console.error('Error:', error.message)
+            setErrorMessage(error.message) // Set the signup error message for the UI
+        }
     }
 
     return (
