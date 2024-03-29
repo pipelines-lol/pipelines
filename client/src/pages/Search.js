@@ -1,10 +1,15 @@
 import { useState, useCallback } from 'react'
 
-import { PipelineCard } from '../components/PipelineCard'
-import { QuerySearchInput } from '../components/QuerySearchInput'
 import { HOST } from '../util/apiRoutes'
+import { fetchWithAuth } from '../util/fetchUtils'
+
+// components
 import Loading from './Loading'
 import { PipelineDisplay } from '../components/PipelineDisplay'
+import { PipelineCard } from '../components/PipelineCard'
+import { QuerySearchInput } from '../components/QuerySearchInput'
+
+// assets
 import { LayoutGrid, Rows3 } from 'lucide-react'
 
 function Search() {
@@ -21,42 +26,24 @@ function Search() {
             setLoading(true)
 
             try {
-                const response = await fetch(
-                    `${HOST}/api/pipeline/search/company/${query.name}`,
-                    {
-                        method: 'GET',
-                        headers: {
-                            'Content-Type': 'application/json',
-                        },
-                    }
-                )
+                setLoading(true)
 
-                if (!response.ok) {
-                    if (response.status === 404) {
-                        setNoneFound(true)
-                    }
+                const data = await fetchWithAuth({
+                    url: `${HOST}/api/pipeline/search/company/${query.name}`,
+                    method: 'GET',
+                })
 
-                    if (
-                        response.headers
-                            .get('content-type')
-                            ?.includes('application/json')
-                    ) {
-                        const errorData = await response.json()
-                        throw new Error(`${errorData.error}`)
-                    } else {
-                        throw new Error(
-                            `HTTP error! Status: ${response.status}`
-                        )
-                    }
-                }
-                if (response.status === 200) {
-                    setNoneFound(false)
-                }
-                const data = await response.json()
-                setProfiles([...data])
-                setLoading(false)
+                // Assuming fetchWithAuth throws for non-OK responses, including 404
+                setNoneFound(false) // If the fetch was successful, there's no 404, so we assume some results were found
+                setProfiles([...data]) // Update the profiles state with the fetched data
             } catch (error) {
-                console.error(error.message)
+                console.error('Error:', error.message)
+
+                // Handle specific conditions like 404 Not Found
+                if (error.message.includes('404')) {
+                    setNoneFound(true)
+                }
+            } finally {
                 setLoading(false)
             }
         },

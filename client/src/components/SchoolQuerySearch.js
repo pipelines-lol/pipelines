@@ -1,5 +1,7 @@
 import { useEffect, useState } from 'react'
+
 import { HOST } from '../util/apiRoutes'
+import { fetchWithAuth } from '../util/fetchUtils'
 
 export const SchoolQuerySearch = ({ value, handleSearch }) => {
     const [query, setQuery] = useState('')
@@ -28,32 +30,14 @@ export const SchoolQuerySearch = ({ value, handleSearch }) => {
         if (query === '') return
 
         try {
-            const response = await fetch(`${HOST}/api/school?name=${query}`, {
+            const data = await fetchWithAuth({
+                url: `${HOST}/api/school?name=${query}`,
                 method: 'GET',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
             })
-
-            if (!response.ok) {
-                // Check if the response has JSON content
-                if (
-                    response.headers
-                        .get('content-type')
-                        ?.includes('application/json')
-                ) {
-                    const errorData = await response.json()
-                    throw new Error(`${errorData.error}`)
-                } else {
-                    throw new Error(`HTTP error! Status: ${response.status}`)
-                }
-            }
-
-            const data = await response.json()
 
             // Remove duplicates based on the "name" property
             const uniqueResults = data.reduce((unique, school) => {
-                if (!unique.find((item) => item.name === school.name)) {
+                if (!unique.some((item) => item.name === school.name)) {
                     unique.push(school)
                 }
                 return unique
