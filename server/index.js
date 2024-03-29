@@ -90,11 +90,12 @@ const routes = [
     middleware: [verifyToken],
     handler: earlyAccessRoutes,
   },
-  { path: "/api/token", tokenRoutes }, // no verification, this is needed for verification
+  { path: "/api/token", handler: tokenRoutes }, // no verification, this is needed for verification
 ];
 
 routes.forEach(({ path, middleware, handler }) => {
-  app.use(path, middleware, handler);
+  if (middleware) app.use(path, middleware, handler);
+  else app.use(path, handler);
 });
 
 const server = app.listen(PORT, () => console.log("Server is running."));
