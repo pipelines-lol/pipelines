@@ -1,9 +1,7 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useAuthContext } from '../hooks/useAuthContext'
-
 import { HOST } from '../util/apiRoutes'
-import { fetchWithAuth } from '../util/fetchUtils'
 
 function Login() {
     const [email, setEmail] = useState('')
@@ -15,7 +13,7 @@ function Login() {
 
     const navigate = useNavigate()
 
-    const login = async (email, password) => {
+    const login = (email, password) => {
         const user = { email, password }
 
         // validation
@@ -24,23 +22,42 @@ function Login() {
             return
         }
 
-        try {
-            const data = await fetchWithAuth({
-                url: `${HOST}/api/user/login`,
-                method: 'POST',
-                data: user,
+        fetch(`${HOST}/api/user/login`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json', // Specify the content type as JSON
+            },
+            body: JSON.stringify(user),
+        })
+            .then((res) => {
+                if (!res.ok) {
+                    // Check if the response has JSON content
+                    if (
+                        res.headers
+                            .get('content-type')
+                            ?.includes('application/json')
+                    ) {
+                        return res.json().then((errorData) => {
+                            throw new Error(`${errorData.error}`)
+                        })
+                    } else {
+                        throw new Error(`HTTP error! Status: ${res.status}`)
+                    }
+                }
+                return res.json()
             })
+            .then((data) => {
+                localStorage.setItem('user', JSON.stringify(data))
 
-            localStorage.setItem('user', JSON.stringify(data))
+                // update AuthContext
+                dispatch({ type: 'LOGIN', payload: data })
 
-            // update AuthContext
-            dispatch({ type: 'LOGIN', payload: data })
-
-            // redirect to home
-            navigate('/')
-        } catch (error) {
-            setErrorMessage(error.message)
-        }
+                // redirect to home
+                navigate('/')
+            })
+            .catch((error) => {
+                setErrorMessage(error.message)
+            })
     }
 
     return (

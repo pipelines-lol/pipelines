@@ -1,5 +1,5 @@
 import { createContext, useEffect, useState } from 'react'
-import Cookies from 'js-cookie'
+import Cookies from 'js-cookie' // Import js-cookie
 
 export const EarlyAccessContext = createContext()
 

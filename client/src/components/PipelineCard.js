@@ -1,10 +1,5 @@
 import { useEffect, useState } from 'react'
-import { useNavigate } from 'react-router-dom'
-
 import { HOST } from '../util/apiRoutes'
-import { fetchWithAuth } from '../util/fetchUtils'
-
-// components
 import { ConditionalLink } from './ConditionalLink'
 
 export const PipelineCard = ({ profileId, name, pfp, anonymous, pipeline }) => {
@@ -15,11 +10,28 @@ export const PipelineCard = ({ profileId, name, pfp, anonymous, pipeline }) => {
         if (!pfp || pfp === '') return
 
         try {
-            const data = await fetchWithAuth({
-                url: `${HOST}/api/pfp/${profileId}`,
+            const response = await fetch(`${HOST}/api/pfp/${profileId}`, {
                 method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
             })
 
+            if (!response.ok) {
+                // Check if the response has JSON content
+                if (
+                    response.headers
+                        .get('content-type')
+                        ?.includes('application/json')
+                ) {
+                    const errorData = await response.json()
+                    throw new Error(`${errorData.error}`)
+                } else {
+                    throw new Error(`HTTP error! Status: ${response.status}`)
+                }
+            }
+
+            const data = await response.json()
             setPfpUrl(data.pfp)
         } catch (error) {
             console.error(error.message)
@@ -72,6 +84,7 @@ export const PipelineCard = ({ profileId, name, pfp, anonymous, pipeline }) => {
         </div>
     )
 }
+import { useNavigate } from 'react-router-dom'
 
 export const ExperienceCard = ({ experience }) => {
     const current = new Date(experience.startDate) > new Date()
