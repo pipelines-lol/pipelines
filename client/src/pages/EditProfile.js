@@ -619,17 +619,19 @@ function EditProfile() {
             return true
         }
 
-        // make sure no input fields are blank
+        // Check input fields
         if (!validateSubmission()) {
             setErrorMessage('Must fill out all input fields.')
             return
         }
 
+        // Check date validity
         if (!isValidDate(dateValidity)) {
             setErrorMessage('Invalid Date')
             return
         }
 
+        // Check for duplicate companies
         if (!checkDuplicates(pipeline)) {
             setErrorMessage('Duplicate Companies (See Guidelines)')
             return
@@ -639,49 +641,27 @@ function EditProfile() {
         sortByDate(pipeline)
         generateCompanies(pipeline)
 
-        // update companies
-        const response = await fetch(`${HOST}/api/company/update`, {
-            method: `PATCH`,
-            headers: {
-                'Content-Type': 'application/json',
-                Authorization: `Bearer ${Cookies.get('sessionId')}`,
-            },
-            body: JSON.stringify(companies),
-        })
+        // Update companies
+        try {
+            await fetchWithAuth({
+                url: `${HOST}/api/company/update`,
+                method: 'PATCH',
+                data: companies,
+            })
 
-        if (!response.ok) {
-            console.log(response.status)
+            // Update user profile
+            await fetchWithAuth({
+                url: `${HOST}/api/profile/${user.profileId}`,
+                method: 'PATCH',
+                data: profile,
+            })
+        } catch (error) {
+            console.error('Error:', error.message)
+            setErrorMessage('An error occurred while updating your profile.')
+        } finally {
+            setLoading(false)
+            navigate('/')
         }
-
-        fetch(`${HOST}/api/profile/${user.profileId}`, {
-            method: 'PATCH',
-            headers: {
-                'Content-Type': 'application/json', // Specify the content type as JSON
-                Authorization: `Bearer ${Cookies.get('sessionId')}`,
-            },
-            body: JSON.stringify(profile),
-        })
-            .then((res) => {
-                if (!res.ok) {
-                    // Check if the response has JSON content
-                    if (
-                        res.headers
-                            .get('content-type')
-                            ?.includes('application/json')
-                    ) {
-                        return res.json().then((errorData) => {
-                            throw new Error(`${errorData.error}`)
-                        })
-                    } else {
-                        throw new Error(`HTTP error! Status: ${res.status}`)
-                    }
-                }
-            })
-            .catch((error) => {
-                console.err(error.message)
-            })
-        setLoading(false)
-        navigate('/')
     }
 
     useEffect(() => {

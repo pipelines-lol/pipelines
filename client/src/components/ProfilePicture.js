@@ -11,29 +11,11 @@ export const ProfilePicture = ({ profile, setPfp }) => {
 
     const fetchPfp = async () => {
         try {
-            const response = await fetch(`${HOST}/api/pfp/${id}`, {
+            const data = await fetchWithAuth({
+                url: `${HOST}/api/pfp/${id}`,
                 method: 'GET',
-                headers: {
-                    'Content-Type': 'application/json',
-                    Authorization: `Bearer ${Cookies.get('sessionId')}`,
-                },
             })
 
-            if (!response.ok) {
-                // Check if the response has JSON content
-                if (
-                    response.headers
-                        .get('content-type')
-                        ?.includes('application/json')
-                ) {
-                    const errorData = await response.json()
-                    throw new Error(`${errorData.error}`)
-                } else {
-                    throw new Error(`HTTP error! Status: ${response.status}`)
-                }
-            }
-
-            const data = await response.json()
             setPfp(data.pfp)
             setFetchedPfp(data.pfp)
         } catch (error) {

@@ -15,7 +15,7 @@ function Login() {
 
     const navigate = useNavigate()
 
-    const login = (email, password) => {
+    const login = async (email, password) => {
         const user = { email, password }
 
         // validation
@@ -24,43 +24,23 @@ function Login() {
             return
         }
 
-        fetch(`${HOST}/api/user/login`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json', // Specify the content type as JSON
-                Authorization: `Bearer ${Cookies.get('sessionId')}`,
-            },
-            body: JSON.stringify(user),
-        })
-            .then((res) => {
-                if (!res.ok) {
-                    // Check if the response has JSON content
-                    if (
-                        res.headers
-                            .get('content-type')
-                            ?.includes('application/json')
-                    ) {
-                        return res.json().then((errorData) => {
-                            throw new Error(`${errorData.error}`)
-                        })
-                    } else {
-                        throw new Error(`HTTP error! Status: ${res.status}`)
-                    }
-                }
-                return res.json()
+        try {
+            const data = await fetchWithAuth({
+                url: `${HOST}/api/user/login`,
+                method: 'POST',
+                data: user,
             })
-            .then((data) => {
-                localStorage.setItem('user', JSON.stringify(data))
 
-                // update AuthContext
-                dispatch({ type: 'LOGIN', payload: data })
+            localStorage.setItem('user', JSON.stringify(data))
 
-                // redirect to home
-                navigate('/')
-            })
-            .catch((error) => {
-                setErrorMessage(error.message)
-            })
+            // update AuthContext
+            dispatch({ type: 'LOGIN', payload: data })
+
+            // redirect to home
+            navigate('/')
+        } catch (error) {
+            setErrorMessage(error.message)
+        }
     }
 
     return (

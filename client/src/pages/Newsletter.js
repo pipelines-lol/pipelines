@@ -23,26 +23,18 @@ function Newsletter() {
 
         // email logic
         try {
-            const response = await fetch(`${HOST}/api/email/send`, {
+            await fetchWithAuth({
+                url: `${HOST}/api/email/send`,
                 method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    Authorization: `Bearer ${Cookies.get('sessionId')}`,
-                },
-                body: JSON.stringify({ email }),
+                data: { email },
             })
 
-            if (response.ok) {
-                setSuccess(true)
-            } else {
-                const errorResponse = await response.json()
-                throw new Error(
-                    errorResponse.message ||
-                        'Email failed to subscribe. Please try again.'
-                )
-            }
+            // If fetchWithAuth doesn't throw, it means the response was ok
+            setSuccess(true)
         } catch (error) {
-            setErrorMessage(error.message)
+            setErrorMessage(
+                error.message || 'Email failed to subscribe. Please try again.'
+            )
         } finally {
             setLoading(false)
         }

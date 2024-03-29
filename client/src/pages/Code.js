@@ -15,27 +15,19 @@ function Code() {
 
     const handleSubmit = async (e) => {
         e.preventDefault()
-        // authentication logic
+
+        // authentication
         try {
-            const response = await fetch(`${HOST}/api/earlyAccess/check`, {
+            await fetchWithAuth({
+                url: `${HOST}/api/earlyAccess/check`,
                 method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    Authorization: `Bearer ${Cookies.get('sessionId')}`,
-                },
-                body: JSON.stringify({ code: code }),
+                data: { code },
             })
 
-            if (response.ok) {
-                // update early access state
-                setAccess(true)
-
-                // navigate to home
-                navigate('/')
-            } else {
-                throw new Error('Invalid code.')
-            }
+            setAccess(true)
+            navigate('/')
         } catch (error) {
+            console.error('Error:', error.message)
             setErrorMessage(error.message)
             setAccess(false)
         }
