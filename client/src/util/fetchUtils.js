@@ -1,4 +1,5 @@
 import Cookies from 'js-cookie'
+import { generateToken } from './tokenUtils'
 
 export const fetchWithAuth = async ({
     url,
@@ -26,9 +27,14 @@ export const fetchWithAuth = async ({
 
     const response = await fetch(url, fetchOptions)
 
-    // Check for a 400 Unauthorized status code to detect invalid token
+    // Check for a 400 or 401 Unauthorized status code to detect invalid token
     if (response.status === 400) {
-        throw new Error('Invalid token. Please try again.')
+        // Invalid token, regenerate it and retry the request
+        const newToken = generateToken()
+        combinedHeaders.Authorization = `Bearer ${newToken}`
+
+        // Retry the request with the new token
+        return fetchWithAuth({ url, method, data, headers: combinedHeaders })
     }
 
     if (!response.ok) {
