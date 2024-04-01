@@ -131,7 +131,7 @@ const Company = () => {
                             url: `${HOST}/api/company/get/${prevEntries[i][0].toLowerCase()}`,
                             method: 'GET',
                         })
-                        top3Prev.push(data) // Add the fetched data to the top3Prev array
+                        top3Post.push(data) // Add the fetched data to the top3Prev array
                     } catch (error) {
                         console.error('Error fetching data:', error)
                     }

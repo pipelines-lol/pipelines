@@ -61,7 +61,7 @@ function Newsletter() {
                 </h1>
 
                 <p className="xs:text-md mx-12 my-8 max-w-2xl text-lg font-light text-gray-300 sm:text-lg md:text-xl lg:text-xl xl:text-2xl">
-                    Signup for our newsletter to recieve information on when we
+                    Signup for our newsletter to receive information on when we
                     launch!
                 </p>
 
