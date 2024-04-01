@@ -7,13 +7,17 @@ import App from './App'
 import { AuthContextProvider } from './context/AuthContext'
 import { EarlyAccessContextProvider } from './context/EarlyAccessContext'
 
+// store contexts here
+const contextProviders = [EarlyAccessContextProvider, AuthContextProvider]
+
 const root = ReactDOM.createRoot(document.getElementById('root'))
 root.render(
     <React.StrictMode>
-        <EarlyAccessContextProvider>
-            <AuthContextProvider>
-                <App />
-            </AuthContextProvider>
-        </EarlyAccessContextProvider>
+        {contextProviders.reduceRight(
+            (acc, Provider) => {
+                return <Provider>{acc}</Provider>
+            },
+            <App />
+        )}
     </React.StrictMode>
 )
