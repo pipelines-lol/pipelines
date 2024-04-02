@@ -25,6 +25,10 @@ userSchema.statics.login = async function (email) {
     user = await this.create({ email, profileId: null });
   }
 
+  //* Logs
+  console.log(`User logged in: ${email}`);
+  console.log(user);
+
   return user;
 };
 
