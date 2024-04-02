@@ -64,6 +64,12 @@ const deleteProfile = async (req, res) => {
     return res.status(404).json({ error: "No such Profile." });
   }
 
+  //* Logs
+  console.log(
+    `Profile of ${profile.firstName} ${profile.lastName} (Linkedin: ${profile.linkedin}) deleted with ID: ${id}`
+  );
+  console.log(profile);
+
   res.status(200).json(profile);
 };
 
@@ -106,6 +112,12 @@ const updateProfile = async (req, res) => {
     if (!updatedProfile) {
       return res.status(404).json({ error: "No such Profile." });
     }
+
+    //* Logs
+    console.log(
+      `Profile of ${profile.firstName} ${profile.lastName} (Linkedin: ${profile.linkedin}) updated with ID: ${id}`
+    );
+    console.log(updatedProfile);
 
     res.status(200).json(profile);
   } catch (error) {

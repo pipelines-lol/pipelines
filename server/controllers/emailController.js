@@ -34,6 +34,9 @@ const addToNewsletter = async (req, res) => {
   const newEmail = new Email({ email });
   await newEmail.save();
 
+  //* Logs
+  console.log(`Email added to newsletter: ${email}`);
+
   res.status(200).json({ data });
 };
 
@@ -44,6 +47,11 @@ const addEmail = async (req, res) => {
     const { email } = req.body;
     const newEmail = new Email({ email });
     const savedEmail = await newEmail.save();
+
+    //* Logs
+    console.log(`New email added to MongoDB: ${email}`);
+    console.log(savedEmail);
+
     res.status(201).json(savedEmail);
   } catch (error) {
     res.status(400).json({ message: error.message });
@@ -81,6 +89,10 @@ const removeEmail = async (req, res) => {
     const { email } = req.params;
     const deletedEmail = await Email.findOneAndDelete({ email: email });
     if (deletedEmail) {
+      //* Logs
+      console.log(`Email removed from MongoDB: ${email}`);
+      console.log(deletedEmail);
+
       res.status(200).json({ message: "Email removed" });
     } else {
       res.status(404).json({ message: "Email not found" });
@@ -96,6 +108,10 @@ const removeEmailById = async (req, res) => {
     const { id } = req.params;
     const deletedEmail = await Email.findByIdAndDelete(id);
     if (deletedEmail) {
+      //* Logs
+      console.log(`Email removed from MongoDB (by ID): ${id}`);
+      console.log(deletedEmail);
+
       res.status(200).json({ message: "Email removed" });
     } else {
       res.status(404).json({ message: "Email not found" });

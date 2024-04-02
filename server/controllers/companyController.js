@@ -31,6 +31,10 @@ const createCompany = async (req, res) => {
     // Save the new company to the database
     const savedCompany = await newCompany.save();
 
+    //* Logs
+    console.log(`New company created: ${savedCompany.name}`);
+    console.log(savedCompany);
+
     res.status(201).json(savedCompany);
   } catch (err) {
     console.error(err);
@@ -309,6 +313,10 @@ const updateCompany = async (req, res) => {
       }
     }
 
+    //* Logs
+    console.log(`Company updated: ${name}`);
+    // console.log() //TODO: log updated company data
+
     res.status(200).json({ message: "success" });
   } catch (err) {
     console.error(err);
@@ -542,6 +550,11 @@ const updateCompanies = async (req, res) => {
         }
       }
     }
+
+    //* Logs
+    console.log(`Companies updated: ${companies}`);
+    // console.log() //TODO: log updated company data
+
     res.status(200).json({ message: "succesful" });
   } catch (err) {
     console.error(err);
@@ -559,6 +572,10 @@ const deleteCompany = async (req, res) => {
   if (!company) {
     return res.status(404).json({ error: "No such company." });
   }
+
+  //* Logs
+  console.log(`Company deleted: ${name}`);
+  console.log(company);
 
   res.status(200).json(company);
 };

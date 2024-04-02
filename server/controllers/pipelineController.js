@@ -243,6 +243,7 @@ const removeExperience = async (req, res) => {
   } else {
     return res.status(400).json({ error: "Invalid request." });
   }
+
   // Update the profile's pipeline in the database
   await Profile.findOneAndUpdate(
     { _id: employeeId },
@@ -250,6 +251,12 @@ const removeExperience = async (req, res) => {
       pipeline: newPipeline,
     }
   );
+
+  //* Logs
+  console.log(
+    `Experience ${removedExperience.displayName} removed from employee: ${employeeId}`
+  );
+  console.log(newPipeline);
 
   res.status(200).json(removedExperience);
 };
@@ -347,6 +354,11 @@ const addExperience = async (req, res) => {
     )}" to "${formatDate(endDate)}" to ${profile.firstName} ${
       profile.lastName
     }`;
+
+    //* Logs
+    console.log(successMessage);
+    console.log(newPipeline);
+
     res.status(200).json({ message: successMessage });
   } catch (error) {
     // Handle errors centrally

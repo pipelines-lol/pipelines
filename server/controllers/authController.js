@@ -100,7 +100,11 @@ const getLinkedinInfoWithCode = async (req, res) => {
 
     // Attach the "vanityName" value to the userInfoResponse object as "vanity_name"
     userInfoResponse.data.vanity_name = vanity_name;
-    console.log("user info ", userInfoResponse.data);
+
+    //* Logs
+    console.log(`User logged in: ${vanity_name}`);
+    console.log(userInfoResponse.data);
+
     return res.status(200).json(userInfoResponse.data);
   } catch (error) {
     console.log(error);
