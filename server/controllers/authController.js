@@ -6,10 +6,6 @@ const axios = require("axios");
 
 const { HOMEPAGE } = require("../utils/apiRoutes");
 
-const createToken = (_id) => {
-  return jwt.sign({ _id }, process.env.JWT_SECRET, { expiresIn: "3d" });
-};
-
 const loginUser = async (req, res) => {
   const { email } = req.body;
 
@@ -44,16 +40,12 @@ const loginUser = async (req, res) => {
       await User.updateOne({ _id: user._id }, { profileId: profile._id });
     }
 
-    // create token
-    const token = createToken(user._id);
-
     res.status(200).json({
       email,
       _id: user._id,
       profileId: profile._id,
       profileCreated: profile.created,
       username: profile.username,
-      token,
     });
   } catch (error) {
     res.status(400).json({ error: error.message });
@@ -105,7 +97,10 @@ const getLinkedinInfoWithCode = async (req, res) => {
     console.log(`User logged in: ${vanity_name}`);
     console.log(userInfoResponse.data);
 
-    return res.status(200).json(userInfoResponse.data);
+    return res.status(200).json({
+      ...userInfoResponse.data,
+      token: accessTokenResponse.data.refresh_token, // Include refresh_token in the response
+    });
   } catch (error) {
     console.log(error);
     return res.status(400).json({ error: error.message });
