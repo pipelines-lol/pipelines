@@ -600,11 +600,11 @@ function EditProfile() {
 
         // Update companies
         try {
-            await fetchWithAuth({
-                url: `${HOST}/api/company/update`,
-                method: 'PATCH',
-                data: companies,
-            })
+            // await fetchWithAuth({
+            //     url: `${HOST}/api/company/update`,
+            //     method: 'PATCH',
+            //     data: companies,
+            // })
 
             // Update user profile
             await fetchWithAuth({
