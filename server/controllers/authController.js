@@ -96,8 +96,8 @@ const getLinkedinInfoWithCode = async (req, res) => {
     userInfoResponse.data.vanity_name = vanity_name;
 
     // Attach the tokens from the linkedin api to the userInfo
-    userBasicProfileResponse.data.token = accessToken;
-    userBasicProfileResponse.data.refresh_token = refreshToken;
+    userInfoResponse.data.token = accessToken;
+    userInfoResponse.data.refresh_token = refreshToken;
 
     //* Logs
     console.log(`User logged in: ${vanity_name}`);
