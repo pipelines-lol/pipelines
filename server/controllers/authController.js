@@ -60,29 +60,15 @@ const getLinkedinInfoWithCode = async (req, res) => {
   try {
     const code = req.headers.auth_code;
     if (!code) throw new Error("No code provided");
+    console.log("Code received successfully.");
 
     // This request gets access_token
-    const refreshTokenResponse = await axios.get(
+    const tokenResponse = await axios.get(
       `https://www.linkedin.com/oauth/v2/accessToken?grant_type=authorization_code&code=${code}&client_id=${CLIENT_ID}&client_secret=${CLIENT_SECRET}&redirect_uri=${REDIRECT_URI}`
     );
 
-    const refreshToken = refreshTokenResponse.data.refresh_token;
-
-    // refresh the token for a new one (not sure why we have to do this)
-    const url = "https://www.linkedin.com/oauth/v2/accessToken";
-    const body = new URLSearchParams({
-      grant_type: "refresh_token",
-      refresh_token: refreshToken,
-      client_id: CLIENT_ID,
-      client_secret: CLIENT_SECRET,
-    });
-    const accessTokenResponse = await axios.post(url, body, {
-      headers: {
-        "Content-Type": "application/x-www-form-urlencoded",
-      },
-    });
-
-    const accessToken = accessTokenResponse.data.access_token;
+    const refreshToken = tokenResponse.data.refresh_token;
+    const accessToken = tokenResponse.data.access_token;
 
     // This request gets user info from access_token (given in the headers of the request)
     let userInfoResponse = await axios.get(
@@ -99,7 +85,7 @@ const getLinkedinInfoWithCode = async (req, res) => {
       "https://api.linkedin.com/v2/me",
       {
         headers: {
-          Authorization: `Bearer ${accessTokenResponse.data.access_token}`,
+          Authorization: `Bearer ${accessToken}`,
         },
       }
     );
@@ -110,17 +96,19 @@ const getLinkedinInfoWithCode = async (req, res) => {
     // Attach the "vanityName" value to the userInfoResponse object as "vanity_name"
     userInfoResponse.data.vanity_name = vanity_name;
 
+    // Attach the tokens from the linkedin api to the userInfo
+    userBasicProfileResponse.data.token = accessToken;
+    userBasicProfileResponse.data.refresh_token = refreshToken;
+
     //* Logs
     console.log(`User logged in: ${vanity_name}`);
     console.log(userInfoResponse.data);
 
-    return res.status(200).json({
-      ...userInfoResponse.data,
-      token: accessToken, // include access token in the response
-      refresh_token: refreshToken, // include refresh token as well
-    });
+    const data = userInfoResponse.data;
+    console.log(data);
+    return res.status(200).json(data);
   } catch (error) {
-    console.log(error.message);
+    console.log(error);
     return res.status(400).json({ error: error.message });
   }
 };
