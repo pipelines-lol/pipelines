@@ -77,8 +77,6 @@ const deleteProfile = async (req, res) => {
 const updateProfile = async (req, res) => {
   const { id } = req.params;
 
-  console.log("Profile Controller Id:", id);
-
   if (!mongoose.Types.ObjectId.isValid(id)) {
     return res.status(404).json({ error: "No such Profile." });
   }
