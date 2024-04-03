@@ -1,5 +1,7 @@
 import { useEffect, useState } from 'react'
+
 import { HOST } from '../../util/apiRoutes'
+import { fetchWithAuth } from '../../util/fetchUtils'
 
 function AdminDashboard() {
     const [companies, setCompanies] = useState([])
@@ -18,12 +20,14 @@ function AdminDashboard() {
         }
 
         try {
-            const response = await fetch(url)
-            if (!response.ok) {
-                throw new Error('Network response was not ok')
-            }
-            const data = await response.json()
-            setCompanies(data) // Update state with fetched companies
+            // Use fetchWithAuth instead of fetch
+            const data = await fetchWithAuth({
+                url: url,
+                method: 'GET', // Assuming it's a GET request
+            })
+
+            // Update state with fetched companies
+            setCompanies(data)
         } catch (error) {
             console.error('Failed to fetch companies:', error)
             // Handle errors or set state accordingly
@@ -35,31 +39,22 @@ function AdminDashboard() {
         fetchCompanies('')
     }, [])
 
-    // Handler for search form submission
-    const handleSearchSubmit = (e) => {
-        e.preventDefault() // Prevent form submission from reloading the page
-        fetchCompanies(searchQuery) // Fetch companies based on the search term
-    }
-
     // Handler for deleting a company
     const handleDelete = async (company) => {
         const { name, displayName } = company
 
-        // confirm before deleting
+        // Confirm before deleting
         if (
             window.confirm(
                 `Are you sure you want to delete the company: "${displayName}"?`
             )
         ) {
             try {
-                const response = await fetch(
-                    `${HOST}/api/company/delete/${name}`,
-                    {
-                        method: 'DELETE',
-                    }
-                )
-                if (!response.ok)
-                    throw new Error('Failed to delete the company')
+                // Use fetchWithAuth instead of fetch
+                await fetchWithAuth({
+                    url: `${HOST}/api/company/delete/${name}`,
+                    method: 'DELETE',
+                })
 
                 // Remove the company from the local state to update the UI
                 setCompanies(
@@ -67,6 +62,7 @@ function AdminDashboard() {
                 )
             } catch (error) {
                 console.error('Error deleting company:', error)
+                // Handle errors
             }
         }
     }
@@ -75,6 +71,12 @@ function AdminDashboard() {
     const handleEdit = async (company) => {
         setIsModalOpen(true)
         setModalCompanyInfo(company)
+    }
+
+    // Handler for search form submission
+    const handleSearchSubmit = (e) => {
+        e.preventDefault() // Prevent form submission from reloading the page
+        fetchCompanies(searchQuery) // Fetch companies based on the search term
     }
 
     return (
@@ -307,23 +309,19 @@ function CompanyModal({ isOpen, onClose, companyData: initialCompanyData }) {
         const method = id ? 'PATCH' : 'POST'
 
         try {
-            console.log(companyData)
-            const response = await fetch(endpoint, {
+            const response = await fetchWithAuth({
+                url: endpoint, // Assuming endpoint is defined elsewhere
                 method,
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify(companyData),
+                data: companyData,
             })
 
-            if (response.ok) {
-                const data = await response.json()
-                console.log(data)
-                resetForm()
-                onClose() // Close the modal upon successful operation
-            } else {
-                throw new Error('Failed to process company information')
-            }
+            const data = await response.json()
+            console.log(data)
+            resetForm()
+            onClose() // Close the modal upon successful operation
         } catch (error) {
             setErrorMessage(error.message)
         }
@@ -343,7 +341,9 @@ function CompanyModal({ isOpen, onClose, companyData: initialCompanyData }) {
                             className="w-full bg-gray-200 px-4 py-2 disabled:select-none disabled:bg-gray-400"
                             value={name}
                             onChange={(e) => setName(e.target.value)}
-                            disabled={id !== null}
+                            disabled={
+                                id !== null && id !== undefined && id !== ''
+                            }
                         />
                     </div>
                     <div>

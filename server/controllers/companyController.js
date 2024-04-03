@@ -1,9 +1,11 @@
 const Company = require("../models/companyModel");
 const Profile = require("../models/profileModel");
-const router = require("../routes/profiles");
-const mongoose = require("mongoose");
 
 const createCompany = async (req, res) => {
+  if (!req.body.name) {
+    return res.status(400).json({ error: "No company name given." });
+  }
+
   const { displayName, logo, description } = req.body;
   const name = req.body.name.toLowerCase();
 
