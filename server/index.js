@@ -18,6 +18,7 @@ const mongodbIdRoutes = require("./routes/mongodbId");
 const offerRoutes = require("./routes/offers");
 const pfpRoutes = require("./routes/pfps");
 const imageModerationRoutes = require("./routes/imageModeration");
+const adminRoutes = require("./routes/admin");
 const emailRoutes = require("./routes/emails");
 const earlyAccessRoutes = require("./routes/earlyAccess");
 const tokenRoutes = require("./routes/token");
