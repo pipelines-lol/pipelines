@@ -11,7 +11,7 @@ export const fetchWithAuth = async ({
     // Default headers including Authorization
     const defaultHeaders = {
         'Content-Type': 'application/json',
-        Authorization: `Bearer ${Cookies.get('sessionId')}`,
+        Authorization: `Bearer ${Cookies.get('token')}`,
     }
 
     // Combine default headers with any custom headers passed in

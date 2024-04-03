@@ -4,6 +4,7 @@ import { useAuthContext } from '../hooks/useAuthContext'
 import { HOMEPAGE, HOST } from '../util/apiRoutes'
 import { CLIENT_ID, SCOPE } from '../util/linkedinUtils'
 import { fetchWithAuth } from '../util/fetchUtils'
+import { generateToken } from '../util/tokenUtils'
 
 import { useEffect, useState } from 'react'
 import MobileNavigationBar from './nav/Mobile'
@@ -36,7 +37,7 @@ const Navbar = () => {
 
             // SPECIAL CASE: First-time user logged in
             if (!user.profileCreated) {
-                await createProfile(user.profileId)
+                await updateProfile(user.profileId)
             }
 
             // Redirect to home
@@ -55,7 +56,7 @@ const Navbar = () => {
         navigate('/')
     }
 
-    const createProfile = async (profileId) => {
+    const updateProfile = async (profileId) => {
         if (!linkedinUserInfo) {
             return
         }
@@ -111,50 +112,63 @@ const Navbar = () => {
     }
 
     // checking for code after linkedin login
+    const [authCode, setAuthCode] = useState(null)
+
     useEffect(() => {
         async function checkForLinkedinToken() {
             const windowUrl = window.location.href
             if (windowUrl.includes('code=')) {
                 const codeMatch = windowUrl.match(/code=([a-zA-Z0-9_-]+)/)
+                if (!codeMatch) return
 
-                try {
-                    // Assuming codeMatch[1] contains the auth_code you wish to include in the request
-                    const authCode = codeMatch[1] // Ensure this variable is correctly defined in your context
-
-                    // Prepare the URL and headers for the fetchWithAuth call
-                    const url = `${HOST}/api/user/linkedin/userinfo`
-                    const headers = {
-                        auth_code: authCode, // Since fetchWithAuth handles the Authorization header, we only need to include additional headers
-                    }
-
-                    // Call fetchWithAuth to perform the request
-                    const data = await fetchWithAuth({
-                        url,
-                        method: 'GET',
-                        headers,
-                    })
-
-                    // Use the response data as needed
-                    setUserLinkedinInfo(data)
-                } catch (error) {
-                    console.error(error.message)
-                }
+                setAuthCode(codeMatch[1])
             }
         }
 
         checkForLinkedinToken()
     }, [])
 
+    useEffect(() => {
+        async function handleLinkedinToken() {
+            if (!authCode) return
+
+            try {
+                const url = `${HOST}/api/user/linkedin/userinfo`
+                const headers = { auth_code: authCode }
+
+                const { token, ...data } = await fetchWithAuth({
+                    url,
+                    method: 'GET',
+                    headers,
+                })
+
+                setUserLinkedinInfo(data)
+                localStorage.setItem('linkedinToken', token)
+                generateToken()
+
+                if (user) {
+                    updateProfile(user.profileId)
+                } else {
+                    login(user.email)
+                }
+            } catch (error) {
+                console.error(error.message)
+            }
+        }
+
+        handleLinkedinToken()
+    }, [authCode]) // Run when authCode or user changes
+
     // check if user info is available, if so, log in user
     useEffect(() => {
         async function checkForUserInfo() {
-            // edge case for old logged in users
-            if (!linkedinUserInfo && user) return logout()
+            // Edge case: If linkedinUserInfo is not available or user is already logged in, return
+            if (!linkedinUserInfo || user) return
 
-            if (!linkedinUserInfo) return
-            if (user) return
-
+            // Extract email from linkedinUserInfo
             const email = linkedinUserInfo.email
+
+            // If email is available, attempt to log in the user
             if (email) {
                 login(email)
             }

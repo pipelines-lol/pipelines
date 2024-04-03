@@ -6,10 +6,6 @@ const axios = require("axios");
 
 const { HOMEPAGE } = require("../utils/apiRoutes");
 
-const createToken = (_id) => {
-  return jwt.sign({ _id }, process.env.JWT_SECRET, { expiresIn: "3d" });
-};
-
 const loginUser = async (req, res) => {
   const { email } = req.body;
 
@@ -44,16 +40,12 @@ const loginUser = async (req, res) => {
       await User.updateOne({ _id: user._id }, { profileId: profile._id });
     }
 
-    // create token
-    const token = createToken(user._id);
-
     res.status(200).json({
       email,
       _id: user._id,
       profileId: profile._id,
       profileCreated: profile.created,
       username: profile.username,
-      token,
     });
   } catch (error) {
     res.status(400).json({ error: error.message });
@@ -68,19 +60,36 @@ const getLinkedinInfoWithCode = async (req, res) => {
   try {
     const code = req.headers.auth_code;
     if (!code) throw new Error("No code provided");
-    console.log("Code gotten succesfully");
 
     // This request gets access_token
-    let accessTokenResponse = await axios.get(
+    const refreshTokenResponse = await axios.get(
       `https://www.linkedin.com/oauth/v2/accessToken?grant_type=authorization_code&code=${code}&client_id=${CLIENT_ID}&client_secret=${CLIENT_SECRET}&redirect_uri=${REDIRECT_URI}`
     );
+
+    const refreshToken = refreshTokenResponse.data.refresh_token;
+
+    // refresh the token for a new one (not sure why we have to do this)
+    const url = "https://www.linkedin.com/oauth/v2/accessToken";
+    const body = new URLSearchParams({
+      grant_type: "refresh_token",
+      refresh_token: refreshToken,
+      client_id: CLIENT_ID,
+      client_secret: CLIENT_SECRET,
+    });
+    const accessTokenResponse = await axios.post(url, body, {
+      headers: {
+        "Content-Type": "application/x-www-form-urlencoded",
+      },
+    });
+
+    const accessToken = accessTokenResponse.data.access_token;
 
     // This request gets user info from access_token (given in the headers of the request)
     let userInfoResponse = await axios.get(
       "https://api.linkedin.com/v2/userinfo",
       {
         headers: {
-          Authorization: `Bearer ${accessTokenResponse.data.access_token}`,
+          Authorization: `Bearer ${accessToken}`,
         },
       }
     );
@@ -105,14 +114,47 @@ const getLinkedinInfoWithCode = async (req, res) => {
     console.log(`User logged in: ${vanity_name}`);
     console.log(userInfoResponse.data);
 
-    return res.status(200).json(userInfoResponse.data);
+    return res.status(200).json({
+      ...userInfoResponse.data,
+      token: accessToken, // include access token in the response
+      refresh_token: refreshToken, // include refresh token as well
+    });
   } catch (error) {
-    console.log(error);
+    console.log(error.message);
     return res.status(400).json({ error: error.message });
+  }
+};
+
+const refreshLinkedinToken = async (req, res) => {
+  const CLIENT_ID = process.env.LINKEDIN_CLIENT_ID;
+  const CLIENT_SECRET = process.env.LINKEDIN_CLIENT_SECRET;
+
+  const { refresh_token } = req.body;
+
+  const url = "https://www.linkedin.com/oauth/v2/accessToken";
+  const body = new URLSearchParams({
+    grant_type: "refresh_token",
+    refresh_token: refresh_token,
+    client_id: CLIENT_ID,
+    client_secret: CLIENT_SECRET,
+  });
+
+  try {
+    const response = await axios.post(url, body, {
+      headers: {
+        "Content-Type": "application/x-www-form-urlencoded",
+      },
+    });
+
+    res.status(200).json(response.data);
+  } catch (error) {
+    console.error("Error:", error);
+    res.status(400).json({ error: error.message });
   }
 };
 
 module.exports = {
   loginUser,
   getLinkedinInfoWithCode,
+  refreshLinkedinToken,
 };
