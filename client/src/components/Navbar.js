@@ -128,7 +128,6 @@ const Navbar = () => {
         checkForLinkedinToken()
     }, [])
 
-    // TODO: FIGURE OUT WHY THIS SHIT IS RUNNING TWICE
     useEffect(() => {
         async function handleLinkedinToken() {
             if (!authCode) return
@@ -158,7 +157,7 @@ const Navbar = () => {
         }
 
         handleLinkedinToken()
-    }, [authCode, user]) // Run when authCode or user changes
+    }, [authCode]) // Run when authCode or user changes
 
     // check if user info is available, if so, log in user
     useEffect(() => {
