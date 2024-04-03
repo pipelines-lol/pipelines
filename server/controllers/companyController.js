@@ -325,7 +325,11 @@ const updateCompany = async (req, res) => {
 };
 
 const updateCompanies = async (req, res) => {
-  companies = req.body;
+  const { companies } = req.body;
+
+  if (!companies)
+    return res.status(200).json({ message: "No companies provided" });
+
   try {
     for (const company of companies) {
       const {
