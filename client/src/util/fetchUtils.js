@@ -29,10 +29,9 @@ export const fetchWithAuth = async ({
     try {
         const response = await fetch(url, fetchOptions)
 
-        // Check for a 400 or 401 Unauthorized status code to detect invalid token
-        if (response.status === 400) {
+        if (response.status === 401) {
             // Invalid token, regenerate it and retry the request
-            const newToken = generateToken()
+            const newToken = await generateToken()
             combinedHeaders.Authorization = `Bearer ${newToken}`
 
             // Retry the request with the new token
@@ -45,14 +44,28 @@ export const fetchWithAuth = async ({
         }
 
         if (!response.ok) {
-            // If response status is not in the range 200-299, parse the response body for error message
-            const error = await response.json()
-            throw new Error(error.error)
+            const errorMessage = await getErrorMessage(response)
+            throw new Error(errorMessage)
         }
 
         return response.json()
     } catch (error) {
-        // If there's an error during the fetch operation, include its message in the thrown error
-        throw new Error(error.message)
+        throw new Error(
+            error.message || 'An error occurred during the fetch operation.'
+        )
+    }
+}
+
+async function getErrorMessage(response) {
+    try {
+        const error = await response.json()
+        return (
+            error.error ||
+            error.message ||
+            error.msg ||
+            `Error occurred with response ${error.response}`
+        )
+    } catch (err) {
+        return `Error occurred with response ${response.status} ${response.statusText}`
     }
 }
