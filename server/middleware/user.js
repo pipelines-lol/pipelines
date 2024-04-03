@@ -11,28 +11,38 @@ const getProfileIdFromToken = async (token) => {
     const linkedinToken = decodedToken.linkedinToken;
 
     // this request gets basic profile info from linkedin token
-    const { vanityName } = await axios.get("https://api.linkedin.com/v2/me", {
+    const { data } = await axios.get("https://api.linkedin.com/v2/me", {
       headers: {
         Authorization: `Bearer ${linkedinToken}`,
       },
     });
 
-    console.log(vanityName);
+    const vanityName = data.vanityName;
 
     // Query MongoDB model to find profile with matching vanity name
     const profile = await Profile.findOne({
       linkedin: `https://linkedin.com/in/${vanityName}`,
     });
 
-    // return profile id
-    return profile._id;
+    // extract id from mongo object
+    if (profile) {
+      const profileId = profile._id.toString();
+
+      // return profile id
+      return profileId;
+    } else {
+      throw Error(`Profile not found: ${vanityName}`);
+    }
   } catch (err) {
     console.error(err);
     return null;
   }
 };
 
-const verifyUser = (req, res, next) => {
+const verifyUser = async (req, res, next) => {
+  // Log the requested URL
+  console.log("Requested URL:", req.originalUrl);
+
   const authHeader = req.headers.authorization;
 
   if (!authHeader) {
@@ -45,9 +55,12 @@ const verifyUser = (req, res, next) => {
   }
 
   const token = tokenParts[1];
-  const requestedProfileId = req.params.id; // Assuming profileId is passed in the request parameters
 
-  const profileIdFromToken = getProfileIdFromToken(token);
+  // Extract the ID from the end of the URL path
+  const idParts = req.originalUrl.split("/");
+  const requestedProfileId = idParts[idParts.length - 1];
+
+  const profileIdFromToken = await getProfileIdFromToken(token);
 
   if (!profileIdFromToken) {
     return res.status(401).json({ msg: "Invalid or expired token." });
