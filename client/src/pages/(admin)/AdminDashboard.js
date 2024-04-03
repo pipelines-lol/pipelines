@@ -83,21 +83,18 @@ function AdminDashboard() {
     const handleDelete = async (company) => {
         const { name, displayName } = company
 
-        // confirm before deleting
+        // Confirm before deleting
         if (
             window.confirm(
                 `Are you sure you want to delete the company: "${displayName}"?`
             )
         ) {
             try {
-                const response = await fetch(
-                    `${HOST}/api/company/delete/${name}`,
-                    {
-                        method: 'DELETE',
-                    }
-                )
-                if (!response.ok)
-                    throw new Error('Failed to delete the company')
+                // Use fetchWithAuth instead of fetch
+                await fetchWithAuth({
+                    url: `${HOST}/api/company/delete/${name}`,
+                    method: 'DELETE',
+                })
 
                 // Remove the company from the local state to update the UI
                 setCompanies(
@@ -105,6 +102,7 @@ function AdminDashboard() {
                 )
             } catch (error) {
                 console.error('Error deleting company:', error)
+                // Handle errors
             }
         }
     }
@@ -113,6 +111,12 @@ function AdminDashboard() {
     const handleEdit = async (company) => {
         setIsModalOpen(true)
         setModalCompanyInfo(company)
+    }
+
+    // Handler for search form submission
+    const handleSearchSubmit = (e) => {
+        e.preventDefault() // Prevent form submission from reloading the page
+        fetchCompanies(searchQuery) // Fetch companies based on the search term
     }
 
     return (
