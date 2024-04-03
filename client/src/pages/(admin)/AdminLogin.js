@@ -2,6 +2,8 @@ import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useAdminContext } from '../../hooks/useAdminContext'
 
+import { fetchWithAuth } from '../../util/fetchUtils'
+
 function AdminLogin() {
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
@@ -13,29 +15,25 @@ function AdminLogin() {
 
     const handleSubmit = async (e) => {
         e.preventDefault()
-        // authentication logic
+
         try {
-            const response = await fetch(
-                'http://localhost:4000/api/admin/login',
-                {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({ email, password }),
-                }
-            )
+            // Make the API auth call
+            await fetchWithAuth({
+                url: 'http://localhost:4000/api/admin/login',
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ email, password }),
+            })
 
-            if (response.ok) {
-                // update admin state
-                dispatch({ type: 'SET_ADMIN', payload: true })
+            // Update admin state
+            dispatch({ type: 'SET_ADMIN', payload: true })
 
-                // navigate to dashboard
-                navigate('/admin/dashboard')
-            } else {
-                throw new Error('Failed to login')
-            }
+            // Navigate to dashboard
+            navigate('/admin/dashboard')
         } catch (error) {
+            // Handle errors
             setErrorMessage(error.message)
             dispatch({ type: 'SET_ADMIN', payload: false })
         }
