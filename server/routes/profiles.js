@@ -1,23 +1,27 @@
-const express = require('express')
+const express = require("express");
 const {
-    getProfiles, 
-    getProfile,
-    deleteProfile,
-    updateProfile,
-} = require('../controllers/profileController')
+  getProfiles,
+  getProfile,
+  deleteProfile,
+  updateProfile,
+} = require("../controllers/profileController");
 
-const router = express.Router()
+const read = express.Router();
+const write = express.Router();
 
 // GET all profiles
-router.get('/', getProfiles)
+read.get("/", getProfiles);
 
 // GET a single profile
-router.get('/:id', getProfile)
+read.get("/:id", getProfile);
 
 // DELETE a profile
-router.delete('/:id', deleteProfile)
+write.delete("/:id", deleteProfile);
 
 // UPDATE a profile
-router.patch('/:id', updateProfile)
+write.patch("/:id", updateProfile);
 
-module.exports = router;
+module.exports = {
+  read,
+  write,
+};
