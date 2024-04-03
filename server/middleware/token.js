@@ -1,15 +1,18 @@
 const jwt = require("jsonwebtoken");
 
-const generateToken = (sessionId) => {
-  const token = jwt.sign(
-    {
-      id: sessionId,
-    },
-    process.env.JWT_SECRET,
-    {
-      expiresIn: "1d",
-    }
-  );
+const generateToken = (sessionId, linkedinToken) => {
+  // Create payload object with sessionId
+  const payload = { id: sessionId };
+
+  // If profileId exists, include it in the payload
+  if (linkedinToken) {
+    payload.linkedinToken = linkedinToken;
+  }
+
+  // Generate token with payload
+  const token = jwt.sign(payload, process.env.JWT_SECRET, {
+    expiresIn: "1d",
+  });
 
   return token;
 };

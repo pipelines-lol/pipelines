@@ -5,11 +5,14 @@ const { generateToken } = require("../middleware/token");
 const router = express.Router();
 
 const getToken = async (req, res) => {
+  // Extract profileId from request parameters
+  const { linkedinToken } = req.query;
+
   // generate sessionId
   const sessionId = uuidv4();
 
-  // generate token
-  const token = generateToken(sessionId);
+  // generate token with profileId included in the payload if it exists
+  const token = generateToken(sessionId, linkedinToken);
 
   res.json(token);
 };
