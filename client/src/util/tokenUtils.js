@@ -4,7 +4,6 @@ import { HOST } from './apiRoutes'
 
 export const generateToken = async () => {
     const linkedinToken = localStorage.getItem('linkedinToken')
-    console.log(linkedinToken)
 
     // Use fetch to get a new session ID if one does not already exist
     try {
