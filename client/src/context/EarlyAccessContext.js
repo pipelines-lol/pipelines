@@ -9,7 +9,6 @@ export const EarlyAccessContextProvider = ({ children }) => {
     useEffect(() => {
         // check if user originally had early access
         const access = Cookies.get('earlyAccess')
-        console.log(access)
         if (access === 'true') {
             setEarlyAccess(true)
         }
