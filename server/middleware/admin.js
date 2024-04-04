@@ -2,7 +2,7 @@ const jwt = require("jsonwebtoken");
 
 const Admin = require("../models/adminModel");
 
-const verifyToken = async (token) => {
+const verifyAdminToken = async (token) => {
   try {
     // Get decoded token
     const decodedToken = jwt.verify(token, process.env.JWT_SECRET);
@@ -36,10 +36,13 @@ const verifyAdmin = async (req, res, next) => {
     return res.status(401).json({ msg: "Token format is 'Bearer <token>'." });
   }
 
+  // extract admin token from MOTHER token
   const token = tokenParts[1];
+  const decodedToken = jwt.verify(token, process.env.JWT_SECRET);
+  const adminToken = decodedToken.adminToken;
 
   // Verify the token has admin privileges
-  if (!verifyToken(token)) {
+  if (!verifyAdminToken(adminToken)) {
     return res.status(403).json({
       msg: "User does not have the required privileges for this request.",
     });
@@ -49,5 +52,6 @@ const verifyAdmin = async (req, res, next) => {
 };
 
 module.exports = {
+  verifyAdminToken,
   verifyAdmin,
 };

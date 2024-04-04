@@ -1,9 +1,18 @@
 const jwt = require("jsonwebtoken");
 
 const Admin = require("../models/adminModel");
+const { verifyAdminToken } = require("../middleware/admin");
 
 const createToken = (_id) => {
   return jwt.sign({ _id }, process.env.JWT_SECRET, { expiresIn: "3d" });
+};
+
+const verifyToken = async (req, res) => {
+  const { token } = req.body;
+
+  const isAdmin = await verifyAdminToken(token);
+
+  res.status(200).json({ isAdmin });
 };
 
 const loginAdmin = async (req, res) => {
@@ -23,4 +32,5 @@ const loginAdmin = async (req, res) => {
 
 module.exports = {
   loginAdmin,
+  verifyToken,
 };
