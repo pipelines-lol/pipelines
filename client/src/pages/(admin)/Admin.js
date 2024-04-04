@@ -2,12 +2,12 @@ import { Routes, Route } from 'react-router-dom'
 import AdminLogin from './AdminLogin'
 import AdminDashboard from './AdminDashboard'
 
-import { useAdminContext } from '../../hooks/useAdminContext'
+import { useAdmin } from '../../hooks/useAdminContext'
 
 import { error404 } from '../../components/Error404'
 
 const Admin = () => {
-    const { admin } = useAdminContext()
+    const { admin } = useAdmin()
 
     return (
         <Routes>
