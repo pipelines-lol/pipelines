@@ -17,7 +17,7 @@ const Navbar = () => {
 
     // taken from linkedin api
 
-    const [linkedinUserInfo, setUserLinkedinInfo] = useState({})
+    const [linkedinUserInfo, setLinkedinUserInfo] = useState({})
     const [pfp, setPfp] = useState(null)
 
     const linkedinRedirectUrl = `https://linkedin.com/oauth/v2/authorization?client_id=${CLIENT_ID}&response_type=code&scope=${SCOPE}&redirect_uri=${HOMEPAGE}`
@@ -48,7 +48,7 @@ const Navbar = () => {
     }
 
     const logout = () => {
-        setUserLinkedinInfo(null)
+        setLinkedinUserInfo(null)
 
         dispatch({ type: 'LOGOUT' })
         localStorage.setItem('user', null)
@@ -133,23 +133,20 @@ const Navbar = () => {
             if (!authCode) return
 
             try {
-                const url = `${HOST}/api/user/linkedin/userinfo`
-                const headers = { auth_code: authCode }
-
+                const url = `${HOST}/api/user/linkedin/userinfo?code=${authCode}`
                 const { token, ...data } = await fetchWithAuth({
                     url,
                     method: 'GET',
-                    headers,
                 })
 
-                setUserLinkedinInfo(data)
+                setLinkedinUserInfo(data)
                 localStorage.setItem('linkedinToken', token)
-                generateToken()
+                await generateToken()
 
                 if (user) {
                     updateProfile(user.profileId)
                 } else {
-                    login(user.email)
+                    await login(data.email)
                 }
             } catch (error) {
                 console.error(error.message)
@@ -163,19 +160,19 @@ const Navbar = () => {
     useEffect(() => {
         async function checkForUserInfo() {
             // Edge case: If linkedinUserInfo is not available or user is already logged in, return
-            if (!linkedinUserInfo || user) return
+            if (linkedinUserInfo || !user) return
 
             // Extract email from linkedinUserInfo
-            const email = linkedinUserInfo.email
+            const email = user.email
 
             // If email is available, attempt to log in the user
             if (email) {
-                login(email)
+                await login(email)
             }
         }
 
         checkForUserInfo()
-    }, [user, linkedinUserInfo])
+    }, [linkedinUserInfo, user])
 
     useEffect(() => {
         const fetchInfo = async () => {
