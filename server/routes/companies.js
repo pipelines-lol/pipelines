@@ -1,4 +1,5 @@
 const express = require("express");
+const bodyParser = require("body-parser");
 const {
   createCompany,
   getCompany,
@@ -7,25 +8,33 @@ const {
   updateCompanies,
   deleteCompany,
 } = require("../controllers/companyController");
-const router = express();
-const bodyParser = require("body-parser");
+
+const read = express.Router();
+const write = express.Router();
 
 //read a specific company
-router.post("/create", bodyParser.json(), createCompany);
+write.post("/create", bodyParser.json(), createCompany);
 
 //get a specific company
-router.get("/get/:name", getCompany);
+read.get("/get/:name", getCompany);
 
 //get multiple companies based on a query
-router.get("/get/companies/:query", getCompanies);
+read.get("/get/companies/:query", getCompanies);
 
 //Update a specific company
-router.patch("/update/:name", bodyParser.json(), updateCompany);
+// ! TEMP READ COMMAND
+// TODO: change up backend to remove client changing of companies
+read.patch("/update/:name", bodyParser.json(), updateCompany);
 
 //Update a specific company
-router.patch("/update", bodyParser.json(), updateCompanies);
+// ! TEMP READ COMMAND
+// TODO: change up backend to remove client changing of companies
+read.patch("/update", bodyParser.json(), updateCompanies);
 
 //Delete a specific company
-router.delete("/delete/:name", deleteCompany);
+write.delete("/delete/:name", deleteCompany);
 
-module.exports = router;
+module.exports = {
+  read,
+  write,
+};

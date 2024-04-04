@@ -1,7 +1,6 @@
 const User = require("../models/userModel");
 const Profile = require("../models/profileModel");
 
-const jwt = require("jsonwebtoken");
 const axios = require("axios");
 
 const { HOMEPAGE } = require("../utils/apiRoutes");

@@ -1,12 +1,17 @@
 const jwt = require("jsonwebtoken");
 
-const generateToken = (sessionId, linkedinToken) => {
+const generateToken = (sessionId, linkedinToken, adminToken) => {
   // Create payload object with sessionId
   const payload = { id: sessionId };
 
-  // If profileId exists, include it in the payload
+  // If linkedinToken exists, include it in the payload
   if (linkedinToken) {
     payload.linkedinToken = linkedinToken;
+  }
+
+  // If adminToken exists, include it in the payload
+  if (adminToken) {
+    payload.adminToken = adminToken;
   }
 
   // Generate token with payload

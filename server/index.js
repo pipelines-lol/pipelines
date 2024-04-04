@@ -8,6 +8,7 @@ const bodyParser = require("body-parser");
 // middleware
 const { verifyToken } = require("./middleware/token");
 const { verifyUser } = require("./middleware/user");
+const { verifyAdmin } = require("./middleware/admin");
 
 // route imports
 const authRoutes = require("./routes/auth");
@@ -19,6 +20,7 @@ const mongodbIdRoutes = require("./routes/mongodbId");
 const offerRoutes = require("./routes/offers");
 const pfpRoutes = require("./routes/pfps");
 const imageModerationRoutes = require("./routes/imageModeration");
+const adminRoutes = require("./routes/admin");
 const emailRoutes = require("./routes/emails");
 const earlyAccessRoutes = require("./routes/earlyAccess");
 const tokenRoutes = require("./routes/token");
@@ -80,7 +82,16 @@ const routes = [
     handler: profileRoutes.write,
   },
   { path: "/api/school", middleware: [verifyToken], handler: schoolRoutes },
-  { path: "/api/company", middleware: [verifyToken], handler: companyRoutes },
+  {
+    path: "/api/company",
+    middleware: [verifyToken],
+    handler: companyRoutes.read,
+  },
+  {
+    path: "/api/company",
+    middleware: [verifyToken, verifyAdmin],
+    handler: companyRoutes.write,
+  },
   {
     path: "/api/pipeline",
     middleware: [verifyToken],
@@ -109,6 +120,10 @@ const routes = [
     middleware: [verifyToken],
     handler: earlyAccessRoutes,
   },
+
+  // admin routes
+  { path: "/api/admin", middleware: [verifyToken], handler: adminRoutes },
+
   { path: "/api/token", handler: tokenRoutes }, // no verification, this is needed for verification
 ];
 
