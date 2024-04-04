@@ -7,6 +7,7 @@ export const fetchWithAuth = async ({
     method,
     data = {},
     headers = {},
+    retry = false,
 }) => {
     // Default headers including Authorization
     const defaultHeaders = {
@@ -29,7 +30,9 @@ export const fetchWithAuth = async ({
     try {
         const response = await fetch(url, fetchOptions)
 
-        if (response.status === 401) {
+        // if this is the first catch at an unauthorized call
+        // try and regenerate the token
+        if (!retry && response.status === 401) {
             // Invalid token, regenerate it and retry the request
             const newToken = await generateToken()
             combinedHeaders.Authorization = `Bearer ${newToken}`
@@ -40,6 +43,7 @@ export const fetchWithAuth = async ({
                 method,
                 data,
                 headers: combinedHeaders,
+                retry: true,
             })
         }
 
