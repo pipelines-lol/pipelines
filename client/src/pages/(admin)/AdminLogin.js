@@ -4,6 +4,7 @@ import { useAdmin } from '../../hooks/useAdminContext'
 
 import { HOST } from '../../util/apiRoutes'
 import { fetchWithAuth } from '../../util/fetchUtils'
+import { generateToken } from '../../util/tokenUtils'
 
 function AdminLogin() {
     const [email, setEmail] = useState('')
@@ -30,7 +31,10 @@ function AdminLogin() {
 
             // Update admin state
             dispatch({ type: 'SET_ADMIN', payload: token })
+
+            // store token and generate new token
             localStorage.setItem('adminToken', token)
+            await generateToken()
 
             // Navigate to dashboard
             navigate('/admin/dashboard')
