@@ -317,9 +317,7 @@ function CompanyModal({ isOpen, onClose, companyData: initialCompanyData }) {
                 },
                 data: companyData,
             })
-
-            const data = await response.json()
-            console.log(data)
+            console.log(response)
             resetForm()
             onClose() // Close the modal upon successful operation
         } catch (error) {
