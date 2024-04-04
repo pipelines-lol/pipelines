@@ -4,17 +4,17 @@ const Admin = require("../models/adminModel");
 
 const verifyToken = async (token) => {
   try {
-    // get decoded token
+    // Get decoded token
     const decodedToken = jwt.verify(token, process.env.JWT_SECRET);
 
-    // extract email and password of user
-    const { email, password } = decodedToken;
+    // Extract the id from the decoded token
+    const { _id } = decodedToken;
 
-    // login admin user
-    await Admin.login(email, password);
+    // Check if an admin account exists with the provided _id
+    const admin = await Admin.findById(_id);
 
-    // return if an admin account exists or not
-    return true;
+    // Return true if an admin account exists, false otherwise
+    return admin ? true : false;
   } catch (err) {
     console.error(err);
     return false;
