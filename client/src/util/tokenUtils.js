@@ -8,11 +8,7 @@ export const generateToken = async () => {
 
     // Use fetch to get a new session ID if one does not already exist
     try {
-        const url = `
-            ${HOST}/api/token
-            ${linkedinToken ? `?linkedinToken=${linkedinToken}` : ''}
-            ${adminToken ? `&adminToken=${adminToken}` : ''}
-        `
+        const url = `${HOST}/api/token${linkedinToken ? `?linkedinToken=${linkedinToken}` : ''}${adminToken ? `&adminToken=${adminToken}` : ''}`
         const response = await fetch(url)
 
         if (!response.ok) {
