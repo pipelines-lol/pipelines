@@ -1,4 +1,6 @@
 const mongoose = require("mongoose");
+const bcrypt = require("bcrypt");
+
 const Schema = mongoose.Schema;
 
 const adminSchema = new Schema(
@@ -28,8 +30,10 @@ adminSchema.statics.login = async function (email, password) {
     throw new Error("Invalid email.");
   }
 
-  if (user.password !== password) {
-    throw new Error("Invalid password.");
+  const match = await bcrypt.compare(password, user.password);
+
+  if (!match) {
+    throw Error(`Incorrect password.`);
   }
 
   return user;
