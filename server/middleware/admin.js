@@ -38,11 +38,18 @@ const verifyAdmin = async (req, res, next) => {
 
   // extract admin token from MOTHER token
   const token = tokenParts[1];
-  const decodedToken = jwt.verify(token, process.env.JWT_SECRET);
-  const adminToken = decodedToken.adminToken;
 
-  // Verify the token has admin privileges
-  if (!verifyAdminToken(adminToken)) {
+  // try to get an admin token
+  try {
+    const decodedToken = jwt.verify(token, process.env.JWT_SECRET);
+    const adminToken = decodedToken.adminToken;
+
+    // Verify the token has admin privileges
+    if (!adminToken || !(await verifyAdminToken(adminToken))) {
+      throw new Error("Invalid admin token.");
+    }
+  } catch (err) {
+    console.log(err);
     return res.status(403).json({
       msg: "User does not have the required privileges for this request.",
     });
