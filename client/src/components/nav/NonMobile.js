@@ -112,7 +112,7 @@ export default function NonMobileNavbar({
                             ) : (
                                 <>
                                     <NavLink
-                                        to="/create"
+                                        to="/edit"
                                         className="relative flex h-full items-center justify-center rounded-lg px-8 py-2 font-normal uppercase text-white shadow-md transition-colors duration-300 hover:bg-white/10"
                                     >
                                         Create Profile

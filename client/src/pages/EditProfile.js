@@ -30,7 +30,7 @@ function EditProfile() {
 
     const navigate = useNavigate()
     const [animationRef] = useAutoAnimate()
-    const { user } = useAuthContext()
+    const { user, dispatch } = useAuthContext()
 
     const fetchProfile = async () => {
         setLoading(true)
@@ -567,6 +567,7 @@ function EditProfile() {
             school,
             anonymous,
             pipeline,
+            created: true,
         }
 
         function isValidDate(arr) {
@@ -613,6 +614,8 @@ function EditProfile() {
                 method: 'PATCH',
                 data: companies,
             })
+
+            dispatch({ type: 'CREATED', payload: user })
         } catch (error) {
             console.error('Error:', error.message)
             setErrorMessage('An error occurred while updating your profile.')
@@ -647,12 +650,13 @@ function EditProfile() {
                 >
                     <div className="flex w-full flex-col items-center justify-center gap-3 pt-12 text-center">
                         <h1 className="mb-2 py-4 text-4xl font-light text-pipelines-gray-100 md:text-6xl">
-                            Edit Your Profile
+                            {`${user.profileCreated ? 'Edit' : 'Create'} Your Profile`}
                         </h1>
                         <p className="text-xl font-light text-pipelines-gray-100/80">
-                            Update your profile to get the most out of
-                            Pipelines. <br /> Don&#39;t worry, you can remain
-                            100% anonymous.
+                            {`${user.profileCreated ? 'Update' : 'Create'}`}{' '}
+                            your profile to get the most out of Pipelines.{' '}
+                            <br /> Don&#39;t worry, you can remain 100%
+                            anonymous.
                         </p>
                     </div>
 
