@@ -93,7 +93,7 @@ const Company = () => {
                     name: null,
                 })
             } else {
-                if (prevEntries[i][1] <= 0) {
+                if (prevEntries[i][1] <= 1) {
                     top3Prev.push({
                         name: null,
                     })
@@ -121,14 +121,14 @@ const Company = () => {
                     name: null,
                 })
             } else {
-                if (postEntries[i][1] <= 0) {
+                if (postEntries[i][1] <= 1) {
                     top3Post.push({
                         name: null,
                     })
                 } else {
                     try {
                         const data = await fetchWithAuth({
-                            url: `${HOST}/api/company/get/${prevEntries[i][0].toLowerCase()}`,
+                            url: `${HOST}/api/company/get/${postEntries[i][0].toLowerCase()}`,
                             method: 'GET',
                         })
                         top3Post.push(data) // Add the fetched data to the top3Prev array
