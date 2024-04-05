@@ -167,7 +167,7 @@ function Profile() {
             // contains '/'
             setUsernameErrorMessage('Invalid username.')
             return false
-        } else if (!(await isValidUsername(username))) {
+        } else if (await isValidUsername(username)) {
             // invalid regex
             setUsernameErrorMessage('Invalid username.')
             return false
