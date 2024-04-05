@@ -16,7 +16,6 @@ const Navbar = () => {
     const { user, dispatch } = useAuthContext()
 
     // taken from linkedin api
-
     const [linkedinUserInfo, setLinkedinUserInfo] = useState({})
     const [pfp, setPfp] = useState(null)
 
@@ -35,9 +34,11 @@ const Navbar = () => {
             // Update AuthContext
             dispatch({ type: 'LOGIN', payload: user })
 
-            // SPECIAL CASE: First-time user logged in
+            // SPECIAL CASE: user with profile not created logged in
             if (!user.profileCreated) {
                 await updateProfile(user.profileId)
+            } else {
+                dispatch({ type: 'CREATED', payload: user })
             }
 
             // Redirect to home
@@ -142,12 +143,7 @@ const Navbar = () => {
                 setLinkedinUserInfo(data)
                 localStorage.setItem('linkedinToken', token)
                 await generateToken()
-
-                if (user) {
-                    updateProfile(user.profileId)
-                } else {
-                    await login(data.email)
-                }
+                await login(data.email)
             } catch (error) {
                 console.error(error.message)
             }

@@ -1,6 +1,7 @@
 const axios = require("axios");
 const jwt = require("jsonwebtoken");
 const Profile = require("../models/profileModel");
+const User = require("../models/userModel");
 
 const getProfileIdFromToken = async (token) => {
   try {
@@ -11,28 +12,30 @@ const getProfileIdFromToken = async (token) => {
     const linkedinToken = decodedToken.linkedinToken;
 
     // this request gets basic profile info from linkedin token
-    const { data } = await axios.get("https://api.linkedin.com/v2/me", {
+    const { data } = await axios.get("https://api.linkedin.com/v2/userinfo", {
       headers: {
         Authorization: `Bearer ${linkedinToken}`,
       },
     });
+    const email = data.email;
 
-    const vanityName = data.vanityName;
-
-    // Query MongoDB model to find profile with matching vanity name
-    const profile = await Profile.findOne({
-      linkedin: `https://linkedin.com/in/${vanityName}`,
-    });
-
-    // extract id from mongo object
-    if (profile) {
-      const profileId = profile._id.toString();
-
-      // return profile id
-      return profileId;
-    } else {
-      throw Error(`Profile not found: ${vanityName}`);
+    // Query MongoDB model to find user with matching email
+    const user = await User.findOne({ email: email });
+    if (!user) {
+      throw Error(`User not found: ${email}`);
     }
+
+    // Find profile using user's _id
+    const profile = await Profile.findOne({ userId: user._id });
+    if (!profile) {
+      throw Error(`Profile not found for user: ${user._id}`);
+    }
+
+    // extract id from profile object
+    const profileId = profile._id.toString();
+
+    // return profile id
+    return profileId;
   } catch (err) {
     console.error(err);
     return null;

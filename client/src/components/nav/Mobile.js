@@ -24,7 +24,6 @@ export default function MobileNavigationBar({
         HOME: '/',
         SEARCH: '/search',
         DISCOVER: '/discover',
-        CREATE: '/create',
         EDIT: '/edit',
         USER: `/user/${user?.profileId}`,
     }
@@ -120,7 +119,7 @@ export default function MobileNavigationBar({
                                     ) : (
                                         <>
                                             <MobileNavLink
-                                                to={MOBILE_ROUTES.CREATE}
+                                                to={MOBILE_ROUTES.EDIT}
                                             >
                                                 Create Profile
                                             </MobileNavLink>

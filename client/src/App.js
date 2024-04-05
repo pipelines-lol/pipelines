@@ -50,7 +50,7 @@ function AppRoutes({ user }) {
         { path: '/discover', element: <Discover /> },
         {
             path: '/edit',
-            element: user && user.profileCreated && <EditProfile />,
+            element: user && <EditProfile />,
         },
         { path: '/user/:id', element: <Profile /> },
         { path: '/company/:id', element: <Company /> },
