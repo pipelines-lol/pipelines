@@ -600,17 +600,18 @@ function EditProfile() {
 
         // Update companies
         try {
-            await fetchWithAuth({
-                url: `${HOST}/api/company/update`,
-                method: 'PATCH',
-                data: companies,
-            })
-
             // Update user profile
             await fetchWithAuth({
                 url: `${HOST}/api/profile/${user.profileId}`,
                 method: 'PATCH',
                 data: profile,
+            })
+
+            // update companies associated with user profile change
+            await fetchWithAuth({
+                url: `${HOST}/api/company/update`,
+                method: 'PATCH',
+                data: companies,
             })
         } catch (error) {
             console.error('Error:', error.message)

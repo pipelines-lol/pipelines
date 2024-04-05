@@ -7,8 +7,9 @@ const bodyParser = require("body-parser");
 
 // middleware
 const { verifyToken } = require("./middleware/token");
-const { verifyUser } = require("./middleware/user");
+const { verifyProfile } = require("./middleware/profile");
 const { verifyAdmin } = require("./middleware/admin");
+const { verifyUser } = require("./middleware/user");
 
 // route imports
 const authRoutes = require("./routes/auth");
@@ -78,7 +79,7 @@ const routes = [
   },
   {
     path: "/api/profile",
-    middleware: [verifyToken, verifyUser],
+    middleware: [verifyToken, verifyProfile],
     handler: profileRoutes.write,
   },
   { path: "/api/school", middleware: [verifyToken], handler: schoolRoutes },
@@ -99,7 +100,7 @@ const routes = [
   },
   {
     path: "/api/pipeline",
-    middleware: [verifyToken, verifyUser],
+    middleware: [verifyToken, verifyProfile],
     handler: pipelineRoutes.write,
   },
   {
