@@ -1,3 +1,4 @@
+import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useAuthContext } from '../hooks/useAuthContext'
 
@@ -5,8 +6,8 @@ import { HOMEPAGE, HOST } from '../util/apiRoutes'
 import { CLIENT_ID, SCOPE } from '../util/linkedinUtils'
 import { fetchWithAuth } from '../util/fetchUtils'
 import { generateToken } from '../util/tokenUtils'
+import { isObjEmpty } from '../util/generalUtils'
 
-import { useEffect, useState } from 'react'
 import MobileNavigationBar from './nav/Mobile'
 import NonMobileNavbar from './nav/NonMobile'
 
@@ -21,7 +22,7 @@ const Navbar = () => {
 
     const linkedinRedirectUrl = `https://linkedin.com/oauth/v2/authorization?client_id=${CLIENT_ID}&response_type=code&scope=${SCOPE}&redirect_uri=${HOMEPAGE}`
 
-    const login = async (email) => {
+    const login = async ({ email, ...data }) => {
         try {
             const user = await fetchWithAuth({
                 url: `${HOST}/api/user/login`,
@@ -34,12 +35,11 @@ const Navbar = () => {
             // Update AuthContext
             dispatch({ type: 'LOGIN', payload: user })
 
-            // SPECIAL CASE: user with profile not created logged in
-            if (!user.profileCreated) {
-                await updateProfile(user.profileId)
-            } else {
+            // SPECIAL CASE: user with profile created on logged in
+            if (user.profileCreated) {
                 dispatch({ type: 'CREATED', payload: user })
             }
+            await updateProfile(user.profileId, data)
 
             // Redirect to home
             navigate('/')
@@ -57,13 +57,13 @@ const Navbar = () => {
         navigate('/')
     }
 
-    const updateProfile = async (profileId) => {
-        if (!linkedinUserInfo) {
+    const updateProfile = async (profileId, data = {}) => {
+        if (isObjEmpty(linkedinUserInfo) && !data) {
             return
         }
 
         const { given_name, family_name, locale, picture, vanity_name } =
-            linkedinUserInfo
+            !isObjEmpty(linkedinUserInfo) ? linkedinUserInfo : data
 
         const profile = {
             firstName: given_name,
@@ -143,7 +143,7 @@ const Navbar = () => {
                 setLinkedinUserInfo(data)
                 localStorage.setItem('linkedinToken', token)
                 await generateToken()
-                await login(data.email)
+                await login(data)
             } catch (error) {
                 console.error(error.message)
             }
@@ -163,7 +163,7 @@ const Navbar = () => {
 
             // If email is available, attempt to log in the user
             if (email) {
-                await login(email)
+                await login({ email })
             }
         }
 
