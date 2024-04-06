@@ -154,10 +154,9 @@ const Offerings = () => {
                                     What We Offer
                                 </h2>
                                 <p className="xs:max-w-3xl mx-auto my-8 text-2xl font-normal tracking-tight text-pipelines-gray-100 sm:px-12 sm:text-4xl md:text-center lg:text-6xl">
-                                    All the benefits of LinkedIn.
-                                    <br />
+                                    Take a deeper dive into{' '}
                                     <span className="bg-gradient-to-tl from-pipeline-blue-200 to-pipeline-blue-200 bg-clip-text text-transparent">
-                                        None of the drawbacks.
+                                        LinkedIn.
                                     </span>
                                 </p>
                                 <p className="text-md mx-auto px-8 font-normal tracking-normal text-pipelines-gray-100/80 sm:max-w-lg md:max-w-2xl md:text-center md:text-xl">
@@ -179,7 +178,7 @@ const Offerings = () => {
                                             <motion.div
                                                 key={idx}
                                                 variants={item}
-                                                className="rounded-md border border-[0.5px] border-white/20 p-5"
+                                                className="rounded-md border-[0.5px] border-white/20 p-5"
                                             >
                                                 <Offering
                                                     title={offering.title}
