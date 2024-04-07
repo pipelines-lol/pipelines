@@ -97,7 +97,6 @@ function EditProfile() {
     }
 
     const updateExperience = async (experience, index) => {
-        console.log('orig companies: ', origCompanies)
         const newPipeline = [...pipeline]
 
         newPipeline.splice(index, 1, experience)
@@ -105,7 +104,6 @@ function EditProfile() {
     }
 
     const generateCompanies = (pipeline) => {
-        console.log('origCompanies: ', origCompanies)
         for (let i = 0; i < pipeline.length; i++) {
             const company = pipeline[i]
             const lowerTitle = company.title.toLowerCase()
@@ -295,7 +293,6 @@ function EditProfile() {
     }
 
     const handleEditProfile = async () => {
-        console.log('orig companies2: ', origCompanies)
         const profile = {
             firstName,
             lastName,
