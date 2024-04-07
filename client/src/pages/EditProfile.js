@@ -445,12 +445,6 @@ function EditProfile() {
             }
 
             try {
-                await fetchWithAuth({
-                    url: `${HOST}/api/company/update/${comp.name}`,
-                    method: 'PATCH',
-                    body: comp,
-                })
-
                 const profile = {
                     firstName,
                     lastName,
@@ -462,7 +456,13 @@ function EditProfile() {
                 await fetchWithAuth({
                     url: `${HOST}/api/profile/${user.profileId}`,
                     method: 'PATCH',
-                    body: profile,
+                    data: profile,
+                })
+
+                await fetchWithAuth({
+                    url: `${HOST}/api/company/update/${comp.name}`,
+                    method: 'PATCH',
+                    data: comp,
                 })
             } catch (error) {
                 console.error(error.message)
