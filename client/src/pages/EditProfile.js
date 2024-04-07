@@ -117,7 +117,7 @@ function EditProfile() {
                 rating: company.rating,
                 startDate: new Date(company.startDate),
                 endDate: new Date(company.endDate),
-                userId: [user.profileId],
+                userId: user.profileId,
                 indefinite: company.isIndefinite,
                 title: lowerTitle,
             }

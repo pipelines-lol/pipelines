@@ -1,5 +1,6 @@
 const Company = require("../models/companyModel");
 const Profile = require("../models/profileModel");
+const math = require("mathjs");
 
 const createCompany = async (req, res) => {
   if (!req.body.name) {
@@ -384,7 +385,7 @@ const updateCompanies = async (req, res) => {
     let left = 0;
     let right = origCompanies.length - 1;
     while (left <= right) {
-      let mid = Math.floor((left + right) / 2);
+      let mid = math.floor((left + right) / 2);
       if (origCompanies[mid].tempId2 === company.tempId2) {
         found = mid; // Found the target
         break;
@@ -397,8 +398,98 @@ const updateCompanies = async (req, res) => {
 
     if (found !== -1) {
       console.log("Found");
+      //1. initialize update data with all fiels that need to be updated
+      const updateData = {
+        $inc: {
+          rating: 0,
+          tenure: 0,
+        },
+        $addToSet: {
+          Employees: "",
+          interns: "",
+          ratedEmployees: "",
+        },
+        $pull: {
+          Employees: "",
+          ratedEmployees: "",
+          interns: "",
+        },
+      };
+      //break
+      //2. calculate tenure and add it to updateData correspondingly
+      let newDifference = 0;
+      let origDifference = 0;
+      //2a. calculate new tenure
+      if (!company.indefinite) {
+        const differenceMs =
+          new Date(company.endDate) - new Date(company.startDate); // calc diff in ms
+        // Convert the difference to days
+        newDifference = math.round(differenceMs / (1000 * 60 * 60 * 24));
+      } else if (
+        company.isIndefinite &&
+        new Date(company.startDate) < new Date()
+      ) {
+        // Calculate the difference in milliseconds
+        const differenceMs = math.abs(date2 - date1);
+
+        // Convert the difference to days
+        newDifference = math.round(differenceMs / (1000 * 60 * 60 * 24));
+      }
+      //2b. calculate old tenure
+      if (!origCompanies[found].indefinite) {
+        const origDate1 = new Date(origCompanies[found].startDate);
+        const origDate2 = new Date(origCompanies[found].endDate);
+
+        const origDifferenceMs = origDate2 - origDate1;
+
+        origDifference = origDifferenceMs / (1000 * 60 * 60 * 24);
+      } else if (
+        company.isIndefinite &&
+        new Date(company.startDate) < new Date()
+      ) {
+        const origDate1 = new Date(origCompanies[found].startDate);
+        const origDate2 = new Date(); //Get new date
+        const origMs = origDate2 - origDate1;
+        origDifference = math.round(origMs / (1000 * 60 * 60 * 24));
+      }
+      //2c. calculate the new total tenure and add to update data
+      const totalTenure = newDifference - origDifference;
+      updateData.$inc["tenure"] = totalTenure;
+      //3. calculate correct rating and add it to the update data
+      const totalRating = company.rating - origCompanies[found].rating;
+      updateData.$inc["rating"] = totalRating;
+      //4. Add employees
+      //4a. Decipher between interns and full time workers
+      const containsIntern = company.title.includes("intern");
+      if (containsIntern) {
+        updateData.$addToSet["interns"] = company.userId;
+      } else {
+        updateData.$addToSet["Employees"] = company.userId;
+      }
+      //4b. Check to add ratedEmployees
+      if (company.rating > 0)
+        updateData.$addToSet["ratedEmployees"] = company.userId;
+      //5. Pull from required employee fields
+      //5a. decipher which employee fields to pull from
+      const origLowerTitle = origCompanies[found].title.toLowerCase();
+      const origContainsIntern = origLowerTitle.includes("intern");
+      //break
+      if (!containsIntern && origContainsIntern) {
+        updateData.$pull["interns"] = company.userId;
+      } else if (containsIntern && !origContainsIntern) {
+        updateData.$pull["Employees"] = company.userId;
+      }
+      //5b. pull from rated employee fields if needed
+      if (company.rating === 0 && origCompanies[found].rating > 0) {
+        updateData.$pull["ratedEmployees"] = company.userId;
+      }
+      //6. Increment and decrement required pipeline fields
+      console.log("Update Data: ", updateData);
     } else {
       console.log("Not Found");
+      //update rating and tenure
+      //Update Employees
+      //Update Pipeline
     }
   }
 

@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 
-const useValidateExperience = (experience) => {
+const useValidateExperience = (experience, index) => {
     const [company, setCompany] = useState('')
     const [title, setTitle] = useState('')
     const [startDate, setStartDate] = useState('')
@@ -24,9 +24,9 @@ const useValidateExperience = (experience) => {
             setIsIndefinite(experience.isIndefinite)
 
             if (experience.id) {
-                setId(experience.id)
+                setId(experience.tempId2)
             } else {
-                setId(0)
+                setId(index + 1)
             }
 
             if (experience.logo) {
