@@ -378,15 +378,12 @@ const updateCompanies = async (req, res) => {
   try {
     const companies = companyArray[0]; // New Pipeline
     const origCompanies = companyArray[1]; // Old Pipeline
-    console.log("New Companies: ", companies);
-    console.log("Old Companies: ", origCompanies);
 
     const user = await Profile.findById(companies[0].userId);
     if (!user) return res.status(404).json({ message: "User not found" });
 
     for (let i = 0; i < companies.length; i++) {
       const company = companies[i]; //store current company
-      console.log("name: ", company.name);
 
       //Find the original state of the company using binary search
       let found = -1;
@@ -412,7 +409,6 @@ const updateCompanies = async (req, res) => {
       };
 
       if (found !== -1) {
-        console.log("Found");
         //2. calculate tenure and add it to updateData correspondingly
         let newDifference = 0;
         let origDifference = 0;
@@ -500,12 +496,10 @@ const updateCompanies = async (req, res) => {
         const origPrevCompanies = origCompanies
           .slice(0, found)
           .map((item) => item.companyName);
-        console.log("old prev companies: ", origPrevCompanies);
 
         const origPostCompanies = origCompanies
           .slice(found + 1)
           .map((item) => item.companyName);
-        console.log("orig post companies: ", origPostCompanies);
 
         //6c. Decide which previous companies need to be incremented
         for (let i = 0; i < newPrevCompanies.length; i++) {
@@ -539,7 +533,6 @@ const updateCompanies = async (req, res) => {
           }
         }
       } else {
-        console.log("Not Found");
         //add rating
         updateData.$inc["rating"] = company.rating;
         //2. Calculate tenure
