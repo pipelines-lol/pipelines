@@ -369,236 +369,43 @@ const updateCompany = async (req, res) => {
 };
 
 const updateCompanies = async (req, res) => {
-  const companies = req.body;
+  const companyArray = req.body;
+  const companies = companyArray[0]; // New Pipeline
+  const origCompanies = companyArray[1]; // Old Pipeline
+  console.log("New Companies: ", companies);
+  console.log("Old Companies: ", origCompanies);
+
+  for (let i = 0; i < companies.length; i++) {
+    const company = companies[i]; //store current company
+    console.log("name: ", company.name);
+
+    //Find the original state of the company using binary search
+    let found = -1;
+    let left = 0;
+    let right = origCompanies.length - 1;
+    while (left <= right) {
+      let mid = Math.floor((left + right) / 2);
+      if (origCompanies[mid].tempId2 === company.tempId2) {
+        found = mid; // Found the target
+        break;
+      } else if (origCompanies[mid].tempId2 < company.tempId2) {
+        left = mid + 1; // Search in the right half
+      } else {
+        right = mid - 1; // Search in the left half
+      }
+    }
+
+    if (found !== -1) {
+      console.log("Found");
+    } else {
+      console.log("Not Found");
+    }
+  }
 
   if (!companies)
     return res.status(200).json({ message: "No companies provided" });
 
   try {
-    for (const company of companies) {
-      const {
-        name,
-        rating,
-        prevCompanies,
-        postCompanies,
-        tenure,
-        Employees,
-        ratedEmployees,
-        interns,
-        prevRemoveCompanies,
-        postRemoveCompanies,
-        prevRemoveOtherCompanies,
-        postRemoveOtherCompanies,
-        removeRating,
-        removeEmployees,
-        removeRatedEmployees,
-      } = company;
-      const lowercaseCompanyName = name.toLowerCase();
-
-      if (Employees && Employees.length > 0) {
-        for (const employee of Employees) {
-          const user = await Profile.findById(employee);
-
-          if (!user) {
-            res.status(404).json({ error: "Employee ID not found" });
-          }
-        }
-      }
-
-      if (!removeEmployees || !(removeEmployees.length > 0)) {
-        const response = await Company.updateOne(
-          { name: lowercaseCompanyName },
-          {
-            $inc: {
-              rating: (rating ? rating : 0) - (removeRating ? removeRating : 0),
-              tenure: tenure ? tenure : 0,
-            },
-            $addToSet: {
-              Employees: { $each: Employees || [] }, // Appending the provided Employees list or an empty array if not provided
-              ratedEmployees: { $each: ratedEmployees || [] },
-              interns: { $each: interns || [] },
-            },
-          }
-        );
-
-        if (!response) {
-          res.status(404).json({ error: "company not found" });
-        }
-      } else {
-        const response = await Company.updateOne(
-          { name: lowercaseCompanyName },
-          {
-            $inc: {
-              rating: (rating ? rating : 0) - (removeRating ? removeRating : 0),
-              tenure: tenure ? tenure : 0,
-            },
-            $pull: {
-              Employees: { $in: removeEmployees },
-              ratedEmployees: { $in: removeEmployees },
-              interns: { $in: removeEmployees },
-            },
-          }
-        );
-
-        if (!response) {
-          res.status(404).json({ error: "company not found" });
-        }
-      }
-
-      //remove rated employees
-      if (removeRatedEmployees && removeRatedEmployees.length > 0) {
-        const response = await Company.updateOne(
-          { name: lowercaseCompanyName },
-          { $pull: { ratedEmployees: { $in: removeRatedEmployees } } }
-        );
-
-        if (!response) {
-          res.status(404).json({ error: "Company not found" });
-          return;
-        }
-      }
-
-      //Increment list of previous companies
-      if (prevCompanies && prevCompanies.length > 0) {
-        for (const companyName of prevCompanies) {
-          const updateData = {
-            $inc: {},
-          };
-
-          // Construct the dynamic key within $inc
-          updateData.$inc[`prevCompanies.${companyName.toLowerCase()}`] = 1;
-
-          const response = await Company.updateOne(
-            { name: lowercaseCompanyName },
-            updateData
-          );
-
-          if (!response) {
-            res
-              .status(404)
-              .json({ error: `Company not found for ${companyName}` });
-            return;
-          }
-        }
-      }
-
-      //Increment list of postCompanies
-      if (postCompanies && postCompanies.length > 0) {
-        for (const companyName of postCompanies) {
-          const updateData = {
-            $inc: {},
-          };
-
-          // Construct the dynamic key within $inc
-          updateData.$inc[`postCompanies.${companyName.toLowerCase()}`] = 1;
-
-          const response = await Company.updateOne(
-            { name: lowercaseCompanyName },
-            updateData
-          );
-
-          if (!response) {
-            res
-              .status(404)
-              .json({ error: `Company not found for ${companyName}` });
-            return;
-          }
-        }
-      }
-
-      // decrement list of removedCompanies
-      if (postRemoveCompanies && postRemoveCompanies.length > 0) {
-        for (const companyName of postRemoveCompanies) {
-          const updateData = {
-            $inc: {},
-          };
-
-          // Construct the dynamic key within $inc
-          updateData.$inc[`postCompanies.${companyName.toLowerCase()}`] = -1;
-
-          const response = await Company.updateOne(
-            { name: lowercaseCompanyName },
-            updateData
-          );
-
-          if (!response) {
-            res
-              .status(404)
-              .json({ error: `Company not found for ${companyName}` });
-            return;
-          }
-        }
-      }
-
-      // decrement list of previous companies
-      if (prevRemoveCompanies && prevRemoveCompanies.length > 0) {
-        for (const companyName of prevRemoveCompanies) {
-          const updateData = {
-            $inc: {},
-          };
-
-          // Construct the dynamic key within $inc
-          updateData.$inc[`prevCompanies.${companyName.toLowerCase()}`] = -1;
-
-          const response = await Company.updateOne(
-            { name: lowercaseCompanyName },
-            updateData
-          );
-
-          if (!response) {
-            res
-              .status(404)
-              .json({ error: `Company not found for ${companyName}` });
-            return;
-          }
-        }
-      }
-
-      if (prevRemoveOtherCompanies && prevRemoveOtherCompanies.length > 0) {
-        for (const companyName of prevRemoveOtherCompanies) {
-          const updateData = {
-            $inc: {},
-          };
-
-          updateData.$inc[`prevCompanies.${lowercaseCompanyName}`] = -1;
-
-          const response = await Company.updateOne(
-            { name: companyName.toLowerCase() },
-            updateData
-          );
-
-          if (!response) {
-            res
-              .status(404)
-              .json({ error: `Company not found for ${companyName}` });
-            return;
-          }
-        }
-      }
-
-      if (postRemoveOtherCompanies && postRemoveOtherCompanies.length > 0) {
-        for (const companyName of postRemoveOtherCompanies) {
-          const updateData = {
-            $inc: {},
-          };
-
-          updateData.$inc[`postCompanies.${lowercaseCompanyName}`] = -1;
-
-          const response = await Company.updateOne(
-            { name: companyName.toLowerCase() },
-            updateData
-          );
-
-          if (!response) {
-            res
-              .status(404)
-              .json({ error: `Company not found for ${companyName}` });
-            return;
-          }
-        }
-      }
-    }
-
     //* Logs
     console.log(`Companies updated: ${companies}`);
     // console.log() //TODO: log updated company data
