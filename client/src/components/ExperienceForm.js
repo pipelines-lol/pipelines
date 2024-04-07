@@ -69,7 +69,7 @@ export const ExperienceForm = ({
         setStartDate,
         setEndDate,
         setLogo,
-    } = useValidateExperience(experience, index)
+    } = useValidateExperience(experience)
 
     function flipDateFormat(inputDate) {
         if (inputDate) {

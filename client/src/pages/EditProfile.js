@@ -79,7 +79,7 @@ function EditProfile() {
 
     const addExperience = async (index) => {
         const placeholder = {
-            tempId2: index + 1,
+            tempId2: 0,
             logo: '',
             companyName: '',
             title: '',

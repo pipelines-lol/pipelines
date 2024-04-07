@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 
-const useValidateExperience = (experience, index) => {
+const useValidateExperience = (experience) => {
     const [company, setCompany] = useState('')
     const [title, setTitle] = useState('')
     const [startDate, setStartDate] = useState('')
@@ -23,10 +23,10 @@ const useValidateExperience = (experience, index) => {
             setSelectedOption(experience.rating / 20)
             setIsIndefinite(experience.isIndefinite)
 
-            if (experience.id) {
+            if (experience.tempId2) {
                 setId(experience.tempId2)
             } else {
-                setId(index + 1)
+                setId(0)
             }
 
             if (experience.logo) {
