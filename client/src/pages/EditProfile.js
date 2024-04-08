@@ -153,10 +153,12 @@ function EditProfile() {
         }
 
         let tempOrig = origCompanies
+        let searchArr = origCompanies.map((company) => company.tempId2)
         let found = -1
-        found = binarySearch(origCompanies, comp)
+        found = binarySearch(searchArr, comp.tempId2)
 
         if (found !== -1) {
+            tempOrig.splice(found, 1)
             try {
                 const profile = {
                     firstName,
