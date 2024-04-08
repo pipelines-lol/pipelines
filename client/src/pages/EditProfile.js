@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useAuthContext } from '../hooks/useAuthContext'
 import { useAutoAnimate } from '@formkit/auto-animate/react'
-
+import { binarySearch } from '../util/generalUtils'
 import { HOST } from '../util/apiRoutes'
 import { fetchWithAuth } from '../util/fetchUtils'
 
@@ -154,20 +154,7 @@ function EditProfile() {
 
         let tempOrig = origCompanies
         let found = -1
-        let left = 0
-        let right = tempOrig.length - 1
-        while (left <= right) {
-            let mid = Math.floor((left + right) / 2)
-            if (tempOrig[mid].tempId2 === comp.tempId2) {
-                tempOrig.splice(mid, 1)
-                found = mid // Found the target
-                break
-            } else if (tempOrig[mid].tempId2 < comp.tempId2) {
-                left = mid + 1 // Search in the right half
-            } else {
-                right = mid - 1 // Search in the left half
-            }
-        }
+        found = binarySearch(origCompanies, comp)
 
         if (found !== -1) {
             try {
