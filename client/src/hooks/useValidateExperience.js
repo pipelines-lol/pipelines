@@ -1,7 +1,8 @@
 import { useState, useEffect } from 'react'
 
 const useValidateExperience = (experience) => {
-    const [company, setCompany] = useState('')
+    const [companyName, setCompanyName] = useState('')
+    const [displayName, setDisplayName] = useState('')
     const [title, setTitle] = useState('')
     const [startDate, setStartDate] = useState('')
     const [endDate, setEndDate] = useState('')
@@ -16,71 +17,43 @@ const useValidateExperience = (experience) => {
     // initialize experience if one exists
     useEffect(() => {
         if (experience) {
-            setCompany(experience.companyName)
+            // Set basic experience details
+            setCompanyName(experience.companyName)
+            setDisplayName(experience.displayName)
             setTitle(experience.title)
             setCompanyId(experience.companyId)
             setRating(experience.rating)
             setSelectedOption(experience.rating / 20)
             setIsIndefinite(experience.isIndefinite)
 
-            if (experience.tempId2) {
-                setId(experience.tempId2)
-            } else {
-                setId(0)
+            // Set ID and logo, with default values if not provided
+            setId(experience.tempId2 || 0)
+            setLogo(experience.logo || '')
+
+            // Initialize startDate and endDate
+            let startDate = ''
+            let endDate = ''
+
+            // Set startDate if provided
+            if (experience.startDate) {
+                startDate = new Date(experience.startDate)
             }
 
-            if (experience.logo) {
-                setLogo(experience.logo)
+            // Set endDate if provided and not indefinite
+            if (experience.endDate && !experience.isIndefinite) {
+                endDate = new Date(experience.endDate)
             }
 
-            let start, end
-
-            // Check if date property exists and is not empty
-            if (
-                experience.startDate &&
-                experience.startDate !== '' &&
-                experience.endDate &&
-                experience.endDate !== '' &&
-                !experience.isIndefinite
-            ) {
-                const startDate = new Date(experience.startDate)
-
-                start = `${startDate.getFullYear()}-${String(startDate.getMonth() + 1).padStart(2, '0')}`
-
-                const endDate = new Date(experience.endDate)
-
-                end = `${endDate.getFullYear()}-${String(endDate.getMonth() + 1).padStart(2, '0')}`
-            } else if (experience.startDate && experience.startDate !== '') {
-                const startDate = new Date(experience.startDate)
-                start = `${startDate.getFullYear()}-${String(startDate.getMonth() + 1).padStart(2, '0')}`
-                end = ''
-            } else if (
-                experience.endDate &&
-                experience.endDate !== '' &&
-                !experience.isIndefinite
-            ) {
-                start = ''
-                const endDate = new Date(experience.endDate)
-                end = `${endDate.getFullYear()}-${String(endDate.getMonth() + 1).padStart(2, '0')}`
-            } else if (
-                experience.endDate &&
-                experience.endDate !== '' &&
-                experience.isIndefinite
-            ) {
-                start = ''
-                end = ''
-            } else {
-                // Set default values if date is empty or undefined
-                ;[start, end] = ['', '']
-            }
-            setStartDate(start)
-            setEndDate(end)
+            // Update state with calculated startDate and endDate
+            setStartDate(startDate)
+            setEndDate(endDate)
         }
     }, [experience])
 
     return {
         globalId,
-        company,
+        companyName,
+        displayName,
         companyId,
         title,
         startDate,
@@ -90,7 +63,8 @@ const useValidateExperience = (experience) => {
         selectedOption,
         first,
         logo,
-        setCompany,
+        setCompanyName,
+        setDisplayName,
         setCompanyId,
         setTitle,
         setIsIndefinite,

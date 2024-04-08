@@ -264,6 +264,8 @@ const updateCompanies = async (req, res) => {
   if (!companyArray)
     return res.status(200).json({ message: "No companies provided" });
 
+  let foundOrUpdated = false; // Variable to track if any companies were found or updated
+
   try {
     const companies = companyArray[0]; // New Pipeline
     const origCompanies = companyArray[1]; // Old Pipeline
@@ -480,9 +482,16 @@ const updateCompanies = async (req, res) => {
         rating change ${updateData.$inc["rating"]}
         tenure change ${updateData.$inc["tenure"]}\n`
       );
+
+      foundOrUpdated = true;
     }
 
-    res.status(200).json({ message: "succesful" });
+    // Send a response after the loop has completed
+    if (foundOrUpdated) {
+      return res.status(200).json({ message: "Successfully updated company" });
+    } else {
+      return res.status(401).json({ message: "No company found or updated" });
+    }
   } catch (err) {
     console.error(err);
     res.status(500).json({ error: "Not able to update company" });

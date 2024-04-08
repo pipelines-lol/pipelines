@@ -19,7 +19,7 @@ function EditProfile() {
     const [lastName, setLastName] = useState('')
     const [anonymous, setAnonymous] = useState(false)
     const [pipeline, setPipeline] = useState([])
-    const [dateValidity, setDateValidity] = useState([])
+    const [dateValidity, setDateValidity] = useState([]) // an array that represents each experience's "validity": True -> valid; False -> invalid
     const [origCompanies, setOrigCompanies] = useState([])
     const [companies, setCompanies] = useState([])
 
@@ -68,7 +68,7 @@ function EditProfile() {
         setLastName(data.lastName)
         setSchool(data.school)
         setAnonymous(data.anonymous)
-        initializeDate(data.pipeline.length)
+        initializeDateValidity(data.pipeline.length)
         const temp = data.pipeline.map((item, index) => ({
             tempId2: index + 1,
             ...item,
@@ -93,13 +93,14 @@ function EditProfile() {
         newPipeline.splice(index, 0, placeholder)
 
         setPipeline(newPipeline)
-        addDate(true, index + 1)
+        addDateValidity(true, index + 1)
     }
 
     const updateExperience = async (experience, index) => {
         const newPipeline = [...pipeline]
 
         newPipeline.splice(index, 1, experience)
+
         setPipeline(newPipeline)
     }
 
@@ -195,43 +196,29 @@ function EditProfile() {
         setPipeline(newPipeline)
     }
 
-    const addDate = (bool, index) => {
+    const addDateValidity = (bool, index) => {
         const newDate = [...dateValidity]
 
         newDate.splice(index, 0, bool)
         setDateValidity(newDate)
     }
 
-    const updateDate = (bool, index) => {
+    const updateDateValidity = (bool, index) => {
         const newDate = [...dateValidity]
         newDate.splice(index, 1, bool)
         setDateValidity(newDate)
     }
 
-    const initializeDate = (len) => {
+    const initializeDateValidity = (len) => {
         const newDate = Array(len).fill(true)
         setDateValidity(newDate)
     }
 
     const validateSubmission = () => {
-        function isValidDateFormat(date) {
-            return !date.includes('undefined')
-        }
-
         function checkPipelineForEmptyFields(pipeline) {
             for (const experience of pipeline) {
                 for (const key in experience) {
                     if (experience.hasOwnProperty(key)) {
-                        // validate date
-                        if (
-                            (key === 'startDate' &&
-                                !isValidDateFormat(experience[key])) ||
-                            (key === 'endDate' &&
-                                !isValidDateFormat(experience[key]))
-                        ) {
-                            return false
-                        }
-
                         // empty field
                         if (
                             typeof experience[key] === 'string' &&
@@ -249,8 +236,9 @@ function EditProfile() {
                             return false
                         }
 
-                        if (key === 'companyName' && !experience[key])
+                        if (key === 'companyName' && !experience[key]) {
                             return false
+                        }
                     }
                 }
             }
@@ -425,7 +413,7 @@ function EditProfile() {
                                 onChange={() => setAnonymous((prev) => !prev)}
                                 className="peer sr-only cursor-pointer"
                             />
-                            <div className="peer h-6 w-11 cursor-pointer rounded-full bg-gray-200/50 after:absolute after:start-[2px] after:top-[2px] after:h-5 after:w-5 after:rounded-full after:border after:border-gray-300/5 after:bg-white after:transition-all after:content-[''] peer-checked:bg-blue-700 peer-checked:after:translate-x-full peer-checked:after:border-white peer-focus:outline-none peer-focus:ring-1 peer-focus:ring-gray-300/90 rtl:peer-checked:after:-translate-x-full dark:border-gray-600 dark:bg-gray-700 dark:peer-focus:ring-blue-800"></div>
+                            <div className="peer h-6 w-11 cursor-pointer rounded-full bg-gray-200/50 after:absolute after:start-[2px] after:top-[2px] after:h-5 after:w-5 after:rounded-full after:border after:border-gray-300/5 after:bg-white after:transition-all after:content-[''] peer-checked:bg-blue-700 peer-checked:after:translate-x-full peer-checked:after:border-white peer-focus:outline-none peer-focus:ring-1 peer-focus:ring-gray-300/90 dark:border-gray-600 dark:bg-gray-700 dark:peer-focus:ring-blue-800 rtl:peer-checked:after:-translate-x-full"></div>
                             <span className="ms-3 text-sm font-light text-gray-300 dark:text-gray-300">
                                 I want to remain anonymous
                             </span>
@@ -454,7 +442,7 @@ function EditProfile() {
                                     index={index}
                                     updateExperience={updateExperience}
                                     removeExperience={removeExperience}
-                                    updateDate={updateDate}
+                                    updateDateValidity={updateDateValidity}
                                 />
                                 <button
                                     key={`add_experience_button_${index + 1}`}
