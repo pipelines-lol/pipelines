@@ -141,12 +141,15 @@ function EditProfile() {
 
         let comp = {
             tempId2: experience.tempId2,
+            companyId: experience.companyId,
             name: experience.companyName,
             title: experience.title,
-            removeRating: experience.rating,
+            rating: experience.rating,
             startDate: experience.startDate,
             endDate: experience.endDate,
-            removeEmployees: [user.profileId],
+            userId: user.profileId,
+            indefinite: experience.isIndefinite,
+            remove: true,
         }
 
         let tempOrig = origCompanies
@@ -160,22 +163,7 @@ function EditProfile() {
             }
         }
 
-        const prevRemoveCompanies = origCompanies
-            .slice(0, found)
-            .map((item) => item.companyName)
-        const postRemoveCompanies = origCompanies
-            .slice(found)
-            .map((item) => item.companyName)
-
         if (found !== -1) {
-            comp = {
-                ...comp,
-                prevRemoveCompanies,
-                postRemoveCompanies,
-                prevRemoveOtherCompanies: postRemoveCompanies,
-                postRemoveOtherCompanies: prevRemoveCompanies,
-            }
-
             try {
                 const profile = {
                     firstName,
@@ -185,6 +173,11 @@ function EditProfile() {
                     pipeline: tempOrig,
                 }
 
+                comp = {
+                    ...comp,
+                    index: found,
+                }
+                setLoading(true)
                 await fetchWithAuth({
                     url: `${HOST}/api/profile/${user.profileId}`,
                     method: 'PATCH',
@@ -192,10 +185,11 @@ function EditProfile() {
                 })
 
                 await fetchWithAuth({
-                    url: `${HOST}/api/company/update/${comp.name}`,
+                    url: `${HOST}/api/company/update/${comp.companyId}`,
                     method: 'PATCH',
-                    data: comp,
+                    data: [comp, origCompanies],
                 })
+                setLoading(false)
             } catch (error) {
                 console.error(error.message)
             }

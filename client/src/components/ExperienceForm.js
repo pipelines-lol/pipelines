@@ -236,7 +236,9 @@ export const ExperienceForm = ({
     const handleRemoveExperience = (index) => {
         const experienceToRemove = {
             tempId2: globalId,
+            companyId: companyId,
             companyName: company,
+            isIndefinite: isIndefinite,
             title: title,
             rating: rating,
             endDate: flipDateFormat(endDate),
