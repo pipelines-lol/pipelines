@@ -239,7 +239,17 @@ const updateCompany = async (req, res) => {
 
     const response = await Company.updateOne({ _id: id }, updateData);
     if (!response) res.status(401).json({ message: "Error Updating Company" });
-    console.log(`${company.name} updated ${updateData}`);
+    console.log(
+      `${company.name} updated
+      Added interns: ${updateData.$addToSet["interns"]}
+      removed interns: ${updateData.$pull["interns"]}
+      added employees: ${updateData.$addToSet["Employees"]}
+      Removed Employees: ${updateData.$pull["Employees"]}
+      added raters: ${updateData.$addToSet["ratedEmployees"]}
+      removed raters: ${updateData.$addToSet["ratedEmployees"]}
+      rating change ${updateData.$inc["rating"]}
+      tenure change ${updateData.$inc["tenure"]}\n`
+    );
     res.status(200).json({ message: "success" });
   } catch (error) {
     console.error("Error updating company:", error);
@@ -469,7 +479,17 @@ const updateCompanies = async (req, res) => {
 
       if (!response) res.status(401).json({ message: "No company found" });
 
-      console.log(`${company.name} updated ${updateData}`);
+      console.log(
+        `${company.name} updated
+        Added interns: ${updateData.$addToSet["interns"]}
+        removed interns: ${updateData.$pull["interns"]}
+        added employees: ${updateData.$addToSet["Employees"]}
+        Removed Employees: ${updateData.$pull["Employees"]}
+        added raters: ${updateData.$addToSet["ratedEmployees"]}
+        removed raters: ${updateData.$addToSet["ratedEmployees"]}
+        rating change ${updateData.$inc["rating"]}
+        tenure change ${updateData.$inc["tenure"]}\n`
+      );
     }
 
     res.status(200).json({ message: "succesful" });
