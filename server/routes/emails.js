@@ -1,6 +1,7 @@
 const express = require("express");
 const {
   addToNewsletter,
+  sendEmails,
   addEmail,
   getEmails,
   getEmailById,
@@ -8,24 +9,31 @@ const {
   removeEmailById,
 } = require("../controllers/emailController");
 
-const router = express.Router();
+const read = express.Router();
+const write = express.Router();
 
 // send email + add to newsletter
-router.post("/send", addToNewsletter);
+read.post("/newsletter", addToNewsletter);
+
+// SEND emails
+write.post("/send", sendEmails);
 
 // CREATE an email
-router.post("/", addEmail);
+write.post("/", addEmail);
 
 // GET emails
-router.get("/", getEmails);
+write.get("/", getEmails);
 
 // GET an email by id
-router.get("/:id", getEmailById);
+write.get("/:id", getEmailById);
 
 // DELETE an email
-router.delete("/:email", removeEmail);
+write.delete("/:email", removeEmail);
 
 // DELETE an email by id
-router.delete("/:id", removeEmailById);
+write.delete("/:id", removeEmailById);
 
-module.exports = router;
+module.exports = {
+  read,
+  write,
+};

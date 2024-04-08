@@ -40,6 +40,44 @@ const addToNewsletter = async (req, res) => {
   res.status(200).json({ data });
 };
 
+const sendEmails = async (req, res) => {
+  const { earlyAccess } = req.query;
+  const { subject, body } = req.body;
+
+  try {
+    let query = {}; // Default query to fetch all emails
+    if (earlyAccess === "true") {
+      // If earlyAccess is true, add additional condition to the query
+      query = { earlyAccess: true };
+    }
+
+    // Fetch emails from MongoDB based on the query
+    const emailsToSend = await Email.find(query);
+
+    // Loop through the emails and send them
+    for (const email of emailsToSend) {
+      // send email logic (e.g., using a third-party service like SendGrid)
+      const { data, error } = await resend.emails.send({
+        from: supportEmail,
+        to: email.email,
+        subject: subject,
+        html: body,
+      });
+
+      if (error) {
+        console.error(`Error sending email to ${email.email}:`, error);
+      } else {
+        console.log(`Email sent successfully to ${email.email}`);
+      }
+    }
+
+    res.status(200).json({ message: "Emails sent successfully." });
+  } catch (error) {
+    console.error("Error sending emails:", error);
+    res.status(500).json({ error: "Failed to send emails." });
+  }
+};
+
 // email model
 // Add an email
 const addEmail = async (req, res) => {
@@ -123,6 +161,7 @@ const removeEmailById = async (req, res) => {
 
 module.exports = {
   addToNewsletter,
+  sendEmails,
   addEmail,
   getEmails,
   getEmailById,
