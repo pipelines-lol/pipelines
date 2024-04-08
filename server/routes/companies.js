@@ -24,7 +24,7 @@ read.get("/get/companies/:query", getCompanies);
 //Update a specific company
 // ! TEMP READ COMMAND
 // TODO: change up backend to remove client changing of companies
-read.patch("/update/:name", bodyParser.json(), updateCompany);
+read.patch("/update/:id", bodyParser.json(), updateCompany);
 
 //Update a specific company
 // ! TEMP READ COMMAND

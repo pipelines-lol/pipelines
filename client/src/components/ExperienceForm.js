@@ -76,15 +76,15 @@ export const ExperienceForm = ({
         if (field === 'startDate') {
             setStartDate(date)
             const newExperience = {
-                id: globalId,
-                companyName: company,
-                companyId: companyId,
-                logo: logo,
-                title: title,
-                startDate: date,
-                endDate: endDate,
-                isIndefinite: isIndefinite,
-                rating: rating,
+                tempId2: globalId, //Unique experience ID assigned in sorted order
+                companyName: company, //Company Name of experience
+                companyId: companyId, //Comany Id of experience in Company
+                logo: logo, // Company Logo
+                title: title, //Job title
+                endDate: flipDateFormat(endDate),
+                startDate: flipDateFormat(value),
+                isIndefinite: isIndefinite, //is there a set end date or not?
+                rating: rating, // Company rating
             }
 
             if (new Date(endDate).getTime() < date.getTime()) {
@@ -97,7 +97,7 @@ export const ExperienceForm = ({
         } else if (field === 'endDate') {
             setEndDate(date)
             const newExperience = {
-                id: globalId,
+                tempId2: globalId,
                 companyName: company,
                 companyId: companyId,
                 logo: logo,
@@ -124,7 +124,7 @@ export const ExperienceForm = ({
         setLogo(value.logo)
 
         const newExperience = {
-            id: globalId,
+            tempId2: globalId,
             companyName: value.name,
             companyId: value._id,
             logo: value.logo,
@@ -149,7 +149,7 @@ export const ExperienceForm = ({
         setSelectedOption(id)
 
         const newExperience = {
-            id: globalId,
+            tempId2: globalId,
             companyName: company,
             companyId: companyId,
             logo: logo,
@@ -163,11 +163,30 @@ export const ExperienceForm = ({
         updateExperience(newExperience, index)
     }
 
+    const handleRatingBox = () => {
+        const newExperience = {
+            tempId2: globalId,
+            companyName: company,
+            companyId: companyId,
+            logo: logo,
+            title: title,
+            startDate: flipDateFormat(startDate),
+            endDate: flipDateFormat(endDate),
+            isIndefinite: isIndefinite,
+            rating: 0,
+        }
+
+        updateExperience(newExperience, index)
+
+        setRating(0)
+        setRatingBox(!ratingBox)
+    }
+
     const handleTitleChange = async (value) => {
         setTitle(value)
 
         const newExperience = {
-            id: globalId,
+            tempId2: globalId,
             companyName: company,
             companyId: companyId,
             logo: logo,
@@ -186,7 +205,7 @@ export const ExperienceForm = ({
         setFirst(false)
 
         const newExperience = {
-            id: globalId,
+            tempId2: globalId,
             companyName: company,
             companyId: companyId,
             logo: logo,
@@ -206,8 +225,10 @@ export const ExperienceForm = ({
 
     const handleRemoveExperience = (index) => {
         const experienceToRemove = {
-            id: globalId,
+            tempId2: globalId,
+            companyId: companyId,
             companyName: company,
+            isIndefinite: isIndefinite,
             title: title,
             rating: rating,
             endDate: endDate,
