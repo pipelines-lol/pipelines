@@ -94,7 +94,6 @@ const getCompanies = async (req, res) => {
 const updateCompany = async (req, res) => {
   //update company on user registration
   const { id } = req.params;
-  console.log("id: ", id);
   const companyArray = req.body;
   const company = companyArray[0];
   const pipeline = companyArray[1];
