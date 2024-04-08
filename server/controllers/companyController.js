@@ -113,6 +113,7 @@ const updateCompany = async (req, res) => {
     removeRating,
     removeEmployees,
   } = req.body;
+  console.log("req body: ", req.body);
   const lowercaseCompanyName = name.toLowerCase();
 
   //! THERE HAS TO BE A WAY TO SIMPLIFY THIS LOGIC HOLY FUUUUUUUUUCCCKKK
@@ -368,7 +369,7 @@ const updateCompany = async (req, res) => {
 };
 
 const updateCompanies = async (req, res) => {
-  const { companies } = req.body;
+  const companies = req.body;
 
   if (!companies)
     return res.status(200).json({ message: "No companies provided" });
