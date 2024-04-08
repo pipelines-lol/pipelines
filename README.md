@@ -58,6 +58,7 @@ Pipelines is distributed under the MIT License. See our [LICENSE](LICENSE) detai
 
 [![Email][email-shield]][email-url]
 [![LinkedIn][linkedin-shield]][linkedin-url]
+[![Discord][discord-shield]][discord-url]
 
 ## Contributors
 
@@ -86,6 +87,8 @@ If you're interested in contributing, please read our [Contributing Guidelines](
 [forks-url]: https://github.com/pipelines-lol/pipelines/network/members
 [email-shield]: https://img.shields.io/badge/Email-4285F4?style=for-the-badge&logo=gmail&logoColor=white
 [email-url]: mailto:support@pipelines.lol
+[discord-shield]: https://img.shields.io/discord/1226757437047050250?style=for-the-badge&logo=discord&label=Discord%20Community
+[discord-url]: https://discord.gg/nQu82sczTN
 [stars-shield]: https://img.shields.io/github/stars/pipelines-lol/pipelines.svg?style=for-the-badge
 [stars-url]: https://github.com/pipelines-lol/pipelines/stargazers
 [issues-shield]: https://img.shields.io/github/issues/pipelines-lol/pipelines.svg?style=for-the-badge
