@@ -39,7 +39,7 @@ const options = {
 }
 
 export const DatePicker = ({ value, onChange }) => {
-    const [date, setDate] = useState(value ? new Date(value) : new Date())
+    const [date, setDate] = useState(value || null)
     const [show, setShow] = useState(false)
     const wrapperRef = useRef(null)
 
@@ -53,10 +53,9 @@ export const DatePicker = ({ value, onChange }) => {
 
     useEffect(() => {
         if (value) {
-            const newDate = new Date(value)
-            setDate(newDate)
+            setDate(value)
         }
-    }, [])
+    }, [value])
 
     useEffect(() => {
         function handleClickOutside(event) {
