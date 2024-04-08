@@ -41,14 +41,33 @@ const addToNewsletter = async (req, res) => {
 };
 
 const sendEmails = async (req, res) => {
-  const { earlyAccess } = req.query;
-  const { subject, body } = req.body;
+  const { earlyAccess, test } = req.query;
+  const { subject, body, testEmail } = req.body;
 
   try {
     let query = {}; // Default query to fetch all emails
     if (earlyAccess === "true") {
       // If earlyAccess is true, add additional condition to the query
       query = { earlyAccess: true };
+    }
+
+    // If test is provided, send the email to that specific address only
+    if (test === "true") {
+      // send email logic
+      const { data, error } = await resend.emails.send({
+        from: supportEmail,
+        to: testEmail,
+        subject: subject,
+        html: body,
+      });
+
+      if (error) {
+        console.error(`Error sending email to ${testEmail}:`, error);
+        return res.status(400).json({ error: "Failed to send email." });
+      } else {
+        console.log(`Email sent successfully to ${testEmail}`);
+        return res.status(200).json({ message: "Email sent successfully." });
+      }
     }
 
     // Fetch emails from MongoDB based on the query
@@ -63,7 +82,6 @@ const sendEmails = async (req, res) => {
         subject: subject,
         html: body,
       });
-
       if (error) {
         console.error(`Error sending email to ${email.email}:`, error);
       } else {
