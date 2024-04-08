@@ -154,12 +154,18 @@ function EditProfile() {
 
         let tempOrig = origCompanies
         let found = -1
-        for (let i = 0; i < tempOrig.length; i++) {
-            let company = tempOrig[i]
-            if (comp.tempId2 === company.tempId2) {
-                tempOrig.splice(i, 1)
-                found = i
+        let left = 0
+        let right = tempOrig.length - 1
+        while (left <= right) {
+            let mid = Math.floor((left + right) / 2)
+            if (tempOrig[mid].tempId2 === comp.tempId2) {
+                tempOrig.splice(mid, 1)
+                found = mid // Found the target
                 break
+            } else if (tempOrig[mid].tempId2 < comp.tempId2) {
+                left = mid + 1 // Search in the right half
+            } else {
+                right = mid - 1 // Search in the left half
             }
         }
 
