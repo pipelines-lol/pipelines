@@ -16,6 +16,8 @@ const useValidateExperience = (experience) => {
     // initialize experience if one exists
     useEffect(() => {
         if (experience) {
+            console.log(experience)
+            // Set basic experience details
             setCompany(experience.companyName)
             setTitle(experience.title)
             setCompanyId(experience.companyId)
@@ -23,58 +25,27 @@ const useValidateExperience = (experience) => {
             setSelectedOption(experience.rating / 20)
             setIsIndefinite(experience.isIndefinite)
 
-            if (experience.id) {
-                setId(experience.id)
-            } else {
-                setId(0)
+            // Set ID and logo, with default values if not provided
+            setId(experience.id || 0)
+            setLogo(experience.logo || '')
+
+            // Initialize startDate and endDate
+            let startDate = ''
+            let endDate = ''
+
+            // Set startDate if provided
+            if (experience.startDate) {
+                startDate = new Date(experience.startDate)
             }
 
-            if (experience.logo) {
-                setLogo(experience.logo)
+            // Set endDate if provided and not indefinite
+            if (experience.endDate && !experience.isIndefinite) {
+                endDate = new Date(experience.endDate)
             }
 
-            let start, end
-
-            // Check if date property exists and is not empty
-            if (
-                experience.startDate &&
-                experience.startDate !== '' &&
-                experience.endDate &&
-                experience.endDate !== '' &&
-                !experience.isIndefinite
-            ) {
-                const startDate = new Date(experience.startDate)
-
-                start = `${startDate.getFullYear()}-${String(startDate.getMonth() + 1).padStart(2, '0')}`
-
-                const endDate = new Date(experience.endDate)
-
-                end = `${endDate.getFullYear()}-${String(endDate.getMonth() + 1).padStart(2, '0')}`
-            } else if (experience.startDate && experience.startDate !== '') {
-                const startDate = new Date(experience.startDate)
-                start = `${startDate.getFullYear()}-${String(startDate.getMonth() + 1).padStart(2, '0')}`
-                end = ''
-            } else if (
-                experience.endDate &&
-                experience.endDate !== '' &&
-                !experience.isIndefinite
-            ) {
-                start = ''
-                const endDate = new Date(experience.endDate)
-                end = `${endDate.getFullYear()}-${String(endDate.getMonth() + 1).padStart(2, '0')}`
-            } else if (
-                experience.endDate &&
-                experience.endDate !== '' &&
-                experience.isIndefinite
-            ) {
-                start = ''
-                end = ''
-            } else {
-                // Set default values if date is empty or undefined
-                ;[start, end] = ['', '']
-            }
-            setStartDate(start)
-            setEndDate(end)
+            // Update state with calculated startDate and endDate
+            setStartDate(startDate)
+            setEndDate(endDate)
         }
     }, [experience])
 

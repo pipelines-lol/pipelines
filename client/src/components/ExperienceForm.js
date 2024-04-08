@@ -119,13 +119,13 @@ export const ExperienceForm = ({
     }
 
     const handleCompanyChange = async (value) => {
-        setCompany(value.name)
+        setCompany(value.displayName)
         setCompanyId(value._id)
         setLogo(value.logo)
 
         const newExperience = {
             id: globalId,
-            companyName: value.name,
+            companyName: value.displayName,
             companyId: value._id,
             logo: value.logo,
             title: title,
