@@ -1,4 +1,3 @@
-import { useState } from 'react'
 import { ExperienceQuerySearchInput } from './ExperienceQuerySearchInput'
 import { TitleQuerySearchInput } from './TitleQuerySearchInput'
 import { X } from 'lucide-react'
@@ -8,16 +7,16 @@ import neutral from '../static/ratings/neutral.png'
 import frown from '../static/ratings/frown.png'
 import demon from '../static/ratings/demon.png'
 import useValidateExperience from '../hooks/useValidateExperience'
+import { DatePicker } from './DatePicker'
 
 export const ExperienceForm = ({
     experience,
     index,
     updateExperience,
     removeExperience,
-    updateDate,
+    updateDateValidity,
 }) => {
-    const [ratingBox, setRatingBox] = useState(false)
-
+    const NULL_RATING = 0
     const options = [
         {
             id: 1,
@@ -71,65 +70,48 @@ export const ExperienceForm = ({
         setLogo,
     } = useValidateExperience(experience)
 
-    function flipDateFormat(inputDate) {
-        if (inputDate) {
-            const [year, month] = inputDate.split('-')
-
-            // Creating a Date object with the given year and month
-            const date = new Date(`${year}-${month}-02T00:00:00.000Z`)
-            // Convert the Date object to an ISO string
-            const isoDateString = date.toISOString()
-
-            return isoDateString
-        } else {
-            return ''
-        }
-    }
-
-    const handleExperienceChange = (e, field) => {
+    const handleDateChange = (date, field) => {
         setFirst(true)
-        const value = e.target.value
 
         if (field === 'startDate') {
-            setStartDate(value)
+            setStartDate(date)
             const newExperience = {
                 id: globalId,
                 companyName: company,
                 companyId: companyId,
                 logo: logo,
                 title: title,
-                endDate: flipDateFormat(endDate),
-                startDate: flipDateFormat(value),
+                startDate: date,
+                endDate: endDate,
                 isIndefinite: isIndefinite,
                 rating: rating,
             }
 
-            if (new Date(endDate).getTime() < new Date(value).getTime()) {
-                updateDate(false, index)
+            if (new Date(endDate).getTime() < date.getTime()) {
+                updateDateValidity(false, index)
             } else {
-                updateDate(true, index)
+                updateDateValidity(true, index)
             }
 
             updateExperience(newExperience, index)
         } else if (field === 'endDate') {
-            setEndDate(value)
-
+            setEndDate(date)
             const newExperience = {
                 id: globalId,
                 companyName: company,
                 companyId: companyId,
                 logo: logo,
                 title: title,
-                endDate: flipDateFormat(value),
-                startDate: flipDateFormat(startDate),
+                startDate: startDate,
+                endDate: date,
                 isIndefinite: isIndefinite,
                 rating: rating,
             }
 
-            if (new Date(value).getTime() < new Date(startDate).getTime()) {
-                updateDate(false, index)
+            if (new Date(date).getTime() < new Date(startDate).getTime()) {
+                updateDateValidity(false, index)
             } else {
-                updateDate(true, index)
+                updateDateValidity(true, index)
             }
 
             updateExperience(newExperience, index)
@@ -147,8 +129,8 @@ export const ExperienceForm = ({
             companyId: value._id,
             logo: value.logo,
             title: title,
-            endDate: flipDateFormat(endDate),
-            startDate: flipDateFormat(startDate),
+            endDate: endDate,
+            startDate: startDate,
             isIndefinite: isIndefinite,
             rating: rating,
         }
@@ -157,7 +139,13 @@ export const ExperienceForm = ({
     }
 
     const handleRatingClick = (id, value) => {
-        setRating(value)
+        const deselected = value === rating
+
+        if (deselected) {
+            setRating(NULL_RATING)
+        } else {
+            setRating(value)
+        }
         setSelectedOption(id)
 
         const newExperience = {
@@ -166,32 +154,13 @@ export const ExperienceForm = ({
             companyId: companyId,
             logo: logo,
             title: title,
-            endDate: flipDateFormat(endDate),
-            startDate: flipDateFormat(startDate),
+            endDate: endDate,
+            startDate: startDate,
             isIndefinite: isIndefinite,
-            rating: value,
+            rating: deselected ? NULL_RATING : value,
         }
 
         updateExperience(newExperience, index)
-    }
-
-    const handleRatingBox = () => {
-        const newExperience = {
-            id: globalId,
-            companyName: company,
-            companyId: companyId,
-            logo: logo,
-            title: title,
-            startDate: flipDateFormat(startDate),
-            endDate: flipDateFormat(endDate),
-            isIndefinite: isIndefinite,
-            rating: 0,
-        }
-
-        updateExperience(newExperience, index)
-
-        setRating(0)
-        setRatingBox(!ratingBox)
     }
 
     const handleTitleChange = async (value) => {
@@ -203,8 +172,8 @@ export const ExperienceForm = ({
             companyId: companyId,
             logo: logo,
             title: value,
-            startDate: flipDateFormat(startDate),
-            endDate: flipDateFormat(endDate),
+            startDate: startDate,
+            endDate: endDate,
             isIndefinite: isIndefinite,
             rating: rating,
         }
@@ -222,13 +191,15 @@ export const ExperienceForm = ({
             companyId: companyId,
             logo: logo,
             title: title,
-            endDate: !isIndefinite ? '2200-12-02T00:00:00.000+00:00' : '',
-            startDate: flipDateFormat(startDate),
+            endDate: !isIndefinite
+                ? new Date('2200-12-02T00:00:00.000+00:00')
+                : '',
+            startDate: startDate,
             isIndefinite: e.target.checked,
             rating: rating,
         }
 
-        updateDate(true, index)
+        updateDateValidity(true, index)
 
         updateExperience(newExperience, index)
     }
@@ -239,8 +210,8 @@ export const ExperienceForm = ({
             companyName: company,
             title: title,
             rating: rating,
-            endDate: flipDateFormat(endDate),
-            startDate: flipDateFormat(startDate),
+            endDate: endDate,
+            startDate: startDate,
         }
 
         removeExperience(experienceToRemove, index)
@@ -281,74 +252,57 @@ export const ExperienceForm = ({
                     <label className="text-medium text-white">
                         Rate your experience
                     </label>
-                    {!ratingBox ? (
-                        <div className="flex bg-gray-200">
-                            {options.map(({ id, value, img }) => (
-                                <button
-                                    key={id}
-                                    onClick={() => handleRatingClick(id, value)}
-                                    className={`border px-4 py-2 ${
-                                        selectedOption === id
-                                            ? 'bg-blue-500 text-white'
-                                            : 'bg-gray-200 text-black'
-                                    } cursor-pointer transition duration-300 ease-in-out hover:bg-blue-500 hover:text-white`}
-                                >
-                                    <img
-                                        className="h-[30px] w-[30px]"
-                                        src={img}
-                                        alt="rating"
-                                    />
-                                </button>
-                            ))}
-                        </div>
-                    ) : (
-                        <div></div>
-                    )}
-                    <div className="flex flex-col md:flex-row">
-                        <label className="text-medium ml-2 pr-2 text-white">
-                            N/A
-                        </label>
-                        <input
-                            type="checkbox"
-                            checked={ratingBox}
-                            onChange={() => handleRatingBox()}
-                        />
+                    <div className="flex gap-4">
+                        {options.map(({ id, value, img }) => (
+                            <button
+                                key={id}
+                                onClick={() => handleRatingClick(id, value)}
+                                className={`px-2 py-2 ${
+                                    selectedOption === id
+                                        ? 'rounded-full bg-blue-500 bg-opacity-50 text-white'
+                                        : 'bg-opacity-0 text-black'
+                                } cursor-pointer rounded-full transition duration-300 ease-in-out hover:bg-blue-500 hover:bg-opacity-50 hover:text-white`}
+                            >
+                                <img
+                                    className="h-[30px] w-[30px]"
+                                    src={img}
+                                    alt="rating"
+                                />
+                            </button>
+                        ))}
                     </div>
                 </div>
 
                 <div className="flex flex-col items-center justify-center gap-3">
                     <label className="text-light text-pipelines-gray-100">
-                        Date
+                        Start date
                     </label>
                     <div className="flex flex-col items-center justify-center gap-4">
-                        <input
-                            className="rounded-full bg-gray-100/60 px-4 py-2 text-gray-800 outline-none"
-                            placeholder="September 2020 - September 2021"
+                        <DatePicker
                             value={startDate}
-                            type="month"
-                            pattern="\d{4}-\d{2}"
-                            onChange={(e) =>
-                                handleExperienceChange(e, 'startDate')
+                            onChange={(date) =>
+                                handleDateChange(date, 'startDate')
                             }
                         />
 
                         {!isIndefinite ? (
-                            <input
-                                className="rounded-full bg-gray-100 px-4 py-2 text-gray-800 outline-none"
-                                placeholder="September 2020 - September 2021"
-                                value={first ? endDate : ''}
-                                type="month"
-                                pattern="\d{4}-\d{2}"
-                                onChange={(e) =>
-                                    handleExperienceChange(e, 'endDate')
-                                }
-                            />
+                            <>
+                                <label className="text-light text-pipelines-gray-100">
+                                    End date
+                                </label>
+                                <DatePicker
+                                    value={first ? endDate : null}
+                                    onChange={(date) =>
+                                        handleDateChange(date, 'endDate')
+                                    }
+                                />
+                            </>
                         ) : (
                             <div></div>
                         )}
-                        <div className="flex flex-row md:flex-col">
+                        <div className="flex flex-row items-center md:flex-col">
                             <label className="medium ml-2 pr-2 text-white">
-                                Indefinite
+                                Current
                             </label>
                             <input
                                 type="checkbox"

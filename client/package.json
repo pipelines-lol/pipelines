@@ -13,6 +13,8 @@
         "aws-sdk": "^2.1532.0",
         "daisyui": "^4.6.0",
         "dotenv": "^16.3.1",
+        "flowbite": "^2.3.0",
+        "flowbite-react": "^0.8.0",
         "framer-motion": "^10.18.0",
         "js-cookie": "^3.0.5",
         "lucide-react": "^0.307.0",
@@ -21,6 +23,7 @@
         "react-loader-spinner": "^6.1.6",
         "react-router-dom": "^6.21.2",
         "react-scripts": "5.0.1",
+        "tailwind-datepicker-react": "^1.4.3",
         "tailwind-merge": "^2.2.0",
         "web-vitals": "^2.1.4"
     },

@@ -19,7 +19,7 @@ function EditProfile() {
     const [lastName, setLastName] = useState('')
     const [anonymous, setAnonymous] = useState(false)
     const [pipeline, setPipeline] = useState([])
-    const [dateValidity, setDateValidity] = useState([])
+    const [dateValidity, setDateValidity] = useState([]) // an array that represents each experience's "validity": True -> valid; False -> invalid
     const [origCompanies, setOrigCompanies] = useState([])
     const [companies, setCompanies] = useState([])
 
@@ -68,7 +68,7 @@ function EditProfile() {
         setLastName(data.lastName)
         setSchool(data.school)
         setAnonymous(data.anonymous)
-        initializeDate(data.pipeline.length)
+        initializeDateValidity(data.pipeline.length)
         const temp = data.pipeline.map((item, index) => ({
             id: index + 1,
             ...item,
@@ -93,7 +93,7 @@ function EditProfile() {
         newPipeline.splice(index, 0, placeholder)
 
         setPipeline(newPipeline)
-        addDate(true, index + 1)
+        addDateValidity(true, index + 1)
     }
 
     const updateExperience = async (experience, index) => {
@@ -474,43 +474,29 @@ function EditProfile() {
         setPipeline(newPipeline)
     }
 
-    const addDate = (bool, index) => {
+    const addDateValidity = (bool, index) => {
         const newDate = [...dateValidity]
 
         newDate.splice(index, 0, bool)
         setDateValidity(newDate)
     }
 
-    const updateDate = (bool, index) => {
+    const updateDateValidity = (bool, index) => {
         const newDate = [...dateValidity]
         newDate.splice(index, 1, bool)
         setDateValidity(newDate)
     }
 
-    const initializeDate = (len) => {
+    const initializeDateValidity = (len) => {
         const newDate = Array(len).fill(true)
         setDateValidity(newDate)
     }
 
     const validateSubmission = () => {
-        function isValidDateFormat(date) {
-            return !date.includes('undefined')
-        }
-
         function checkPipelineForEmptyFields(pipeline) {
             for (const experience of pipeline) {
                 for (const key in experience) {
                     if (experience.hasOwnProperty(key)) {
-                        // validate date
-                        if (
-                            (key === 'startDate' &&
-                                !isValidDateFormat(experience[key])) ||
-                            (key === 'endDate' &&
-                                !isValidDateFormat(experience[key]))
-                        ) {
-                            return false
-                        }
-
                         // empty field
                         if (
                             typeof experience[key] === 'string' &&
@@ -733,7 +719,7 @@ function EditProfile() {
                                     index={index}
                                     updateExperience={updateExperience}
                                     removeExperience={removeExperience}
-                                    updateDate={updateDate}
+                                    updateDateValidity={updateDateValidity}
                                 />
                                 <button
                                     key={`add_experience_button_${index + 1}`}
