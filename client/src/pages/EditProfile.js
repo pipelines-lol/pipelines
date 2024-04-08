@@ -413,7 +413,7 @@ function EditProfile() {
                                 onChange={() => setAnonymous((prev) => !prev)}
                                 className="peer sr-only cursor-pointer"
                             />
-                            <div className="peer h-6 w-11 cursor-pointer rounded-full bg-gray-200/50 after:absolute after:start-[2px] after:top-[2px] after:h-5 after:w-5 after:rounded-full after:border after:border-gray-300/5 after:bg-white after:transition-all after:content-[''] peer-checked:bg-blue-700 peer-checked:after:translate-x-full peer-checked:after:border-white peer-focus:outline-none peer-focus:ring-1 peer-focus:ring-gray-300/90 rtl:peer-checked:after:-translate-x-full dark:border-gray-600 dark:bg-gray-700 dark:peer-focus:ring-blue-800"></div>
+                            <div className="peer h-6 w-11 cursor-pointer rounded-full bg-gray-200/50 after:absolute after:start-[2px] after:top-[2px] after:h-5 after:w-5 after:rounded-full after:border after:border-gray-300/5 after:bg-white after:transition-all after:content-[''] peer-checked:bg-blue-700 peer-checked:after:translate-x-full peer-checked:after:border-white peer-focus:outline-none peer-focus:ring-1 peer-focus:ring-gray-300/90 dark:border-gray-600 dark:bg-gray-700 dark:peer-focus:ring-blue-800 rtl:peer-checked:after:-translate-x-full"></div>
                             <span className="ms-3 text-sm font-light text-gray-300 dark:text-gray-300">
                                 I want to remain anonymous
                             </span>
