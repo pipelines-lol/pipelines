@@ -1,7 +1,8 @@
 import { useState, useEffect } from 'react'
 
 const useValidateExperience = (experience) => {
-    const [company, setCompany] = useState('')
+    const [companyName, setCompanyName] = useState('')
+    const [displayName, setDisplayName] = useState('')
     const [title, setTitle] = useState('')
     const [startDate, setStartDate] = useState('')
     const [endDate, setEndDate] = useState('')
@@ -16,9 +17,9 @@ const useValidateExperience = (experience) => {
     // initialize experience if one exists
     useEffect(() => {
         if (experience) {
-            console.log(experience)
             // Set basic experience details
-            setCompany(experience.companyName)
+            setCompanyName(experience.companyName)
+            setDisplayName(experience.displayName)
             setTitle(experience.title)
             setCompanyId(experience.companyId)
             setRating(experience.rating)
@@ -51,7 +52,8 @@ const useValidateExperience = (experience) => {
 
     return {
         globalId,
-        company,
+        companyName,
+        displayName,
         companyId,
         title,
         startDate,
@@ -61,7 +63,8 @@ const useValidateExperience = (experience) => {
         selectedOption,
         first,
         logo,
-        setCompany,
+        setCompanyName,
+        setDisplayName,
         setCompanyId,
         setTitle,
         setIsIndefinite,

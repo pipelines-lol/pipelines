@@ -48,7 +48,8 @@ export const ExperienceForm = ({
     // initialize experience if one exists
     const {
         globalId,
-        company,
+        companyName,
+        displayName,
         companyId,
         title,
         startDate,
@@ -58,7 +59,8 @@ export const ExperienceForm = ({
         selectedOption,
         first,
         logo,
-        setCompany,
+        setCompanyName,
+        setDisplayName,
         setCompanyId,
         setTitle,
         setIsIndefinite,
@@ -77,12 +79,13 @@ export const ExperienceForm = ({
             setStartDate(date)
             const newExperience = {
                 tempId2: globalId, //Unique experience ID assigned in sorted order
-                companyName: company, //Company Name of experience
+                companyName: companyName, //Company Name of experience
+                displayName: displayName, // display name for company
                 companyId: companyId, //Comany Id of experience in Company
                 logo: logo, // Company Logo
                 title: title, //Job title
-                endDate: flipDateFormat(endDate),
-                startDate: flipDateFormat(value),
+                startDate: date,
+                endDate: endDate,
                 isIndefinite: isIndefinite, //is there a set end date or not?
                 rating: rating, // Company rating
             }
@@ -98,7 +101,8 @@ export const ExperienceForm = ({
             setEndDate(date)
             const newExperience = {
                 tempId2: globalId,
-                companyName: company,
+                companyName: companyName,
+                displayName: displayName,
                 companyId: companyId,
                 logo: logo,
                 title: title,
@@ -118,16 +122,18 @@ export const ExperienceForm = ({
         }
     }
 
-    const handleCompanyChange = async (value) => {
-        setCompany(value.displayName)
-        setCompanyId(value._id)
-        setLogo(value.logo)
+    const handleCompanyChange = async (company) => {
+        setCompanyName(company.name)
+        setDisplayName(company.displayName)
+        setCompanyId(company._id)
+        setLogo(company.logo)
 
         const newExperience = {
             tempId2: globalId,
-            companyName: value.displayName,
-            companyId: value._id,
-            logo: value.logo,
+            companyName: company.name,
+            displayName: company.displayName,
+            companyId: company._id,
+            logo: company.logo,
             title: title,
             endDate: endDate,
             startDate: startDate,
@@ -150,7 +156,8 @@ export const ExperienceForm = ({
 
         const newExperience = {
             tempId2: globalId,
-            companyName: company,
+            companyName: companyName,
+            displayName: displayName,
             companyId: companyId,
             logo: logo,
             title: title,
@@ -163,31 +170,13 @@ export const ExperienceForm = ({
         updateExperience(newExperience, index)
     }
 
-    const handleRatingBox = () => {
-        const newExperience = {
-            tempId2: globalId,
-            companyName: company,
-            companyId: companyId,
-            logo: logo,
-            title: title,
-            startDate: flipDateFormat(startDate),
-            endDate: flipDateFormat(endDate),
-            isIndefinite: isIndefinite,
-            rating: 0,
-        }
-
-        updateExperience(newExperience, index)
-
-        setRating(0)
-        setRatingBox(!ratingBox)
-    }
-
     const handleTitleChange = async (value) => {
         setTitle(value)
 
         const newExperience = {
             tempId2: globalId,
-            companyName: company,
+            companyName: companyName,
+            displayName: displayName,
             companyId: companyId,
             logo: logo,
             title: value,
@@ -206,7 +195,8 @@ export const ExperienceForm = ({
 
         const newExperience = {
             tempId2: globalId,
-            companyName: company,
+            companyName: companyName,
+            displayName: displayName,
             companyId: companyId,
             logo: logo,
             title: title,
@@ -226,8 +216,9 @@ export const ExperienceForm = ({
     const handleRemoveExperience = (index) => {
         const experienceToRemove = {
             tempId2: globalId,
+            companyName: companyName,
+            displayName: displayName,
             companyId: companyId,
-            companyName: company,
             isIndefinite: isIndefinite,
             title: title,
             rating: rating,

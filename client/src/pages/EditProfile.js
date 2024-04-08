@@ -100,6 +100,7 @@ function EditProfile() {
         const newPipeline = [...pipeline]
 
         newPipeline.splice(index, 1, experience)
+
         setPipeline(newPipeline)
     }
 
@@ -235,8 +236,9 @@ function EditProfile() {
                             return false
                         }
 
-                        if (key === 'companyName' && !experience[key])
+                        if (key === 'companyName' && !experience[key]) {
                             return false
+                        }
                     }
                 }
             }

@@ -16,7 +16,7 @@ export const ExperienceQuerySearchInput = ({ value, handleSearch }) => {
         // check if there was a previous value
         // if there was, set query to it
         if (value) {
-            setQuery(value.companyName)
+            setQuery(value.displayName)
         }
     }, [value])
 
