@@ -1,5 +1,6 @@
 const Company = require("../models/companyModel");
 const Profile = require("../models/profileModel");
+const utils = require("../utils/generalUtils");
 const math = require("mathjs");
 
 const createCompany = async (req, res) => {
@@ -246,7 +247,7 @@ const updateCompany = async (req, res) => {
       added employees: ${updateData.$addToSet["Employees"]}
       Removed Employees: ${updateData.$pull["Employees"]}
       added raters: ${updateData.$addToSet["ratedEmployees"]}
-      removed raters: ${updateData.$addToSet["ratedEmployees"]}
+      removed raters: ${updateData.$pull["ratedEmployees"]}
       rating change ${updateData.$inc["rating"]}
       tenure change ${updateData.$inc["tenure"]}\n`
     );
@@ -275,19 +276,8 @@ const updateCompanies = async (req, res) => {
 
       //Find the original state of the company using binary search
       let found = -1;
-      let left = 0;
-      let right = origCompanies.length - 1;
-      while (left <= right) {
-        let mid = math.floor((left + right) / 2);
-        if (origCompanies[mid].tempId2 === company.tempId2) {
-          found = mid; // Found the target
-          break;
-        } else if (origCompanies[mid].tempId2 < company.tempId2) {
-          left = mid + 1; // Search in the right half
-        } else {
-          right = mid - 1; // Search in the left half
-        }
-      }
+      let searchArr = origCompanies.map((comp) => comp.tempId2);
+      found = utils.binarySearch(searchArr, company.tempId2);
 
       //Initialize update data
       const updateData = {
@@ -486,7 +476,7 @@ const updateCompanies = async (req, res) => {
         added employees: ${updateData.$addToSet["Employees"]}
         Removed Employees: ${updateData.$pull["Employees"]}
         added raters: ${updateData.$addToSet["ratedEmployees"]}
-        removed raters: ${updateData.$addToSet["ratedEmployees"]}
+        removed raters: ${updateData.$pull["ratedEmployees"]}
         rating change ${updateData.$inc["rating"]}
         tenure change ${updateData.$inc["tenure"]}\n`
       );
