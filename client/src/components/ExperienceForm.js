@@ -93,15 +93,15 @@ export const ExperienceForm = ({
         if (field === 'startDate') {
             setStartDate(value)
             const newExperience = {
-                tempId2: globalId,
-                companyName: company,
-                companyId: companyId,
-                logo: logo,
-                title: title,
+                tempId2: globalId, //Unique experience ID assigned in sorted order
+                companyName: company, //Company Name of experience
+                companyId: companyId, //Comany Id of experience in Company
+                logo: logo, // Company Logo
+                title: title, //Job title
                 endDate: flipDateFormat(endDate),
                 startDate: flipDateFormat(value),
-                isIndefinite: isIndefinite,
-                rating: rating,
+                isIndefinite: isIndefinite, //is there a set end date or not?
+                rating: rating, // Company rating
             }
 
             if (new Date(endDate).getTime() < new Date(value).getTime()) {
