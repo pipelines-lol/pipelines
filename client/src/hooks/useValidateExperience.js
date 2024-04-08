@@ -23,8 +23,8 @@ const useValidateExperience = (experience) => {
             setSelectedOption(experience.rating / 20)
             setIsIndefinite(experience.isIndefinite)
 
-            if (experience.id) {
-                setId(experience.id)
+            if (experience.tempId2) {
+                setId(experience.tempId2)
             } else {
                 setId(0)
             }
