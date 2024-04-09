@@ -115,7 +115,12 @@ const routes = [
     handler: imageModerationRoutes,
   },
   { path: "/api/offer", middleware: [verifyToken], handler: offerRoutes },
-  { path: "/api/email", middleware: [verifyToken], handler: emailRoutes },
+  { path: "/api/email", middleware: [verifyToken], handler: emailRoutes.read },
+  {
+    path: "/api/email",
+    middleware: [verifyToken, verifyAdmin],
+    handler: emailRoutes.write,
+  },
   {
     path: "/api/earlyAccess",
     middleware: [verifyToken],

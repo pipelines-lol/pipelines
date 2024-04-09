@@ -19,12 +19,15 @@ function Newsletter() {
     const handleSubmit = async (e) => {
         e.preventDefault()
 
+        // Disable the submit button to prevent spamming
+        e.target.disabled = true
+
         setLoading(true)
 
         // email logic
         try {
             await fetchWithAuth({
-                url: `${HOST}/api/email/send`,
+                url: `${HOST}/api/email/newsletter`,
                 method: 'POST',
                 data: { email },
             })
@@ -37,6 +40,11 @@ function Newsletter() {
             )
         } finally {
             setLoading(false)
+
+            // Re-enable the submit button after a certain delay (e.g., 3 seconds)
+            setTimeout(() => {
+                e.target.disabled = false
+            }, 3000) // 3 seconds delay before re-enabling the button
         }
     }
 
