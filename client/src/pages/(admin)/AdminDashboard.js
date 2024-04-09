@@ -9,19 +9,18 @@ function AdminDashboard() {
 
     return (
         <div
-            className="flex min-h-screen flex-row items-center justify-center bg-gray-100"
+            className="flex min-h-screen flex-row bg-gray-100"
             style={{
                 backgroundImage: 'url("/hero.png")',
                 backgroundSize: 'cover',
                 backgroundPosition: 'center',
                 backgroundRepeat: 'no-repeat',
-                height: '50dvh',
                 borderBottom: '1px solid rgba(2, 101, 172, 0.2)',
                 borderTop: '1px solid rgba(2, 101, 172, 0.3)',
             }}
         >
             {/* Sidenav */}
-            <div className="flex min-h-full w-1/5 flex-col bg-gray-800 text-white">
+            <div className="flex min-h-full w-full flex-col bg-gray-800 text-white sm:w-1/5">
                 <div className="px-5 py-10">
                     <h1 className="text-lg font-bold">Admin Dashboard</h1>
                 </div>
@@ -38,7 +37,7 @@ function AdminDashboard() {
 
             {/* Main Dashboard Content */}
             <div
-                className="h-screen flex-1 flex-col items-center justify-center bg-gray-100 p-10"
+                className="flex-1 flex-col items-center justify-center bg-gray-100 p-10"
                 style={{
                     borderBottom: '1px solid rgba(2, 101, 172, 0.2)',
                     borderTop: '1px solid rgba(2, 101, 172, 0.3)',
