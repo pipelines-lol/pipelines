@@ -79,7 +79,7 @@ export const CompanyPage = () => {
     }
 
     return (
-        <div className="flex h-full w-full flex-col items-center gap-5 space-y-8 rounded-2xl border-2 border-transparent px-24 py-12 text-pipelines-gray-100">
+        <div className="flex flex-col items-center gap-5 space-y-8 overflow-hidden rounded-2xl border-2 border-transparent px-4 py-12 text-pipelines-gray-100 md:px-8">
             <h2 className="text-2xl font-medium text-black">
                 Company Dashboard
             </h2>
@@ -105,7 +105,7 @@ export const CompanyPage = () => {
             </form>
 
             {/* Main Company table */}
-            <div className="w-full overflow-x-auto">
+            <div className="w-full overflow-x-auto md:overflow-visible">
                 <table className="min-w-full text-left text-sm text-gray-500">
                     <thead className="sticky bg-gray-50 text-xs uppercase text-gray-700">
                         <tr>
@@ -279,7 +279,13 @@ function CompanyModal({ isOpen, onClose, companyData: initialCompanyData }) {
     }
 
     return (
-        <div className="bg-smoke-light fixed inset-0 z-50 flex overflow-auto">
+        <div
+            className={`fixed inset-0 z-50 flex items-center justify-center ${isOpen ? '' : 'hidden'}`}
+        >
+            <div
+                className="absolute inset-0 bg-black opacity-50"
+                onClick={onClose}
+            ></div>
             <div className="relative m-auto flex w-full max-w-md flex-col rounded-lg bg-white p-8">
                 <form onSubmit={handleSubmit} className="space-y-4">
                     <h1>{id ? 'Update' : 'Add'} Company</h1>
