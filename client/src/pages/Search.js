@@ -1,4 +1,5 @@
-import { useState, useCallback } from 'react'
+import { useState, useCallback, useEffect } from 'react'
+import { useSearchParams } from 'react-router-dom'
 
 import { HOST } from '../util/apiRoutes'
 import { fetchWithAuth } from '../util/fetchUtils'
@@ -12,43 +13,102 @@ import { QuerySearchInput } from '../components/QuerySearchInput'
 // assets
 import { LayoutGrid, Rows3 } from 'lucide-react'
 
+const ERROR_MESSAGE = {
+    NO_USERS: 'No users on this site for this company :/',
+    NO_COMPANY_FOUND: 'No company on this site with that name :/',
+}
+
 function Search() {
+    const [query, setQuery] = useState('')
     const [profiles, setProfiles] = useState([])
 
     const [loading, setLoading] = useState(false)
-    const [noneFound, setNoneFound] = useState(false)
+    const [errorMessage, setErrorMessage] = useState('')
 
     const [viewMode, setViewMode] = useState('grid')
 
-    const handleSearch = useCallback(
-        async (query) => {
-            // loading state to load query
+    const [searchParams, setSearchParams] = useSearchParams() // eslint-disable-line no-unused-vars
+
+    const fetchCompanies = async (company) => {
+        try {
+            const encodedQuery = encodeURIComponent(company)
+            const data = await fetchWithAuth({
+                url: `${HOST}/api/pipeline/search/company/${encodedQuery}`,
+                method: 'GET',
+            })
+
+            // Assuming fetchWithAuth throws for non-OK responses, including 404
+            setErrorMessage('') // If the fetch was successful, there's no 404, so we assume some results were found
+            setProfiles([...data]) // Update the profiles state with the fetched data
+        } catch (err) {
+            throw new Error(err)
+        }
+    }
+
+    const handleSearch = useCallback(async (query) => {
+        // loading state to load query
+        setLoading(true)
+
+        try {
             setLoading(true)
 
-            try {
+            // set the URL query params
+            setQuery(query.name)
+            const params = { company: query.name }
+            setSearchParams(params)
+
+            await fetchCompanies(query.name)
+        } catch (error) {
+            console.error('Error:', error.message)
+
+            // Handle specific conditions like 404 Not Found
+            if (error.message.includes('404')) {
+                setErrorMessage(ERROR_MESSAGE.NO_USERS)
+            }
+        } finally {
+            setLoading(false)
+        }
+    }, [])
+
+    const resetSearch = () => {
+        setQuery('')
+        setProfiles([])
+        setErrorMessage('')
+    }
+
+    useEffect(() => {
+        const fetchSearchParamCompanies = async () => {
+            const company = searchParams.get('company')
+
+            // edge case: no search params given
+            if (!company) {
+                resetSearch()
+            }
+
+            // if params preset, refetch companies and set query to company in URL
+            if (company !== query) {
                 setLoading(true)
 
-                const data = await fetchWithAuth({
-                    url: `${HOST}/api/pipeline/search/company/${query.name}`,
-                    method: 'GET',
-                })
+                try {
+                    await fetchCompanies(company)
+                    setQuery(company)
+                } catch (error) {
+                    console.error('Error:', error.message)
 
-                // Assuming fetchWithAuth throws for non-OK responses, including 404
-                setNoneFound(false) // If the fetch was successful, there's no 404, so we assume some results were found
-                setProfiles([...data]) // Update the profiles state with the fetched data
-            } catch (error) {
-                console.error('Error:', error.message)
-
-                // Handle specific conditions like 404 Not Found
-                if (error.message.includes('404')) {
-                    setNoneFound(true)
+                    // Handle specific conditions like 404 Not Found
+                    if (error.message.includes('404')) {
+                        setErrorMessage(ERROR_MESSAGE.NO_USERS)
+                    } else {
+                        setErrorMessage(ERROR_MESSAGE.NO_COMPANY_FOUND)
+                    }
+                } finally {
+                    setLoading(false)
                 }
-            } finally {
-                setLoading(false)
             }
-        },
-        [setLoading, setNoneFound, setProfiles]
-    )
+        }
+
+        fetchSearchParamCompanies()
+    }, [searchParams])
 
     if (loading) {
         return <Loading />
@@ -56,9 +116,9 @@ function Search() {
 
     const gridView = (
         <div className="my-4 grid grid-cols-2 gap-1 pb-12 sm:gap-2 md:grid-cols-4 md:gap-4">
-            {noneFound ? (
+            {errorMessage ? (
                 <div className="col-span-full mt-9 text-center text-3xl font-bold text-pipelines-gray-500">
-                    No users on this site for this company :/
+                    {errorMessage}
                 </div>
             ) : (
                 profiles.map((profile) => (
@@ -77,9 +137,9 @@ function Search() {
 
     const pipelineView = (
         <div className="my-4 flex flex-col gap-16 pb-12">
-            {noneFound ? (
+            {errorMessage ? (
                 <div className="col-span-full mt-9 text-center text-3xl font-bold text-pipelines-gray-500">
-                    No users on this site for this company :/
+                    {errorMessage}
                 </div>
             ) : (
                 profiles.map((profile) => (
