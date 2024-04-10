@@ -98,6 +98,7 @@ const updateCompany = async (req, res) => {
   const companyArray = req.body;
   const company = companyArray[0];
   const pipeline = companyArray[1];
+  const oldSchool = companyArray[2];
 
   if (!companyArray) return res.status(200).json({ message: "success" });
 
@@ -108,6 +109,8 @@ const updateCompany = async (req, res) => {
       $pull: {},
     };
     if (company.remove) {
+      //update Company tally
+      updateData.$inc[`schoolTally.${oldSchool}`] = -1;
       //Set update rating
       updateData.$inc["rating"] = company.rating * -1;
 
@@ -172,6 +175,8 @@ const updateCompany = async (req, res) => {
         if (!response) console.log(`Error updating ${updateName}`);
       }
     } else {
+      //update school tally data
+      updateData.$inc[`schoolTally.${oldSchool}`] = 1;
       //Set update rating
       updateData.$inc["rating"] = company.rating;
 
@@ -267,6 +272,10 @@ const updateCompanies = async (req, res) => {
   try {
     const companies = companyArray[0]; // New Pipeline
     const origCompanies = companyArray[1]; // Old Pipeline
+    const newSchool = companyArray[2][0];
+    const oldSchool = companyArray[2][1];
+    console.log("New School: ", newSchool);
+    console.log("Old School: ", oldSchool);
 
     const user = await Profile.findById(companies[0].userId);
     if (!user) return res.status(404).json({ message: "User not found" });
@@ -287,6 +296,16 @@ const updateCompanies = async (req, res) => {
       };
 
       if (found !== -1) {
+        //if the school changed update the data accordingly
+        if (oldSchool && newSchool && oldSchool !== newSchool) {
+          updateData.$inc[`schoolTally.${newSchool}`] = 1;
+          updateData.$inc[`schoolTally.${oldSchool}`] = -1;
+        } else if (newSchool && !oldSchool) {
+          updateData.$inc[`schoolTally.${newSchool}`] = 1;
+        } else if (!newSchool && oldSchool) {
+          updateData.$inc[`schoolTally.${oldSchool}`] = -1;
+        }
+
         //2. calculate tenure and add it to updateData correspondingly
         let newDifference = 0;
         let origDifference = 0;
@@ -411,6 +430,8 @@ const updateCompanies = async (req, res) => {
           }
         }
       } else {
+        //Update school tally
+        updateData.$inc[`schoolTally.${newSchool}`] = 1;
         //add rating
         updateData.$inc["rating"] = company.rating;
         //2. Calculate tenure
