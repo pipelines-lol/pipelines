@@ -29,6 +29,7 @@ read.get("/search/university/:university", getPipelinesByUniversity);
 read.get("/search/multi", getMultiplePipelinesByCompany);
 
 // GET random pipelines
+read.get("/random", getRandomPipelines);
 read.get("/random/:size", getRandomPipelines);
 
 // UPDATE (remove) experience from pipeline

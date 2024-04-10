@@ -183,10 +183,14 @@ const getMultiplePipelinesByCompany = async (req, res) => {
 const getRandomPipelines = async (req, res) => {
   const { size } = req.params;
 
-  const randomProfiles = await Profile.aggregate([
-    { $match: { created: true, "pipeline.0": { $exists: true } } },
-    { $sample: { size: Number(size) } },
-  ]);
+  let query = [{ $match: { created: true, "pipeline.0": { $exists: true } } }];
+
+  // If size is provided, include $sample stage
+  if (size) {
+    query.push({ $sample: { size: Number(size) } });
+  }
+
+  const randomProfiles = await Profile.aggregate(query);
 
   res.status(200).json(randomProfiles);
 };
