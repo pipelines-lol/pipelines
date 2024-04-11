@@ -324,6 +324,7 @@ function EditProfile() {
 
         // Update companies
         try {
+            console.log('profile: ', profile)
             // Update user profile
             await fetchWithAuth({
                 url: `${HOST}/api/profile/${user.profileId}`,

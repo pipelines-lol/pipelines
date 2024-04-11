@@ -1,30 +1,36 @@
 const fetch = require("node-fetch");
+const School = require("../models/schoolModel");
 
 const searchSchools = async (req, res) => {
-  const query = req.query.name;
-  const limit = parseInt(req.query.limit, 10) || 10;
+  const { query } = req.params;
 
   try {
-    const response = await fetch(
-      `http://universities.hipolabs.com/search?name=${query}`
-    );
-    if (!response.ok) {
-      throw new Error(`HTTP error! Status: ${response.status}`);
-    }
-    let data = await response.json();
+    // Create a regular expression to find documents that start with the query
+    const regex = new RegExp("^" + query, "i"); // "i" for case-insensitive search
 
-    // if there's a limit, trim the data array to the specified length.
-    if (limit > 0) {
-      data = data.slice(0, limit);
-    }
+    // Find companies that match the regex
+    const schools = await School.find({ name: regex });
 
-    res.json(data);
-  } catch (error) {
-    console.error(error);
-    res.status(500).send(error.message);
+    res.status(200).json(schools);
+  } catch (err) {
+    return res.status(400).json({ error: "Failed to retrieve schools" });
+  }
+};
+
+const getSchool = async (req, res) => {
+  const { id } = req.params;
+  console.log("ID: ", id);
+  try {
+    const school = await School.findOne({ _id: id });
+    console.log("School: ", school);
+    if (!school) res.status(404).json({ message: "School not found" });
+    res.status(200).json(school);
+  } catch (err) {
+    return res.status(400).json({ error: "Failed to retrieve school " });
   }
 };
 
 module.exports = {
   searchSchools,
+  getSchool,
 };

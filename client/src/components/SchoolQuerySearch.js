@@ -20,18 +20,30 @@ export const SchoolQuerySearch = ({ value, handleSearch }) => {
         }
     }, [timerId])
 
+    const fetchSchool = async (id) => {
+        try {
+            const data = await fetchWithAuth({
+                url: `${HOST}/api/school/get/${id}`,
+                method: 'GET',
+            })
+            data ? setQuery(data.name) : setQuery('')
+        } catch (err) {
+            console.error('Error: ', err)
+        }
+    }
+
     // initialize school if one exists
     useEffect(() => {
-        value ? setQuery(value) : setQuery('')
+        console.log('Value: ', value)
+        fetchSchool(value)
     }, [value])
 
     const fetchSchools = async (query) => {
         // edge case: empty query
         if (query === '') return
-
         try {
             const data = await fetchWithAuth({
-                url: `${HOST}/api/school?name=${query}`,
+                url: `${HOST}/api/school/get/schools/${query}`,
                 method: 'GET',
             })
 
@@ -79,11 +91,11 @@ export const SchoolQuerySearch = ({ value, handleSearch }) => {
 
     const handleSchoolButtonClick = (school) => {
         // clear results
-        setQuery(school.name)
+        setQuery(school._id)
         setResults([])
 
         // Handle the school button click
-        handleSearch(school.name)
+        handleSearch(school._id)
     }
 
     return (
