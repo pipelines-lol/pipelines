@@ -91,7 +91,7 @@ export const SchoolQuerySearch = ({ value, handleSearch }) => {
 
     const handleSchoolButtonClick = (school) => {
         // clear results
-        setQuery(school._id)
+        setQuery(school.name)
         setResults([])
 
         // Handle the school button click
