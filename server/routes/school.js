@@ -1,11 +1,21 @@
 const express = require("express");
-const { searchSchools, getSchool } = require("../controllers/schoolController");
+const {
+  searchSchools,
+  getSchool,
+  createSchool,
+  deleteSchool,
+} = require("../controllers/schoolController");
 
-const router = express.Router();
+const read = express.Router();
+const write = express.Router();
+
+write.post("/create", createSchool);
 
 // GET schools by query
-router.get("/get/schools/:query", searchSchools);
+read.get("/get/schools/:query", searchSchools);
 
-router.get("/get/:id", getSchool);
+read.get("/get/:id", getSchool);
 
-module.exports = router;
+write.get("/delete/:id", deleteSchool);
+
+module.exports = read;
