@@ -32,6 +32,7 @@ function Profile() {
     const [usernameErrorMessage, setUsernameErrorMessage] = useState('')
     const [linkedin, setLinkedin] = useState('')
     const [linkedinErrorMessage, setLinkedinErrorMessage] = useState('')
+    const [school, setSchool] = useState('')
 
     const [location, setLocation] = useState('')
 
@@ -53,6 +54,8 @@ function Profile() {
                 method: 'GET',
             })
 
+            if (data.school) fetchSchool(data.school)
+
             // Successful fetch and data extraction
             setProfile(data)
             setUsername(data.username)
@@ -64,6 +67,18 @@ function Profile() {
             setProfile(null)
         } finally {
             setLoading(false)
+        }
+    }
+
+    const fetchSchool = async (id) => {
+        try {
+            const data = await fetchWithAuth({
+                url: `${HOST}/api/school/get/${id}`,
+                method: 'GET',
+            })
+            data ? setSchool(data.name) : setSchool('')
+        } catch (err) {
+            console.error('Error: ', err)
         }
     }
 
@@ -385,7 +400,7 @@ function Profile() {
                             <h1 className="text-white">
                                 {profile && profile.anonymous
                                     ? 'Anonymous'
-                                    : profile.school}
+                                    : school}
                             </h1>
                         </div>
                     </div>

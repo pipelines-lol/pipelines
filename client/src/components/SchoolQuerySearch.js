@@ -34,7 +34,6 @@ export const SchoolQuerySearch = ({ value, handleSearch }) => {
 
     // initialize school if one exists
     useEffect(() => {
-        console.log('Value: ', value)
         fetchSchool(value)
     }, [value])
 
