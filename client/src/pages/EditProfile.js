@@ -27,6 +27,7 @@ function EditProfile() {
     const [errorMessage, setErrorMessage] = useState('')
 
     const [school, setSchool] = useState('')
+    const [origSchool, setOrigSchool] = useState('')
 
     const navigate = useNavigate()
     const [animationRef] = useAutoAnimate()
@@ -67,6 +68,7 @@ function EditProfile() {
         setFirstName(data.firstName)
         setLastName(data.lastName)
         setSchool(data.school)
+        setOrigSchool(data.school)
         setAnonymous(data.anonymous)
         initializeDateValidity(data.pipeline.length)
         const temp = data.pipeline.map((item, index) => ({
@@ -183,7 +185,7 @@ function EditProfile() {
                 await fetchWithAuth({
                     url: `${HOST}/api/company/update/${comp.companyId}`,
                     method: 'PATCH',
-                    data: [comp, origCompanies],
+                    data: [comp, origCompanies, origSchool],
                 })
                 setLoading(false)
             } catch (error) {
@@ -310,6 +312,7 @@ function EditProfile() {
 
         // Update companies
         try {
+            console.log('profile: ', profile)
             // Update user profile
             await fetchWithAuth({
                 url: `${HOST}/api/profile/${user.profileId}`,
@@ -321,7 +324,7 @@ function EditProfile() {
             await fetchWithAuth({
                 url: `${HOST}/api/company/update`,
                 method: 'PATCH',
-                data: [companies, origCompanies],
+                data: [companies, origCompanies, [school, origSchool]],
             })
 
             dispatch({ type: 'CREATED', payload: user })
