@@ -19,10 +19,8 @@ const searchSchools = async (req, res) => {
 
 const getSchool = async (req, res) => {
   const { id } = req.params;
-  console.log("ID: ", id);
   try {
     const school = await School.findOne({ _id: id });
-    console.log("School: ", school);
     if (!school) res.status(404).json({ message: "School not found" });
     res.status(200).json(school);
   } catch (err) {
