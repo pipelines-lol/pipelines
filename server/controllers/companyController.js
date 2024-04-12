@@ -276,8 +276,6 @@ const updateCompanies = async (req, res) => {
     const origCompanies = companyArray[1]; // Old Pipeline
     const newSchool = companyArray[2][0];
     const oldSchool = companyArray[2][1];
-    console.log("New School: ", newSchool);
-    console.log("Old School: ", oldSchool);
 
     const user = await Profile.findById(companies[0].userId);
     if (!user) return res.status(404).json({ message: "User not found" });

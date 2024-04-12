@@ -135,6 +135,16 @@ function EditProfile() {
         setPipeline(temp)
     }
 
+    const generateSchoolData = (pipeline) => {
+        const companyIDs = pipeline.map((company) => company.companyId)
+        // Set new school data
+        const newSchool = {
+            schoolId: school,
+            schoolTally: companyIDs,
+        }
+        return newSchool
+    }
+
     const removeExperience = async (experience, index) => {
         const newPipeline = [...pipeline]
         const removeDate = [...dateValidity]
@@ -309,10 +319,10 @@ function EditProfile() {
         setLoading(true)
         sortByDate(pipeline)
         generateCompanies(pipeline)
+        const schoolsData = generateSchoolData(pipeline)
 
         // Update companies
         try {
-            console.log('profile: ', profile)
             // Update user profile
             await fetchWithAuth({
                 url: `${HOST}/api/profile/${user.profileId}`,
@@ -325,6 +335,13 @@ function EditProfile() {
                 url: `${HOST}/api/company/update`,
                 method: 'PATCH',
                 data: [companies, origCompanies, [school, origSchool]],
+            })
+
+            // update schools associated with user profile change
+            await fetchWithAuth({
+                url: `${HOST}/api/school/update/${school}`,
+                method: 'PATCH',
+                data: [schoolsData, origSchool],
             })
 
             dispatch({ type: 'CREATED', payload: user })
