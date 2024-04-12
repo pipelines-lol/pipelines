@@ -21,4 +21,7 @@ read.get("/get/:id", getSchool);
 
 write.get("/delete/:id", deleteSchool);
 
-module.exports = { read, write };
+module.exports = {
+  read,
+  write,
+};

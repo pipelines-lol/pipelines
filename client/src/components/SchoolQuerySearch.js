@@ -22,11 +22,13 @@ export const SchoolQuerySearch = ({ value, handleSearch }) => {
 
     const fetchSchool = async (id) => {
         try {
-            const data = await fetchWithAuth({
-                url: `${HOST}/api/school/get/${id}`,
-                method: 'GET',
-            })
-            data ? setQuery(data.name) : setQuery('')
+            if (id) {
+                const data = await fetchWithAuth({
+                    url: `${HOST}/api/school/get/${id}`,
+                    method: 'GET',
+                })
+                data ? setQuery(data.name) : setQuery('')
+            }
         } catch (err) {
             console.error('Error: ', err)
         }
