@@ -82,7 +82,16 @@ const routes = [
     middleware: [verifyToken, verifyProfile],
     handler: profileRoutes.write,
   },
-  { path: "/api/school", middleware: [verifyToken], handler: schoolRoutes },
+  {
+    path: "/api/school",
+    middleware: [verifyToken, verifyAdmin],
+    handler: schoolRoutes.write,
+  },
+  {
+    path: "/api/school",
+    middleware: [verifyToken],
+    handler: schoolRoutes.read,
+  },
   {
     path: "/api/company",
     middleware: [verifyToken],

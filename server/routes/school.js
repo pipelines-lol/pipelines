@@ -2,6 +2,7 @@ const express = require("express");
 const {
   searchSchools,
   getSchool,
+  updateSchool,
   createSchool,
   deleteSchool,
 } = require("../controllers/schoolController");
@@ -13,6 +14,8 @@ write.post("/create", createSchool);
 
 // GET schools by query
 read.get("/get/schools/:query", searchSchools);
+
+read.patch("/update/:id", updateSchool);
 
 read.get("/get/:id", getSchool);
 
