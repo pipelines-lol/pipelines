@@ -8,6 +8,7 @@ import { fetchWithAuth } from '../util/fetchUtils'
 
 // components
 import Loading from './Loading'
+import { error404 } from '../components/Error404'
 import { ExperienceCard } from '../components/PipelineCard'
 import { ProfilePicture } from '../components/ProfilePicture'
 
@@ -309,11 +310,12 @@ function Profile() {
             ? getCurrentExperience()
             : null
 
-    if (loading) {
-        return <Loading />
-    }
-
-    return (
+    const error404component = error404('We were unable to find that profile!')
+    return loading ? (
+        <Loading />
+    ) : !profile ? (
+        error404component
+    ) : (
         <div className="flex h-full min-h-[90vh] w-full items-center justify-center pt-24">
             <div
                 className="flex h-full w-full flex-col items-center justify-center gap-10 bg-pipelines-gray-100/20 text-center md:flex-row"
