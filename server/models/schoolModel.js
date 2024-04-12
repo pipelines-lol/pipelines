@@ -16,6 +16,7 @@ const schoolSchema = new Schema({
     of: Number,
   },
   rank: Number,
+  logo: String,
 });
 
 module.exports = mongoose.model("School", schoolSchema);
