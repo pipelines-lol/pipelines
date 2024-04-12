@@ -76,6 +76,24 @@ const getCompany = async (req, res) => {
   }
 };
 
+const getCompanyById = async (req, res) => {
+  const { id } = req.params;
+
+  try {
+    // Find the company by ID in the database
+    const company = await Company.findById(id);
+
+    // Check if the company exists
+    if (!company) {
+      return res.status(404).json({ error: "Company not found." });
+    }
+
+    return res.status(200).json(company);
+  } catch (err) {
+    return res.status(400).json({ error: "Failed to retrieve company" });
+  }
+};
+
 const getCompanies = async (req, res) => {
   const { query } = req.params;
 
@@ -538,6 +556,7 @@ const deleteCompany = async (req, res) => {
 module.exports = {
   createCompany,
   getCompany,
+  getCompanyById,
   getCompanies,
   updateCompany,
   updateCompanies,
