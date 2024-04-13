@@ -21,6 +21,7 @@ import Search from './pages/Search'
 import Signup from './pages/Signup'
 import Suggestions from './pages/Suggestions'
 import Company from './pages/Company'
+import School from './pages/School'
 import Admin from './pages/(admin)/Admin'
 
 // Context
@@ -54,6 +55,7 @@ function AppRoutes({ user }) {
         },
         { path: '/user/:id', element: <Profile /> },
         { path: '/company/:id', element: <Company /> },
+        { path: '/school/:id', element: <School /> },
         { path: '/suggestions', element: <Suggestions /> },
         { path: '/admin/*', element: <Admin /> },
         {

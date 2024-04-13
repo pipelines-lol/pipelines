@@ -8,11 +8,12 @@ import { fetchWithAuth } from '../util/fetchUtils'
 
 // components
 import Loading from './Loading'
-import { ExperienceCard } from '../components/PipelineCard'
+import { error404 } from '../components/Error404'
+import { EducationCard, ExperienceCard } from '../components/PipelineCard'
 import { ProfilePicture } from '../components/ProfilePicture'
 
 // assets
-import { GraduationCap, MapPin } from 'lucide-react'
+import { MapPin } from 'lucide-react'
 
 function Profile() {
     const { id } = useParams()
@@ -76,7 +77,7 @@ function Profile() {
                 url: `${HOST}/api/school/get/${id}`,
                 method: 'GET',
             })
-            data ? setSchool(data.name) : setSchool('')
+            data ? setSchool(data) : setSchool('')
         } catch (err) {
             console.error('Error: ', err)
         }
@@ -309,14 +310,15 @@ function Profile() {
             ? getCurrentExperience()
             : null
 
-    if (loading) {
-        return <Loading />
-    }
-
-    return (
+    const error404component = error404('We were unable to find that profile!')
+    return loading ? (
+        <Loading />
+    ) : !profile ? (
+        error404component
+    ) : (
         <div className="flex h-full min-h-[90vh] w-full items-center justify-center pt-24">
             <div
-                className="flex h-full w-full flex-col items-center justify-center gap-10 bg-pipelines-gray-100/20 text-center md:flex-row"
+                className="flex h-full w-full flex-col items-center justify-center gap-10 bg-pipelines-gray-100/20 p-8 text-center md:flex-row"
                 style={{
                     backgroundImage: 'url("/hero.png")',
                     backgroundSize: 'cover',
@@ -327,82 +329,82 @@ function Profile() {
                     paddingBottom: '10vh',
                 }}
             >
-                <div className="min-h-4/5 min-w-1/4 flex flex-col items-center gap-5 rounded-2xl border-2 border-transparent bg-pipeline-blue-200/20 px-24 py-12 text-pipelines-gray-100">
-                    {admin && !profile.anonymous ? (
-                        <ProfilePicture profile={profile} setPfp={setPfp} />
-                    ) : (
-                        <img
-                            src={pfp || '/avatar.png'}
-                            className="h-48 w-48 rounded-full object-cover"
-                            alt={`${profile._id}_avatar`}
-                        />
-                    )}
-
-                    {admin && !profile.anonymous ? (
-                        <div className="flex flex-col items-center justify-center gap-3">
-                            <label className="text-white">Username</label>
-                            <input
-                                className="rounded-full bg-pipelines-gray-100/10 p-3 text-white"
-                                value={username}
-                                onChange={handleUsernameChange}
+                <div className="min-h-4/5 min-w-1/4 flex flex-col items-center gap-5">
+                    <div className="flex h-full w-full flex-col items-center gap-5 rounded-2xl border-2 border-transparent bg-pipeline-blue-200/20 px-24 py-12 text-pipelines-gray-100">
+                        {admin && !profile.anonymous ? (
+                            <ProfilePicture profile={profile} setPfp={setPfp} />
+                        ) : (
+                            <img
+                                src={pfp || '/avatar.png'}
+                                className="h-48 w-48 rounded-full object-cover"
+                                alt={`${profile._id}_avatar`}
                             />
-                            {usernameErrorMessage && (
-                                <h1 className="text-red-400">
-                                    {usernameErrorMessage}
+                        )}
+
+                        {admin && !profile.anonymous ? (
+                            <div className="flex flex-col items-center justify-center gap-3">
+                                <label className="text-white">Username</label>
+                                <input
+                                    className="rounded-full bg-pipelines-gray-100/10 p-3 text-white"
+                                    value={username}
+                                    onChange={handleUsernameChange}
+                                />
+                                {usernameErrorMessage && (
+                                    <h1 className="text-red-400">
+                                        {usernameErrorMessage}
+                                    </h1>
+                                )}
+                            </div>
+                        ) : (
+                            <div className="flex flex-col items-center justify-center gap-3">
+                                <label className="font-medium text-white">
+                                    Username
+                                </label>
+                                <h1 className="text-white">
+                                    {profile && profile.anonymous
+                                        ? 'Anonymous'
+                                        : username}
                                 </h1>
-                            )}
-                        </div>
-                    ) : (
-                        <div className="flex flex-col items-center justify-center gap-3">
-                            <label className="font-medium text-white">
-                                Username
-                            </label>
-                            <h1 className="text-white">
-                                {profile && profile.anonymous
-                                    ? 'Anonymous'
-                                    : username}
-                            </h1>
-                        </div>
-                    )}
+                            </div>
+                        )}
 
-                    {/* Linkedin Section */}
-                    <label className="font-medium text-white">Linkedin</label>
-                    {profile && profile.anonymous ? (
-                        <h1 className="text-white">Anonymous</h1>
-                    ) : (
-                        <Link to={buildLinkedinUrl(linkedin)} target="_blank">
-                            <h1 className="text-white hover:underline">
-                                {profile && linkedin}
-                            </h1>
-                        </Link>
-                    )}
+                        {/* Linkedin Section */}
+                        <label className="font-medium text-white">
+                            Linkedin
+                        </label>
+                        {profile && profile.anonymous ? (
+                            <h1 className="text-white">Anonymous</h1>
+                        ) : (
+                            <Link
+                                to={buildLinkedinUrl(linkedin)}
+                                target="_blank"
+                            >
+                                <h1 className="text-white hover:underline">
+                                    {profile && linkedin}
+                                </h1>
+                            </Link>
+                        )}
 
-                    {/* Save Button */}
-                    {admin && saveable && !hasError ? (
-                        <button
-                            className={
-                                'rounded-full bg-black px-12 py-1 text-white'
-                            }
-                            onClick={handleEditProfile}
-                        >
-                            <h1 className="font-normal uppercase text-white">
-                                Save
-                            </h1>
-                        </button>
-                    ) : (
-                        <></>
-                    )}
+                        {/* Save Button */}
+                        {admin && saveable && !hasError ? (
+                            <button
+                                className={
+                                    'rounded-full bg-black px-12 py-1 text-white'
+                                }
+                                onClick={handleEditProfile}
+                            >
+                                <h1 className="font-normal uppercase text-white">
+                                    Save
+                                </h1>
+                            </button>
+                        ) : (
+                            <></>
+                        )}
+                    </div>
 
                     {/* Education */}
-                    <div className="flex h-full w-full flex-col items-center justify-center gap-5 p-10">
-                        <div className="flex w-full flex-row items-center justify-center gap-5">
-                            <GraduationCap color="white" />
-                            <h1 className="text-white">
-                                {profile && profile.anonymous
-                                    ? 'Anonymous'
-                                    : school}
-                            </h1>
-                        </div>
+                    <div className="flex h-full w-full flex-col items-center justify-center gap-5 rounded-2xl border-2 border-transparent bg-pipeline-blue-200/20 p-10 px-24 py-12 text-pipelines-gray-100">
+                        <EducationCard education={school} />
                     </div>
                 </div>
 

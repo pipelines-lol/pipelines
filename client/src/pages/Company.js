@@ -305,10 +305,6 @@ const Company = () => {
     const error404component = error404(
         'We were unable to find the company you requested!'
     )
-    if (loading) {
-        return <Loading />
-    }
-
     return loading ? (
         <Loading />
     ) : name === null ? (
@@ -320,7 +316,7 @@ const Company = () => {
                 backgroundImage: `url("${HOMEPAGE}/CTA.png")`,
             }}
         >
-            <div className="hero-overlay rounded-lg"></div>
+            <div className="max-w-screen hero-overlay rounded-lg"></div>
             {companyInfo()}
         </div>
     )
