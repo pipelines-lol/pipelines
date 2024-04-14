@@ -77,7 +77,7 @@ function Profile() {
                 url: `${HOST}/api/school/get/${id}`,
                 method: 'GET',
             })
-            data ? setSchool(data) : setSchool('')
+            data ? setSchool(data) : setSchool(null)
         } catch (err) {
             console.error('Error: ', err)
         }
@@ -403,9 +403,11 @@ function Profile() {
                     </div>
 
                     {/* Education */}
-                    <div className="flex h-full w-full flex-col items-center justify-center gap-5 rounded-2xl border-2 border-transparent bg-pipeline-blue-200/20 p-10 px-24 py-12 text-pipelines-gray-100">
-                        <EducationCard education={school} />
-                    </div>
+                    {!profile.anonymous && school && (
+                        <div className="flex h-full w-full flex-col items-center justify-center gap-5 rounded-2xl border-2 border-transparent bg-pipeline-blue-200/20 p-10 px-24 py-12 text-pipelines-gray-100">
+                            <EducationCard education={school} />
+                        </div>
+                    )}
                 </div>
 
                 {/* Center text (location / position) */}
