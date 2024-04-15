@@ -99,7 +99,7 @@ const Company = () => {
                     })
                 } else {
                     try {
-                        const url = `${HOST}/api/company/get/${prevEntries[i][0].toLowerCase()}`
+                        const url = `${HOST}/api/company/get/${prevEntries[i][0]}`
 
                         // Use fetchWithAuth for the request, specifying the URL and the method.
                         const response = await fetchWithAuth({
@@ -128,7 +128,7 @@ const Company = () => {
                 } else {
                     try {
                         const data = await fetchWithAuth({
-                            url: `${HOST}/api/company/get/${postEntries[i][0].toLowerCase()}`,
+                            url: `${HOST}/api/company/get/${postEntries[i][0]}`,
                             method: 'GET',
                         })
                         top3Post.push(data) // Add the fetched data to the top3Prev array

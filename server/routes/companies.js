@@ -3,7 +3,6 @@ const bodyParser = require("body-parser");
 const {
   createCompany,
   getCompany,
-  getCompanyById,
   getCompanies,
   updateCompany,
   updateCompanies,
@@ -17,11 +16,7 @@ const write = express.Router();
 write.post("/create", bodyParser.json(), createCompany);
 
 //get a specific company
-read.get("/get/:name", getCompany);
-
-//get a specific company by id;
-// ! TEMP: will be main get function soon
-read.get("/getid/:id", getCompanyById);
+read.get("/get/:id", getCompany);
 
 //get multiple companies based on a query
 read.get("/get/companies/:query", getCompanies);
@@ -37,7 +32,7 @@ read.patch("/update/:id", bodyParser.json(), updateCompany);
 read.patch("/update", bodyParser.json(), updateCompanies);
 
 //Delete a specific company
-write.delete("/delete/:name", deleteCompany);
+write.delete("/delete/:id", deleteCompany);
 
 module.exports = {
   read,

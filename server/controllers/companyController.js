@@ -51,36 +51,17 @@ const createCompany = async (req, res) => {
 };
 
 const getCompany = async (req, res) => {
-  const { name } = req.params;
+  const { id } = req.params;
 
   // special case because of getCompanies
   // call looks like: /api/company/get/companies/
-  if (name === "companies" || name === "companies/") {
+  if (id === "companies" || id === "companies/") {
     const companies = await Company.find({});
     return res.status(200).json(companies);
   }
 
   try {
     // Find the company by name in the database
-    const lowercaseCompanyName = name.toLowerCase();
-    const company = await Company.findOne({ name: lowercaseCompanyName });
-
-    // Check if the company exists
-    if (!company) {
-      return res.status(404).json({ error: "Company not found." });
-    }
-
-    return res.status(200).json(company);
-  } catch (err) {
-    return res.status(400).json({ error: "Failed to retrieve company" });
-  }
-};
-
-const getCompanyById = async (req, res) => {
-  const { id } = req.params;
-
-  try {
-    // Find the company by ID in the database
     const company = await Company.findById(id);
 
     // Check if the company exists
@@ -157,36 +138,36 @@ const updateCompany = async (req, res) => {
       //update pipelines accordingly
       const prevCompanies = pipeline
         .slice(0, company.index)
-        .map((item) => item.companyName);
+        .map((item) => item.companyId);
 
       const postCompanies = pipeline
         .slice(company.index)
-        .map((item) => item.companyName);
+        .map((item) => item.companyId);
 
       //Iterate through and update each prior company accordingly
       for (let i = 0; i < prevCompanies.length; i++) {
-        const updateName = prevCompanies[i];
-        updateData.$inc[`prevCompanies.${updateName}`] = -1;
+        const updateId = prevCompanies[i];
+        updateData.$inc[`prevCompanies.${updateId}`] = -1;
 
         // remove self from other company
         const response = await Company.updateOne(
-          { name: updateName },
-          { $inc: { [`postCompanies.${company.name}`]: -1 } }
+          { _id: updateId },
+          { $inc: { [`postCompanies.${company.companyId}`]: -1 } }
         );
 
         // Notify when there's an issue updating a company
-        if (!response) console.log(`Error updating ${updateName}`);
+        if (!response) console.log(`Error updating ${updateId}`);
       }
 
       //Iterate through and update each next company accordingly
       for (let i = 0; i < postCompanies.length; i++) {
-        const updateName = postCompanies[i];
-        updateData.$inc[`postCompanies.${updateName}`] = -1;
+        const updateId = postCompanies[i];
+        updateData.$inc[`postCompanies.${updateId}`] = -1;
 
         // remove self from other company
         const response = await Company.updateOne(
-          { name: updateName },
-          { $inc: { [`prevCompanies.${company.name}`]: -1 } }
+          { _id: updateId },
+          { $inc: { [`prevCompanies.${company.companyId}`]: -1 } }
         );
 
         // Notify when there's an issue updating a company
@@ -224,21 +205,21 @@ const updateCompany = async (req, res) => {
       //update pipelines accordingly
       const prevCompanies = pipeline
         .slice(0, company.index)
-        .map((item) => item.companyName);
+        .map((item) => item.companyId);
 
       const postCompanies = pipeline
         .slice(company.index + 1)
-        .map((item) => item.companyName);
+        .map((item) => item.companId);
 
       //Iterate through and update each prior company accordingly
       for (let i = 0; i < prevCompanies.length; i++) {
-        const updateName = prevCompanies[i];
-        updateData.$inc[`prevCompanies.${updateName}`] = 1;
+        const updateId = prevCompanies[i];
+        updateData.$inc[`prevCompanies.${updateId}`] = 1;
 
         // remove self from other company
         const response = await Company.updateOne(
-          { name: updateName },
-          { $inc: { [`postCompanies.${company.name}`]: 1 } }
+          { _id: updateId },
+          { $inc: { [`postCompanies.${company.companyId}`]: 1 } }
         );
 
         // Notify when there's an issue updating a company
@@ -247,13 +228,13 @@ const updateCompany = async (req, res) => {
 
       //Iterate through and update each next company accordingly
       for (let i = 0; i < postCompanies.length; i++) {
-        const updateName = postCompanies[i];
-        updateData.$inc[`postCompanies.${updateName}`] = 1;
+        const updateId = postCompanies[i];
+        updateData.$inc[`postCompanies.${updateId}`] = 1;
 
         // remove self from other company
         const response = await Company.updateOne(
-          { name: updateName },
-          { $inc: { [`prevCompanies.${company.name}`]: 1 } }
+          { _id: updateId },
+          { $inc: { [`prevCompanies.${company.companyId}`]: 1 } }
         );
 
         // Notify when there's an issue updating a company
@@ -401,50 +382,52 @@ const updateCompanies = async (req, res) => {
 
         //6. Increment and decrement required pipeline fields
         //6a.Get New Pipeline
-        const newPrevCompanies = companies.slice(0, i).map((item) => item.name);
+        const newPrevCompanies = companies
+          .slice(0, i)
+          .map((item) => item.companyId);
 
         const newPostCompanies = companies
           .slice(i + 1)
-          .map((item) => item.name);
+          .map((item) => item.companyId);
 
         //6b.Get Old pipeline
         const origPrevCompanies = origCompanies
           .slice(0, found)
-          .map((item) => item.companyName);
+          .map((item) => item.companyId);
 
         const origPostCompanies = origCompanies
           .slice(found + 1)
-          .map((item) => item.companyName);
+          .map((item) => item.companyId);
 
         //6c. Decide which previous companies need to be incremented
         for (let i = 0; i < newPrevCompanies.length; i++) {
-          const newCompanyName = newPrevCompanies[i];
-          if (!origPrevCompanies.includes(newCompanyName)) {
-            updateData.$inc[`prevCompanies.${newCompanyName}`] = 1;
+          const newCompanyId = newPrevCompanies[i];
+          if (!origPrevCompanies.includes(newCompanyId)) {
+            updateData.$inc[`prevCompanies.${newCompanyId}`] = 1;
           }
         }
 
         //Decide which next companies need to be incremented
         for (let i = 0; i < newPostCompanies.length; i++) {
-          const newCompanyName = newPostCompanies[i];
-          if (!origPostCompanies.includes(newCompanyName)) {
-            updateData.$inc[`postCompanies.${newCompanyName}`] = 1;
+          const newCompanyId = newPostCompanies[i];
+          if (!origPostCompanies.includes(newCompanyId)) {
+            updateData.$inc[`postCompanies.${newCompanyId}`] = 1;
           }
         }
 
         //6d. Decide which prev comanies need to be decremented
         for (let i = 0; i < origPrevCompanies.length; i++) {
-          const newCompanyName = origPrevCompanies[i];
-          if (!newPrevCompanies.includes(newCompanyName)) {
-            updateData.$inc[`prevCompanies.${newCompanyName}`] = -1;
+          const newCompanyId = origPrevCompanies[i];
+          if (!newPrevCompanies.includes(newCompanyId)) {
+            updateData.$inc[`prevCompanies.${newCompanyId}`] = -1;
           }
         }
 
         // Decide which next comanies need to be decremented
         for (let i = 0; i < origPostCompanies.length; i++) {
-          const newCompanyName = origPostCompanies[i];
-          if (!newPostCompanies.includes(newCompanyName)) {
-            updateData.$inc[`postCompanies.${newCompanyName}`] = -1;
+          const newCompanyId = origPostCompanies[i];
+          if (!newPostCompanies.includes(newCompanyId)) {
+            updateData.$inc[`postCompanies.${newCompanyId}`] = -1;
           }
         }
       } else {
@@ -486,19 +469,23 @@ const updateCompanies = async (req, res) => {
 
         //4 add pipelines
         //4a. get pipelines
-        const prevCompanies = companies.slice(0, i).map((item) => item.name);
-        const postCompanies = companies.slice(i + 1).map((item) => item.name);
+        const prevCompanies = companies
+          .slice(0, i)
+          .map((item) => item.companyId);
+        const postCompanies = companies
+          .slice(i + 1)
+          .map((item) => item.companyId);
 
         //4b. Increment previous companies
         for (let i = 0; i < prevCompanies.length; i++) {
-          const newCompanyName = prevCompanies[i];
-          updateData.$inc[`prevCompanies.${newCompanyName}`] = 1;
+          const newCompanyId = prevCompanies[i];
+          updateData.$inc[`prevCompanies.${newCompanyId}`] = 1;
         }
 
         //4c. Increment next companies
         for (let i = 0; i < postCompanies.length; i++) {
-          const newCompanyName = postCompanies[i];
-          updateData.$inc[`postCompanies.${newCompanyName}`] = 1;
+          const newCompanyId = postCompanies[i];
+          updateData.$inc[`postCompanies.${newCompanyId}`] = 1;
         }
       }
       const response = await Company.updateOne(
@@ -536,10 +523,9 @@ const updateCompanies = async (req, res) => {
 };
 
 const deleteCompany = async (req, res) => {
-  const name = req.params.name;
-  const lowercaseCompanyName = name.toLowerCase();
+  const { id } = req.params;
   const company = await Company.findOneAndDelete({
-    name: lowercaseCompanyName,
+    _id: id,
   });
 
   if (!company) {
@@ -547,7 +533,7 @@ const deleteCompany = async (req, res) => {
   }
 
   //* Logs
-  console.log(`Company deleted: ${name}`);
+  console.log(`Company deleted: ${id}`);
   console.log(company);
 
   res.status(200).json(company);
@@ -556,7 +542,6 @@ const deleteCompany = async (req, res) => {
 module.exports = {
   createCompany,
   getCompany,
-  getCompanyById,
   getCompanies,
   updateCompany,
   updateCompanies,
