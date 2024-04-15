@@ -71,7 +71,6 @@ function EditProfile() {
         setOrigSchool(data.school)
         setAnonymous(data.anonymous)
         initializeDateValidity(data.pipeline.length)
-        console.log('Pipeline: ', data.pipeline)
         const temp = data.pipeline.map((item, index) => ({
             tempId2: index + 1,
             ...item,
