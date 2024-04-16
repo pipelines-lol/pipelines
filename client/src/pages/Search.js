@@ -47,9 +47,15 @@ function Search() {
             setErrorMessage('') // If the fetch was successful, there's no 404, so we assume some results were found
             setProfiles([...profileData]) // Update the profiles state with the fetched data
 
-            const companyRating = Math.floor(
-                companyData.rating / companyData.ratedEmployees.length / 20
-            )
+            // only calculate the company rating if there are employees that rated it
+            const companyRating =
+                companyData.ratedEmployees.length !== 0
+                    ? Math.floor(
+                          companyData.rating /
+                              companyData.ratedEmployees.length /
+                              20
+                      )
+                    : null
             setCompany({
                 id: companyData.name,
                 name: companyData.displayName,
