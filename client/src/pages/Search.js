@@ -30,16 +30,28 @@ function Search() {
 
     const [searchParams, setSearchParams] = useSearchParams() // eslint-disable-line no-unused-vars
 
+    const fetchCompanyByName = async (companyName) => {
+        try {
+            const company = await fetchWithAuth({
+                url: `${HOST}/api/company/getBy?name=${companyName}`,
+                method: 'GET',
+            })
+
+            await fetchCompanies({ _id: company._id })
+        } catch (err) {
+            throw new Error(err)
+        }
+    }
+
     const fetchCompanies = async (company) => {
         try {
-            const encodedQuery = encodeURIComponent(company)
             const profileData = await fetchWithAuth({
-                url: `${HOST}/api/pipeline/search/company/${encodedQuery}`,
+                url: `${HOST}/api/company/employees/${company._id}`,
                 method: 'GET',
             })
 
             const companyData = await fetchWithAuth({
-                url: `${HOST}/api/company/get/${encodedQuery}`,
+                url: `${HOST}/api/company/get/${company._id}`,
                 method: 'GET',
             })
 
@@ -47,28 +59,32 @@ function Search() {
             setErrorMessage('') // If the fetch was successful, there's no 404, so we assume some results were found
             setProfiles([...profileData]) // Update the profiles state with the fetched data
 
-            // only calculate the company rating if there are employees that rated it
-            const companyRating =
-                companyData.ratedEmployees.length !== 0
-                    ? Math.floor(
-                          companyData.rating /
-                              companyData.ratedEmployees.length /
-                              20
-                      )
-                    : null
-            setCompany({
-                id: companyData.name,
-                name: companyData.displayName,
-                logo: companyData.logo,
-                info: companyData.description,
-                rating: companyRating,
-            }) // fetch company data to display in card
+            storeCompanyData(companyData)
         } catch (err) {
             throw new Error(err)
         }
     }
 
-    const handleSearch = useCallback(async (query) => {
+    const storeCompanyData = (companyData) => {
+        // only calculate the company rating if there are employees that rated it
+        const companyRating =
+            companyData.ratedEmployees.length !== 0
+                ? Math.floor(
+                      companyData.rating /
+                          companyData.ratedEmployees.length /
+                          20
+                  )
+                : null
+        setCompany({
+            id: companyData.name,
+            name: companyData.displayName,
+            logo: companyData.logo,
+            info: companyData.description,
+            rating: companyRating,
+        }) // fetch company data to display in card
+    }
+
+    const handleSearch = useCallback(async (company) => {
         // loading state to load query
         setLoading(true)
 
@@ -76,11 +92,11 @@ function Search() {
             setLoading(true)
 
             // set the URL query params
-            setQuery(query.name)
-            const params = { company: query.name }
+            setQuery(company.name)
+            const params = { company: company.name }
             setSearchParams(params)
 
-            await fetchCompanies(query.name)
+            await fetchCompanies(company)
         } catch (error) {
             console.error(error.message)
 
@@ -105,21 +121,21 @@ function Search() {
 
     useEffect(() => {
         const fetchSearchParamCompanies = async () => {
-            const company = searchParams.get('company')
+            const companyName = searchParams.get('company')
 
             // edge case: no search params given
-            if (!company) {
+            if (!companyName) {
                 resetSearch()
                 return
             }
 
             // if params preset, refetch companies and set query to company in URL
-            if (company !== query) {
+            if (companyName !== query) {
                 setLoading(true)
 
                 try {
-                    await fetchCompanies(company)
-                    setQuery(company)
+                    await fetchCompanyByName(companyName)
+                    setQuery(companyName)
                 } catch (error) {
                     console.error(error.message)
 
