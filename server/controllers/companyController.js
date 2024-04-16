@@ -61,8 +61,26 @@ const getCompany = async (req, res) => {
   }
 
   try {
-    // Find the company by name in the database
+    // Find the company by id in the database
     const company = await Company.findById(id);
+
+    // Check if the company exists
+    if (!company) {
+      return res.status(404).json({ error: "Company not found." });
+    }
+
+    return res.status(200).json(company);
+  } catch (err) {
+    return res.status(400).json({ error: "Failed to retrieve company" });
+  }
+};
+
+const getCompanyByName = async (req, res) => {
+  const { name } = req.query;
+
+  try {
+    // Find the company by name in the database
+    const company = await Company.findOne({ name: name.toLowerCase() });
 
     // Check if the company exists
     if (!company) {
@@ -88,6 +106,35 @@ const getCompanies = async (req, res) => {
     res.status(200).json(companies);
   } catch (err) {
     return res.status(400).json({ error: "Failed to retrieve company " });
+  }
+};
+
+const getEmployees = async (req, res) => {
+  const { id } = req.params;
+
+  try {
+    // Find the company by name in the database
+    const company = await Company.findById(id);
+
+    // Check if the company exists
+    if (!company) {
+      return res.status(404).json({ error: "Company not found." });
+    }
+
+    // Retrieve profiles of employees and interns using the arrays of object IDs
+    const employeeProfiles = await Profile.find({
+      _id: { $in: company.Employees },
+    });
+    const internProfiles = await Profile.find({
+      _id: { $in: company.interns },
+    });
+
+    // Combine employee and intern profiles into one list
+    const allProfiles = [...employeeProfiles, ...internProfiles];
+
+    return res.status(200).json(allProfiles);
+  } catch (err) {
+    return res.status(400).json({ error: "Failed to retrieve company" });
   }
 };
 
@@ -542,7 +589,9 @@ const deleteCompany = async (req, res) => {
 module.exports = {
   createCompany,
   getCompany,
+  getCompanyByName,
   getCompanies,
+  getEmployees,
   updateCompany,
   updateCompanies,
   deleteCompany,

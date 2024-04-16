@@ -3,7 +3,9 @@ const bodyParser = require("body-parser");
 const {
   createCompany,
   getCompany,
+  getCompanyByName,
   getCompanies,
+  getEmployees,
   updateCompany,
   updateCompanies,
   deleteCompany,
@@ -18,8 +20,14 @@ write.post("/create", bodyParser.json(), createCompany);
 //get a specific company
 read.get("/get/:id", getCompany);
 
+// get a specific company by name
+read.get("/getBy", getCompanyByName);
+
 //get multiple companies based on a query
 read.get("/get/companies/:query", getCompanies);
+
+// get profiles of employees that work at company
+read.get("/employees/:id", getEmployees);
 
 //Update a specific company
 // ! TEMP READ COMMAND
