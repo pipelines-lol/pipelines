@@ -97,7 +97,7 @@ export const ExperienceCard = ({ experience }) => {
             <div
                 className="inline-block rounded-md p-2 backdrop-blur-2xl backdrop-filter transition duration-500 hover:scale-125 hover:cursor-pointer"
                 onClick={() => {
-                    navigate(`/company/${experience.companyName}`)
+                    navigate(`/company/${experience.companyId}`)
                 }}
             >
                 <img

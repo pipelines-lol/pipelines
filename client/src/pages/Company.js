@@ -2,7 +2,6 @@ import { useEffect, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 
 import { HOST, HOMEPAGE } from '../util/apiRoutes'
-import { companies } from '../data/companyData'
 import { fetchWithAuth } from '../util/fetchUtils'
 
 // components
@@ -143,28 +142,6 @@ const Company = () => {
         setLoading(false)
     }
 
-    // capitalize helper
-    function capitalize(str) {
-        // shoutout bobdagoat
-        if (typeof str !== 'string' || str.trim() === '') {
-            // bad input
-            return str
-        }
-
-        const formattedCompany = companies.find(
-            (company) => company.name.toLowerCase() === str.toLowerCase()
-        )
-
-        if (formattedCompany) {
-            return formattedCompany.name
-        }
-
-        return str
-            .split(' ')
-            .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
-            .join(' ')
-    }
-
     const navigate = useNavigate()
 
     const tableElem = (rank, company) => {
@@ -180,7 +157,7 @@ const Company = () => {
             <tr
                 className="w-full divide-y divide-gray-200 border-b border-t border-gray-200 transition duration-500 hover:cursor-pointer hover:bg-pipeline-blue-200"
                 onClick={() => {
-                    navigate(`/company/${company.name}`)
+                    navigate(`/company/${company.id}`)
                 }}
             >
                 <div className="avatar p-2">
@@ -189,7 +166,7 @@ const Company = () => {
                     </div>
                 </div>
                 <td className="w-full">
-                    {`(#${rank + 1}): ` + capitalize(company.name)}
+                    {`(#${rank + 1}): ` + company.displayName}
                 </td>
             </tr>
         )
