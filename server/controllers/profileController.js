@@ -3,6 +3,9 @@ const Company = require("../models/companyModel");
 const Profile = require("../models/profileModel");
 const mongoose = require("mongoose");
 
+// helper functions
+const { shuffleArray } = require("../utils/generalUtils");
+
 // GET all profiles
 const getProfiles = async (req, res) => {
   const profiles = await Profile.find({}).sort({ createdAt: -1 });
@@ -50,6 +53,58 @@ const getProfile = async (req, res) => {
   res.status(200).json(profile);
 };
 
+// GET a certain amount of random profiles
+const getRandomProfiles = async (req, res) => {
+  try {
+    // Retrieve the amount of profiles to retrieve from req.query
+    const { amount } = req.query;
+
+    if (amount) {
+      // Parse the amount into a number
+      const numberOfProfilesToRetrieve = parseInt(amount);
+
+      // Check if the parsed result is NaN
+      if (isNaN(numberOfProfilesToRetrieve)) {
+        return res.status(400).json({ error: "Invalid amount provided." });
+      }
+
+      // Get the total count of profiles in the database with non-empty "pipeline" field
+      const totalProfilesCount = await Profile.countDocuments({
+        pipeline: { $exists: true, $ne: [], $gt: [] },
+      });
+
+      // Generate an array of random indices within the total count of profiles with non-empty "pipeline" field
+      const randomIndices = [];
+      while (randomIndices.length < numberOfProfilesToRetrieve) {
+        const randomIndex = Math.floor(Math.random() * totalProfilesCount);
+        if (!randomIndices.includes(randomIndex)) {
+          randomIndices.push(randomIndex);
+        }
+      }
+
+      // Retrieve random profiles based on the random indices and with non-empty "pipeline" field
+      const randomProfiles = await Profile.find({
+        pipeline: { $exists: true, $ne: [], $gt: [] },
+      })
+        .limit(numberOfProfilesToRetrieve)
+        .skip(randomIndices[0]);
+
+      res.status(200).json(randomProfiles);
+    } else {
+      // If no amount is given, retrieve all profiles with non-empty "pipeline" field and shuffle them
+      const allProfilesWithPipeline = await Profile.find({
+        pipeline: { $exists: true, $ne: [], $gt: [] },
+      });
+      const shuffledProfiles = shuffleArray(allProfilesWithPipeline);
+
+      res.status(200).json(shuffledProfiles);
+    }
+  } catch (error) {
+    console.log("Error: ", error);
+    res.status(500).json({ error: "Internal Server Error." });
+  }
+};
+
 // DELETE a profile
 const deleteProfile = async (req, res) => {
   const { id } = req.params;
@@ -73,7 +128,7 @@ const deleteProfile = async (req, res) => {
   res.status(200).json(profile);
 };
 
-// UPDATE a poll
+// UPDATE a profile
 const updateProfile = async (req, res) => {
   const { id } = req.params;
 
@@ -129,6 +184,7 @@ const updateProfile = async (req, res) => {
 module.exports = {
   getProfiles,
   getProfile,
+  getRandomProfiles,
   deleteProfile,
   updateProfile,
 };

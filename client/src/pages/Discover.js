@@ -22,7 +22,7 @@ function Discover() {
 
         try {
             const data = await fetchWithAuth({
-                url: `${HOST}/api/pipeline/random`,
+                url: `${HOST}/api/profile/random`,
                 method: 'GET',
             })
 
