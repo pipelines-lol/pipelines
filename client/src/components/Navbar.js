@@ -76,7 +76,7 @@ const Navbar = () => {
 
         try {
             await fetchWithAuth({
-                url: `${HOST}/api/profile/${profileId}`,
+                url: `${HOST}/api/profile/get/${profileId}`,
                 method: 'PATCH',
                 data: profile, // This is the profile data to be updated
             })

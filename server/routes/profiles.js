@@ -2,6 +2,7 @@ const express = require("express");
 const {
   getProfiles,
   getProfile,
+  getRandomProfiles,
   deleteProfile,
   updateProfile,
 } = require("../controllers/profileController");
@@ -13,7 +14,10 @@ const write = express.Router();
 read.get("/", getProfiles);
 
 // GET a single profile
-read.get("/:id", getProfile);
+read.get("/get/:id", getProfile);
+
+// GET a certain amount of random profiles
+read.get("/random", getRandomProfiles);
 
 // DELETE a profile
 write.delete("/:id", deleteProfile);

@@ -39,7 +39,7 @@ function EditProfile() {
         try {
             // Use fetchWithAuth to perform the request
             const data = await fetchWithAuth({
-                url: `${HOST}/api/profile/${user.profileId}`, // Adjust HOST and user.profileId as needed
+                url: `${HOST}/api/profile/get/${user.profileId}`, // Adjust HOST and user.profileId as needed
                 method: 'GET',
             })
 

@@ -51,7 +51,7 @@ function Profile() {
             }
 
             const data = await fetchWithAuth({
-                url: `${HOST}/api/profile/${id}`,
+                url: `${HOST}/api/profile/get/${id}`,
                 method: 'GET',
             })
 
@@ -283,7 +283,7 @@ function Profile() {
 
         try {
             await fetchWithAuth({
-                url: `${HOST}/api/profile/${user.profileId}`,
+                url: `${HOST}/api/profile/get/${user.profileId}`,
                 method: 'PATCH',
                 data: updatedProfile,
             })

@@ -18,7 +18,7 @@ export default function People() {
 
         try {
             const data = await fetchWithAuth({
-                url: `${HOST}/api/pipeline/random/${size}`,
+                url: `${HOST}/api/profile/random?amount=${size}`,
                 method: 'GET',
             })
             setProfiles([...data])
