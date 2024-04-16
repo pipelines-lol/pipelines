@@ -16,7 +16,6 @@ const authRoutes = require("./routes/auth");
 const profileRoutes = require("./routes/profiles");
 const schoolRoutes = require("./routes/school");
 const companyRoutes = require("./routes/companies");
-const pipelineRoutes = require("./routes/pipelines");
 const mongodbIdRoutes = require("./routes/mongodbId");
 const offerRoutes = require("./routes/offers");
 const pfpRoutes = require("./routes/pfps");
@@ -66,7 +65,7 @@ app.use(express.json());
 
 // testing
 app.get("/", (req, res) => {
-  res.json("Hello!");
+  res.json("Hello! This is the Pipelines API!");
 });
 
 // routes
@@ -106,16 +105,6 @@ const routes = [
     path: "/api/company",
     middleware: [verifyToken, verifyAdmin],
     handler: companyRoutes.write,
-  },
-  {
-    path: "/api/pipeline",
-    middleware: [verifyToken],
-    handler: pipelineRoutes.read,
-  },
-  {
-    path: "/api/pipeline",
-    middleware: [verifyToken, verifyProfile],
-    handler: pipelineRoutes.write,
   },
   {
     path: "/api/mongodbId",
