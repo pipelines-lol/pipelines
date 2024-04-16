@@ -76,7 +76,7 @@ function Search() {
                   )
                 : null
         setCompany({
-            id: companyData.name,
+            id: companyData._id,
             name: companyData.displayName,
             logo: companyData.logo,
             info: companyData.description,
