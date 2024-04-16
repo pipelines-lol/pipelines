@@ -2,7 +2,6 @@ import { useEffect, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 
 import { HOST, HOMEPAGE } from '../util/apiRoutes'
-import { companies } from '../data/companyData'
 import { fetchWithAuth } from '../util/fetchUtils'
 
 // components
@@ -99,7 +98,7 @@ const Company = () => {
                     })
                 } else {
                     try {
-                        const url = `${HOST}/api/company/get/${prevEntries[i][0].toLowerCase()}`
+                        const url = `${HOST}/api/company/get/${prevEntries[i][0]}`
 
                         // Use fetchWithAuth for the request, specifying the URL and the method.
                         const response = await fetchWithAuth({
@@ -128,7 +127,7 @@ const Company = () => {
                 } else {
                     try {
                         const data = await fetchWithAuth({
-                            url: `${HOST}/api/company/get/${postEntries[i][0].toLowerCase()}`,
+                            url: `${HOST}/api/company/get/${postEntries[i][0]}`,
                             method: 'GET',
                         })
                         top3Post.push(data) // Add the fetched data to the top3Prev array
@@ -141,28 +140,6 @@ const Company = () => {
         setPrevCompanies([...top3Prev])
         setPostCompanies([...top3Post])
         setLoading(false)
-    }
-
-    // capitalize helper
-    function capitalize(str) {
-        // shoutout bobdagoat
-        if (typeof str !== 'string' || str.trim() === '') {
-            // bad input
-            return str
-        }
-
-        const formattedCompany = companies.find(
-            (company) => company.name.toLowerCase() === str.toLowerCase()
-        )
-
-        if (formattedCompany) {
-            return formattedCompany.name
-        }
-
-        return str
-            .split(' ')
-            .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
-            .join(' ')
     }
 
     const navigate = useNavigate()
@@ -180,7 +157,7 @@ const Company = () => {
             <tr
                 className="w-full divide-y divide-gray-200 border-b border-t border-gray-200 transition duration-500 hover:cursor-pointer hover:bg-pipeline-blue-200"
                 onClick={() => {
-                    navigate(`/company/${company.name}`)
+                    navigate(`/company/${company.id}`)
                 }}
             >
                 <div className="avatar p-2">
@@ -189,7 +166,7 @@ const Company = () => {
                     </div>
                 </div>
                 <td className="w-full">
-                    {`(#${rank + 1}): ` + capitalize(company.name)}
+                    {`(#${rank + 1}): ` + company.displayName}
                 </td>
             </tr>
         )
