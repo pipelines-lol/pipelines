@@ -283,7 +283,7 @@ function Profile() {
 
         try {
             await fetchWithAuth({
-                url: `${HOST}/api/profile/get/${user.profileId}`,
+                url: `${HOST}/api/profile/${user.profileId}`,
                 method: 'PATCH',
                 data: updatedProfile,
             })
