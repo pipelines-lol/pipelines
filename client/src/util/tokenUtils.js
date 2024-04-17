@@ -3,12 +3,27 @@ import Cookies from 'js-cookie'
 import { HOST } from './apiRoutes'
 
 export const generateToken = async () => {
-    const linkedinToken = localStorage.getItem('linkedinToken')
-    const adminToken = localStorage.getItem('adminToken')
+    const tokenKeys = ['linkedin', 'admin']
+    const tokenQueries = []
+
+    // loop through tokens needed and fetch them
+    for (const tokenKey of tokenKeys) {
+        const tokenName = `${tokenKey}Token`
+        const token = localStorage.getItem(tokenName)
+
+        // if the token exists, add it to the token pieces
+        if (token) {
+            tokenQueries.push(`${tokenName}=${token}`)
+        }
+    }
+
+    // Construct the URL dynamically based on the tokens array
+    const tokenParams =
+        tokenQueries.length > 0 ? '?' + tokenQueries.join('&') : ''
+    const url = `${HOST}/api/token${tokenParams}`
 
     // Use fetch to get a new session ID if one does not already exist
     try {
-        const url = `${HOST}/api/token${linkedinToken ? `?linkedinToken=${linkedinToken}` : ''}${adminToken ? `&adminToken=${adminToken}` : ''}`
         const response = await fetch(url)
 
         if (!response.ok) {
