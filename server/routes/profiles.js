@@ -2,6 +2,7 @@ const express = require("express");
 const {
   getProfiles,
   getProfile,
+  getProfileByUsername,
   getRandomProfiles,
   deleteProfile,
   updateProfile,
@@ -15,6 +16,9 @@ read.get("/", getProfiles);
 
 // GET a single profile
 read.get("/get/:id", getProfile);
+
+// GET a single profile by username
+read.get("/getBy", getProfileByUsername);
 
 // GET a certain amount of random profiles
 read.get("/random", getRandomProfiles);

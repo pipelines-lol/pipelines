@@ -1,18 +1,15 @@
 import { useEffect, useState } from 'react'
-import { useParams } from 'react-router-dom'
 
 import { HOST } from '../util/apiRoutes'
 import { fetchWithAuth } from '../util/fetchUtils'
 
 export const ProfilePicture = ({ profile, setPfp }) => {
-    const { id } = useParams()
-
     const [fetchedPfp, setFetchedPfp] = useState(null)
 
     const fetchPfp = async () => {
         try {
             const data = await fetchWithAuth({
-                url: `${HOST}/api/pfp/${id}`,
+                url: `${HOST}/api/pfp/${profile._id}`,
                 method: 'GET',
             })
 
