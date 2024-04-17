@@ -143,12 +143,49 @@ const updateProfile = async (req, res) => {
       return res.status(404).json({ error: "No such Profile." });
     }
 
+    // * PROFILE PAGE VALIDATION
+    // username validation
+    const username = profile.username;
+    if (username) {
+      const isValidUsername = (username) => {
+        const mongodbConflict = mongoose.Types.ObjectId.isValid(username);
+        const usernameRegex =
+          /^[a-zA-Z0-9_](?!.*[._]{2})[a-zA-Z0-9_.]{1,30}[a-zA-Z0-9_]$/;
+        console.log("Mongo Conflict:", mongodbConflict);
+        console.log("Regex Conflict:", usernameRegex.test(username));
+        return !mongodbConflict && usernameRegex.test(username);
+      };
+
+      const isAvailable = async (username) => {
+        // Check if any profile already has the given username
+        const existingProfile = await Profile.findOne({
+          username: username.toLowerCase(),
+        });
+        return !existingProfile;
+      };
+
+      // blank username
+      if (username.length === 0)
+        return res.status(404).json({ error: "Invalid username." });
+      // contains '/'
+      else if (username.indexOf("/") !== -1)
+        return res.status(404).json({ error: "Invalid username." });
+      // invalid regex
+      else if (!isValidUsername(username))
+        return res.status(404).json({ error: "Invalid username." });
+      // taken username
+      else if (!isAvailable(username))
+        return res.status(404).json({ error: "Username already taken." });
+    }
+
+    // * PIPELINE / EXPERIENCE VALIDATION
     // check if a pipeline change is within the req.body
-    if (profile.pipeline) {
+    const pipeline = profile.pipeline;
+    if (pipeline) {
       // if there is a pipeline change
       // make sure display names are added vs. raw names
-      for (let i = 0; i < profile.pipeline.length; i++) {
-        const query_name = profile.pipeline[i].companyName;
+      for (let i = 0; i < pipeline.length; i++) {
+        const query_name = pipeline[i].companyName;
         const company = await Company.findOne({ name: query_name });
 
         if (company) {

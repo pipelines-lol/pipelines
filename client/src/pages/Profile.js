@@ -19,10 +19,6 @@ function Profile() {
     const { id } = useParams()
     const [profile, setProfile] = useState({})
 
-    // for searching through profiles that have
-    // id as a username instead of id
-    const [profiles, setProfiles] = useState([])
-
     const { user } = useAuthContext()
     const [loading, setLoading] = useState(false)
 
@@ -30,15 +26,13 @@ function Profile() {
 
     const [pfp, setPfp] = useState('')
     const [username, setUsername] = useState('')
-    const [usernameErrorMessage, setUsernameErrorMessage] = useState('')
+    const [errorMessage, setErrorMessage] = useState('')
     const [linkedin, setLinkedin] = useState('')
-    const [linkedinErrorMessage, setLinkedinErrorMessage] = useState('')
     const [school, setSchool] = useState('')
 
     const [location, setLocation] = useState('')
 
-    const hasError =
-        usernameErrorMessage.length !== 0 && linkedinErrorMessage.length !== 0
+    const hasError = errorMessage.length !== 0
 
     const fetchProfile = async () => {
         try {
@@ -80,24 +74,6 @@ function Profile() {
             data ? setSchool(data) : setSchool(null)
         } catch (err) {
             console.error('Error: ', err)
-        }
-    }
-
-    const fetchProfiles = async () => {
-        setLoading(true)
-
-        try {
-            const data = await fetchWithAuth({
-                url: `${HOST}/api/profile/`,
-                method: 'GET',
-            })
-
-            // If fetchWithAuth doesn't throw, it means the response was ok
-            setProfiles(data)
-        } catch (error) {
-            console.error('Error:', error.message)
-        } finally {
-            setLoading(false)
         }
     }
 
@@ -151,67 +127,6 @@ function Profile() {
         }
     }
 
-    const validateUsername = async (username) => {
-        const isValidUsername = async (username) => {
-            const mongodbConflict = await isMongoDBId(username)
-            const usernameRegex =
-                /^[a-zA-Z0-9_](?!.*[._]{2})[a-zA-Z0-9_.]{1,30}[a-zA-Z0-9_]$/
-            return !mongodbConflict && usernameRegex.test(username)
-        }
-
-        const isAvailable = (username) => {
-            const filteredProfiles = profiles.filter(
-                (profile) =>
-                    profile.username.toLowerCase() === username.toLowerCase()
-            )
-
-            // check if the one profile there is the current user's
-            if (filteredProfiles.length === 1) {
-                const filteredProfile = filteredProfiles[0]
-
-                return profile.username === filteredProfile.username
-            }
-
-            return filteredProfiles.length === 0
-        }
-
-        // blank username
-        if (username.length === 0) {
-            setUsernameErrorMessage('Invalid username.')
-            return false
-        } else if (username.indexOf('/') !== -1) {
-            // contains '/'
-            setUsernameErrorMessage('Invalid username.')
-            return false
-        } else if (await isValidUsername(username)) {
-            // invalid regex
-            setUsernameErrorMessage('Invalid username.')
-            return false
-        } else if (!isAvailable(username)) {
-            // taken username
-            setUsernameErrorMessage('Username already taken.')
-            return false
-        } else {
-            // valid username
-            setUsernameErrorMessage('')
-            return true
-        }
-    }
-
-    const validateLinkedin = async (linkedin) => {
-        // Regular expression for a basic LinkedIn username check
-        const regex = /^[a-z0-9-]+$/i
-
-        // Check if the username matches the pattern
-        if (!regex.test(linkedin)) {
-            setLinkedinErrorMessage('Invalid Linkedin username.')
-            return false
-        } else {
-            setLinkedinErrorMessage('')
-            return true
-        }
-    }
-
     const extractLinkedinUsername = (linkedin) => {
         const regex = /https:\/\/linkedin\.com\/in\/([^/]+)/
         const match = linkedin.match(regex)
@@ -225,17 +140,12 @@ function Profile() {
         return null
     }
 
-    const buildLinkedinUrl = (username) => {
-        const baseLinkedinUrl = 'https://linkedin.com/in/'
-        return `${baseLinkedinUrl}${username}`
-    }
-
     const handleUsernameChange = async (e) => {
         // change -> saveable progress
         setSaveable(true)
 
         // remove previous errors
-        setUsernameErrorMessage('')
+        setErrorMessage('')
 
         const value = e.target.value
         setUsername(value)
@@ -252,43 +162,19 @@ function Profile() {
     const handleEditProfile = async () => {
         const updatedProfile = {
             username,
-            linkedin: buildLinkedinUrl(linkedin),
             location,
-        }
-
-        // check all fields are filled out
-        if (!username || username.length === 0) {
-            setUsernameErrorMessage('All fields must be filled.')
-            return
-        }
-
-        if (!linkedin || linkedin.length === 0) {
-            // clear linkedin if user left blank / deleted
-            updatedProfile.linkedin = ''
-        }
-
-        if (!location || location.length === 0) {
-            // clear location if user left blank / deleted
-            updatedProfile.location = ''
-        }
-
-        // field validation
-        if (!validateUsername(username)) {
-            return
-        }
-
-        if (!validateLinkedin(linkedin)) {
-            return
         }
 
         try {
             await fetchWithAuth({
-                url: `${HOST}/api/profile/get/${user.profileId}`,
+                url: `${HOST}/api/profile/${user.profileId}`,
                 method: 'PATCH',
                 data: updatedProfile,
             })
         } catch (error) {
-            console.error('Error:', error.message)
+            const message = error.message
+            console.error('Error:', message)
+            setErrorMessage(message)
         }
 
         setSaveable(false)
@@ -297,7 +183,6 @@ function Profile() {
     useEffect(() => {
         const fetchInfo = async () => {
             await fetchProfile()
-            await fetchProfiles()
         }
 
         fetchInfo()
@@ -349,9 +234,9 @@ function Profile() {
                                     value={username}
                                     onChange={handleUsernameChange}
                                 />
-                                {usernameErrorMessage && (
+                                {errorMessage && (
                                     <h1 className="text-red-400">
-                                        {usernameErrorMessage}
+                                        {errorMessage}
                                     </h1>
                                 )}
                             </div>
@@ -376,7 +261,7 @@ function Profile() {
                             <h1 className="text-white">Anonymous</h1>
                         ) : (
                             <Link
-                                to={buildLinkedinUrl(linkedin)}
+                                to={`https://linkedin.com/in/${linkedin}`}
                                 target="_blank"
                             >
                                 <h1 className="text-white hover:underline">
