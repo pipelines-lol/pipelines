@@ -37,15 +37,34 @@ function Profile() {
     const fetchProfile = async () => {
         try {
             setLoading(true)
-            const isValidId = await isMongoDBId(id)
-
-            if (!isValidId) {
-                setProfile(null)
-                throw new Error('Invalid MongoDB ID')
-            }
 
             const data = await fetchWithAuth({
                 url: `${HOST}/api/profile/get/${id}`,
+                method: 'GET',
+            })
+
+            if (data.school) fetchSchool(data.school)
+
+            // Successful fetch and data extraction
+            setProfile(data)
+            setUsername(data.username)
+            setLinkedin(extractLinkedinUsername(data.linkedin))
+            setLocation(data.location)
+            setPfp(data.pfp)
+        } catch (error) {
+            console.error('Error:', error.message)
+            setProfile(null)
+        } finally {
+            setLoading(false)
+        }
+    }
+
+    const fetchProfileByUsername = async () => {
+        try {
+            setLoading(true)
+
+            const data = await fetchWithAuth({
+                url: `${HOST}/api/profile/getBy?username=${id}`,
                 method: 'GET',
             })
 
@@ -182,13 +201,21 @@ function Profile() {
 
     useEffect(() => {
         const fetchInfo = async () => {
-            await fetchProfile()
+            const isValidId = await isMongoDBId(id)
+
+            if (!isValidId.response) {
+                await fetchProfileByUsername()
+            } else {
+                await fetchProfile()
+            }
         }
 
         fetchInfo()
     }, [id])
 
-    const admin = user && (user.profileId === id || user.username === id)
+    // establish if the user viewing the profile
+    // has admin privileges of the viewed profile
+    const admin = user && profile && user.profileId === profile._id
 
     const currentExperienceInfo = // {'Incoming / Currently / Previously', Work Title, Company Name}
         profile && profile.pipeline && profile.pipeline.length > 0

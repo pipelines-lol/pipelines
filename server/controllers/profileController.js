@@ -53,6 +53,43 @@ const getProfile = async (req, res) => {
   res.status(200).json(profile);
 };
 
+// GET a single profile by username
+const getProfileByUsername = async (req, res) => {
+  const { username } = req.query;
+
+  // Search for profile by username
+  const profile = await Profile.findOne({ username });
+
+  if (!profile) {
+    return res.status(404).json({ error: "No such Profile." });
+  }
+
+  // check if profile is anonymous
+  if (profile.anonymous) {
+    // Convert the Mongoose document to a plain JavaScript object
+    let anonymousProfile = profile.toObject();
+
+    // Use object destructuring to exclude certain properties
+    const { linkedin, pfp, location, lastName, ...rest } = anonymousProfile;
+
+    // Create a new profile object with the properties you want to retain and modify
+    anonymousProfile = {
+      ...rest,
+      firstName: "Anonymous",
+
+      // set unwanted properties an empty string
+      linkedin: "",
+      pfp: "",
+      location: "",
+      lastName: "",
+    };
+
+    return res.status(200).json(anonymousProfile);
+  }
+
+  res.status(200).json(profile);
+};
+
 // GET a certain amount of random profiles
 const getRandomProfiles = async (req, res) => {
   try {
@@ -221,6 +258,7 @@ const updateProfile = async (req, res) => {
 module.exports = {
   getProfiles,
   getProfile,
+  getProfileByUsername,
   getRandomProfiles,
   deleteProfile,
   updateProfile,
